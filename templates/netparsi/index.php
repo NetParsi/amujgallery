@@ -87,7 +87,8 @@ if (!isset($amujPages[$staticPage])) {
 }
 
 $amujOverlay = $staticPage ? $amujPages[$staticPage][1] : false;
-$amujBare    = $staticPage && !empty($amujPages[$staticPage][2]);
+// Sign-in pages (static demo or the SMS auth component) stand alone without header and footer
+$amujBare    = ($staticPage && !empty($amujPages[$staticPage][2])) || $option === 'com_auth';
 
 if ($staticPage) {
     $this->setTitle($amujPages[$staticPage][0]);

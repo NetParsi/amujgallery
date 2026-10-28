@@ -229,15 +229,105 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  var latin = function (s) {
+    return String(s).replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); })
+      .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); });
+  };
+  var persian = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+
+  // Sign in with the SMS auth component: each step is its own page posting to the component
+  // (html/com_auth). Here the mobile is formatted, the code boxes are joined and the resend timer runs.
+  var authLive = document.querySelector('[data-az-auth-live]');
+  if (authLive) {
+    var liveBtn = authLive.querySelector('button[type="submit"]');
+    var liveError = authLive.querySelector('[data-error]');
+    var sending = function () { liveBtn.classList.add('is-loading'); liveBtn.disabled = true; };
+
+    // Step 1: mobile
+    var liveMobile = authLive.querySelector('.az-auth-mobile');
+    if (liveMobile) {
+      var mobileDigits = function () { return latin(liveMobile.value).replace(/\D/g, '').slice(0, 11); };
+      liveMobile.addEventListener('input', function () {
+        var v = mobileDigits();
+        liveMobile.value = persian(v.replace(/^(\d{4})(\d{0,3})(\d{0,4}).*/, function (m, a, b, c) { return [a, b, c].filter(Boolean).join(' '); }));
+        liveError.textContent = '';
+        liveBtn.disabled = v.length !== 11;
+      });
+      authLive.addEventListener('submit', function (e) {
+        var v = mobileDigits();
+        if (!/^09\d{9}$/.test(v)) { e.preventDefault(); liveError.textContent = 'شماره موبایل معتبر نیست. نمونه: ۰۹۱۲۳۴۵۶۷۸۹'; return; }
+        authLive.mobilenum.value = v;
+        sending();
+      });
+    }
+
+    // Step 2: code boxes -> codenum, sent as soon as all digits are in
+    var liveBoxes = authLive.querySelectorAll('.az-otp input');
+    if (liveBoxes.length) {
+      var liveCode = function () { return Array.prototype.map.call(liveBoxes, function (b) { return latin(b.value); }).join(''); };
+      var liveSync = function () {
+        liveBtn.disabled = liveCode().length !== liveBoxes.length;
+        liveBoxes.forEach(function (b) { b.classList.toggle('is-filled', !!b.value); });
+      };
+      liveBoxes.forEach(function (box, i) {
+        box.addEventListener('input', function () {
+          var digits = latin(box.value).replace(/\D/g, '');
+          if (digits.length > 1) { // pasted or autofilled code
+            digits.slice(0, liveBoxes.length - i).split('').forEach(function (d, k) { liveBoxes[i + k].value = persian(d); });
+            liveBoxes[Math.min(i + digits.length, liveBoxes.length) - 1].focus();
+          } else {
+            box.value = persian(digits);
+            if (digits && liveBoxes[i + 1]) liveBoxes[i + 1].focus();
+          }
+          liveError.textContent = '';
+          liveSync();
+          if (liveCode().length === liveBoxes.length && !liveBtn.classList.contains('is-loading')) authLive.requestSubmit();
+        });
+        box.addEventListener('keydown', function (e) {
+          if (e.key === 'Backspace' && !box.value && liveBoxes[i - 1]) { liveBoxes[i - 1].focus(); liveBoxes[i - 1].value = ''; liveSync(); }
+        });
+      });
+      authLive.addEventListener('submit', function (e) {
+        if (liveCode().length !== liveBoxes.length) { e.preventDefault(); return; }
+        authLive.codenum.value = liveCode();
+        sending();
+      });
+
+      var liveTimer = authLive.querySelector('[data-az-timer]');
+      var left = parseInt(liveTimer.dataset.left, 10) || 0;
+      if (left > 0) {
+        var tick = function () {
+          liveTimer.querySelector('b').textContent = persian(Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'));
+          if (left-- <= 0) {
+            clearInterval(tickId);
+            liveTimer.hidden = true;
+            authLive.querySelector('[data-az-resend]').hidden = false;
+          }
+        };
+        var tickId = setInterval(tick, 1000);
+        tick();
+      }
+    }
+
+    // Step 3: new customer's name (+ email when the component asks for it)
+    var liveName = authLive.querySelector('#az-name'); // (form.name is the form's own name attribute)
+    if (liveName) {
+      authLive.addEventListener('submit', function (e) {
+        var email = authLive.querySelector('#az-email');
+        var okName = liveName.value.trim().length >= 3;
+        var okEmail = !email || (!email.value.trim() && !email.required) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+        authLive.querySelector('[data-error-name]').textContent = okName ? '' : 'نام و نام خانوادگی را وارد کنید.';
+        if (email) authLive.querySelector('[data-error-email]').textContent = okEmail ? '' : 'ایمیل معتبر وارد کنید.';
+        if (!okName || !okEmail) { e.preventDefault(); return; }
+        sending();
+      });
+    }
+  }
+
   // Sign in / sign up: mobile -> SMS code -> (new customer) name + email.
-  // Demo only: code 11111 = existing customer; the auth component replaces these handlers.
+  // Demo only (static login page): code 11111 = existing customer.
   var auth = document.querySelector('[data-az-auth]');
   if (auth) {
-    var latin = function (s) {
-      return String(s).replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); })
-        .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); });
-    };
-    var persian = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
     var steps = auth.querySelectorAll('.az-auth-step');
     var dots = auth.querySelectorAll('.az-auth-steps li');
     var mobile = '';

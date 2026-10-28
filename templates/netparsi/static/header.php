@@ -123,7 +123,7 @@ $announcements = [
             <?php if ($amujUser) : ?>
                 <button class="az-user-link is-signed" type="button" uk-toggle="target: #az-user" aria-label="حساب کاربری <?php echo $amujUser['first']; ?>"><?php echo $icoUserKeep; ?><span class="az-txt"><?php echo $amujUser['first']; ?></span></button>
             <?php else : ?>
-                <a class="az-user-link" href="<?php echo amuj_url('login'); ?>" aria-label="ورود به حساب"><?php echo $icoUserKeep; ?><span class="az-txt">ورود</span></a>
+                <a class="az-user-link" href="<?php echo amuj_login_url(); ?>" aria-label="ورود به حساب"><?php echo $icoUserKeep; ?><span class="az-txt">ورود</span></a>
             <?php endif; ?>
         <?php endif; ?>
         <a class="az-desk" href="<?php echo amuj_url('help'); ?>">راهنما</a>
@@ -144,7 +144,7 @@ $announcements = [
                 <?php if ($amujUser) : ?>
                     <a href="#az-user" class="is-signed" uk-toggle="target: #az-user" aria-label="حساب کاربری"><?php echo $icoUser; ?></a>
                 <?php else : ?>
-                    <a href="<?php echo amuj_url('login'); ?>" aria-label="ورود"><?php echo $icoUser; ?></a>
+                    <a href="<?php echo amuj_login_url(); ?>" aria-label="ورود"><?php echo $icoUser; ?></a>
                 <?php endif; ?>
                 <a href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><?php echo $icoSearch; ?></a>
                 <a href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید"><span class="az-bag"><?php echo $cartCount; ?></span></a>
@@ -321,7 +321,7 @@ $announcements = [
 
         <div class="az-user-foot">
             <a class="az-btn az-btn--block" href="<?php echo amuj_url('account'); ?>">مشاهده حساب کاربری</a>
-            <a class="az-user-logout" href="<?php echo amuj_url('home', ['demo_user' => 0]); ?>">خروج از حساب</a>
+            <a class="az-user-logout" href="<?php echo amuj_logout_url(); ?>">خروج از حساب</a>
         </div>
     </div>
 </div>

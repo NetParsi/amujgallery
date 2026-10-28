@@ -497,6 +497,7 @@ if (!function_exists('amuj_url')) {
     /**
      * Page URL. A page that has gone dynamic has a menu item with the same alias in the
      * hidden menu "amuj-pages" (e.g. cart); that item wins over the static demo page.
+     * login / register go to the first step (mobile) of the SMS auth component's menu items.
      */
     function amuj_url($page = 'home', array $query = [])
     {
@@ -505,17 +506,45 @@ if (!function_exists('amuj_url')) {
         if ($dynamic === null) {
             $dynamic = [];
             if (class_exists('\Joomla\CMS\Factory')) {
-                foreach (\Joomla\CMS\Factory::getApplication()->getMenu('site')->getItems('menutype', 'amuj-pages') as $item) {
+                $menu = \Joomla\CMS\Factory::getApplication()->getMenu('site');
+                foreach ($menu->getItems('menutype', 'amuj-pages') as $item) {
                     $dynamic[$item->alias] = (int) $item->id;
+                }
+                foreach ($menu->getItems('link', 'index.php?option=com_auth&view=cellphone') as $item) {
+                    $dynamic += ['login' => (int) $item->id, 'register' => (int) $item->id];
                 }
             }
         }
 
-        if (isset($dynamic[$page]) && !$query) {
-            return \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $dynamic[$page]);
+        if (isset($dynamic[$page])) {
+            return \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $dynamic[$page] . ($query ? '&' . http_build_query($query) : ''));
         }
 
         return AMUJ_BASE . 'index.php?' . http_build_query(['page' => $page] + $query);
+    }
+
+    /** Sign-in page that brings the visitor back to the current page afterwards */
+    function amuj_login_url()
+    {
+        if (!class_exists('\Joomla\CMS\Factory')) {
+            return amuj_url('login');
+        }
+        if (\Joomla\CMS\Factory::getApplication()->getInput()->getCmd('option') === 'com_auth') {
+            return amuj_url('login');
+        }
+
+        return amuj_url('login', ['return' => base64_encode(\Joomla\CMS\Uri\Uri::getInstance()->toString())]);
+    }
+
+    /** Sign-out link: Joomla logout for a real customer, the demo switch otherwise */
+    function amuj_logout_url()
+    {
+        if (class_exists('\Joomla\CMS\Factory') && !\Joomla\CMS\Factory::getApplication()->getIdentity()->guest) {
+            return \Joomla\CMS\Router\Route::_('index.php?option=com_users&task=user.logout&'
+                . \Joomla\CMS\Session\Session::getFormToken() . '=1&return=' . base64_encode(\Joomla\CMS\Uri\Uri::root()));
+        }
+
+        return amuj_url('home', ['demo_user' => 0]);
     }
 
     /** Number of items in the visitor's HikaShop cart (static demo: 2) */
