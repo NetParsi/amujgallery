@@ -1574,3 +1574,5 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
 .az-cat-nav a:hover::before { width: 22px; background: #000; }
 .az-cat-nav a.is-active::before { width: 30px; height: 2px; background: var(--az-accent-ink); }
 @media (max-width: 959px) { .az-cat-nav a::before { display: none; } }
+/* Swatch ring fully visible: no negative margin (the buy column clips overflow) */
+.az-colors { margin-right: 0; padding: 5px; }

@@ -22,8 +22,10 @@ if (!empty($p['color_images'])) {
         $gallery[$i] = $img;
     }
     $gallery = [$activeColor => $gallery[$activeColor]] + $gallery;
+} elseif (!empty($p['gallery'])) {
+    $gallery = $p['gallery'];
 } else {
-    $gallery = [$p['img'], $p['img2'], ($p['img'] + 2), ($p['img'] + 5)];
+    $gallery = [$p['img'], $p['img2']];
 }
 $singleSize = count($sizes) === 1;
 ?>

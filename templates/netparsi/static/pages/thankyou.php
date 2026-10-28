@@ -7,7 +7,7 @@ defined('_JEXEC') or die;
  */
 $failed   = isset($_GET['status']) && $_GET['status'] === 'failed';
 $products = amuj_products();
-$items    = [13 => ['۳۸', 'مشکی'], 2 => ['M', 'مشکی']];
+$items    = [13 => ['۳۸', 'مشکی'], 2 => ['۳۸', 'کرم']];
 $subtotal = $products[13]['price'] + $products[2]['price'];
 $shipping = 85000;
 $paid     = $subtotal + $shipping;

@@ -179,13 +179,13 @@ if (!function_exists('amuj_url')) {
     function amuj_orders()
     {
         return [
-            'AM-140508-2731' => ['date' => '۸ آبان ۱۴۰۵', 'step' => 2, 'items' => [13 => ['۳۸', 'مشکی'], 2 => ['M', 'مشکی']],
+            'AM-140508-2731' => ['date' => '۸ آبان ۱۴۰۵', 'step' => 2, 'items' => [13 => ['۳۸', 'مشکی'], 2 => ['۳۸', 'کرم']],
                                  'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => ''],
-            'AM-140421-1984' => ['date' => '۲۱ مهر ۱۴۰۵', 'step' => 3, 'items' => [5 => ['S', 'مشکی'], 9 => ['M', 'کرم'], 7 => ['S', 'بژ']],
+            'AM-140421-1984' => ['date' => '۲۱ مهر ۱۴۰۵', 'step' => 3, 'items' => [1 => ['۳۸', 'آبی'], 3 => ['۴۰', 'مشکی']],
                                  'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => '۱۲۳۴۵۶۷۸۹۰۱۲۳۴۵۶۷۸۹۰۱۲'],
-            'AM-140317-0442' => ['date' => '۱۷ شهریور ۱۴۰۵', 'step' => 4, 'items' => [1 => ['M', 'بژ']],
+            'AM-140317-0442' => ['date' => '۱۷ شهریور ۱۴۰۵', 'step' => 4, 'items' => [4 => ['۳۸', 'قهوه‌ای']],
                                  'shipping' => 0, 'method' => 'تحویل حضوری', 'pay' => 'کیف پول', 'tracking' => ''],
-            'AM-140302-0118' => ['date' => '۲ شهریور ۱۴۰۵', 'step' => -1, 'items' => [8 => ['S', 'مشکی']],
+            'AM-140302-0118' => ['date' => '۲ شهریور ۱۴۰۵', 'step' => -1, 'items' => [5 => ['۳۸', 'سفید']],
                                  'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => ''],
         ];
     }
@@ -305,8 +305,8 @@ if (!function_exists('amuj_url')) {
     }
 
     /**
-     * Demo image. Drop your own photos in /images/demo/{n}.jpg to replace the
-     * placeholder photos without touching the markup.
+     * Image URL. A path is used as is; a number picks one of the shop photos
+     * (or /images/demo/{n}.jpg when that file exists).
      */
     function amuj_img($n, $width = 900)
     {
@@ -321,20 +321,16 @@ if (!function_exists('amuj_url')) {
             return AMUJ_BASE . $local;
         }
 
+        // Real shop photos; numbered placeholders anywhere in the theme cycle through them
         $photos = [
-            '1515886657613-9f3515b0c78f', '1496747611176-843222e1e57c', '1509631179647-0177331693ae',
-            '1539109136881-3be0616acf4b', '1485968579580-b6d095142e6e', '1469334031218-e382a71b716b',
-            '1529139574466-a303027c1d8b', '1594633312681-425c7b97ccd1', '1554412933-514a83d2f3c8',
-            '1525507119028-ed4c629a60a3', '1591047139829-d91aecb6caea', '1490481651871-ab68de25d43d',
-            '1483985988355-763728e1935b', '1445205170230-053b83016050', '1434389677669-e08b4cac3105',
-            '1487222477894-8943e31ef7b2', '1475180098004-ca77a66827be', '1520975954732-35dd22299614',
-            '1581044777550-4cfa60707c03', '1544441893-675973e31985', '1552374196-1ab2a1c593e8',
-            '1622519407650-3df9883f76a5',
+            'images/products/cream/1.jpg', 'images/products/bomber/1.jpg', 'images/products/monogram/black.jpg',
+            'images/products/cream/2.jpg', 'images/products/suede/1.jpg', 'images/products/bomber/2.jpg',
+            'images/products/monogram/brown.jpg', 'images/products/cream/3.jpg', 'images/products/bomber/3.jpg',
+            'images/products/suede/2.jpg', 'images/products/art/1.jpg', 'images/demo-product/harir-black.jpg',
+            'images/demo-product/harir-green.jpg', 'images/demo-product/harir-white.jpg',
         ];
 
-        $id = $photos[($n - 1) % count($photos)];
-
-        return 'https://images.unsplash.com/photo-' . $id . '?auto=format&fit=crop&w=' . $width . '&q=75';
+        return AMUJ_BASE . $photos[(max(1, (int) $n) - 1) % count($photos)];
     }
 
     function amuj_products()
@@ -355,18 +351,42 @@ if (!function_exists('amuj_url')) {
                    'desc'         => 'پیراهن حریر سبک و روان با رُفل‌های لایه‌ای در دامن، گل‌های پارچه‌ای روی یقه و آستین پفی با مچ کش‌دار. در سایزهای ۳۶ تا ۴۲.',
                    'details'      => ['جنس: حریر', 'قد: ۸۰ سانتی‌متر', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲', 'رنگ‌بندی: سفید، مشکی، سبز'],
                    'code'         => 'AM-1405-013'],
-            1  => ['name' => 'مانتو کتان بلند',          'cat' => 'مانتو',   'price' => 2290000, 'img' => 4,  'img2' => 1,  'tag' => 'جدید',   'colors' => [$beige, $black, $cream]],
-            2  => ['name' => 'کت بلیزر کراپ',            'cat' => 'کت',      'price' => 2790000, 'img' => 1,  'img2' => 5,  'tag' => '',       'colors' => [$black, $cream]],
-            3  => ['name' => 'پالتو پشمی کمربنددار',     'cat' => 'پالتو',   'price' => 5490000, 'img' => 8,  'img2' => 9,  'tag' => 'جدید',   'colors' => [$brown, $black, $gray, $beige]],
-            4  => ['name' => 'بارانی کلاسیک دوبل',       'cat' => 'بارانی',  'price' => 4190000, 'img' => 3,  'img2' => 7,  'tag' => '',       'colors' => [$beige, $navy]],
-            5  => ['name' => 'پیراهن ساتن میدی',         'cat' => 'پیراهن',  'price' => 1690000, 'img' => 2,  'img2' => 3,  'tag' => '',       'colors' => [$black, $brown, $navy]],
-            6  => ['name' => 'ست کت و شلوار کرپ',        'cat' => 'ست',      'price' => 3890000, 'img' => 5,  'img2' => 4,  'tag' => 'پرفروش', 'colors' => [$black, $cream]],
-            7  => ['name' => 'شلوار راسته فاق بلند',     'cat' => 'شلوار',   'price' => 1390000, 'img' => 7,  'img2' => 6,  'tag' => '',       'colors' => [$black, $beige, $gray, $navy, $cream]],
-            8  => ['name' => 'دامن پلیسه میدی',          'cat' => 'دامن',    'price' => 1590000, 'img' => 6,  'img2' => 2,  'tag' => '',       'colors' => [$black, $beige]],
-            9  => ['name' => 'شومیز حریر یقه‌دار',       'cat' => 'شومیز',   'price' => 1190000, 'img' => 9,  'img2' => 8,  'tag' => '',       'colors' => [$cream, $black, $navy]],
-            10 => ['name' => 'شال نخی بلند',             'cat' => 'اکسسوری', 'price' => 490000,  'img' => 10, 'img2' => 1,  'tag' => '',       'colors' => [$beige, $black, $brown, $cream, $gray, $navy]],
-            11 => ['name' => 'مانتو جلوباز لینن',        'cat' => 'مانتو',   'price' => 1990000, 'img' => 11, 'img2' => 12, 'tag' => 'جدید',   'colors' => [$cream, $beige]],
-            12 => ['name' => 'پالتو بلند اورسایز',       'cat' => 'پالتو',   'price' => 5990000, 'img' => 13, 'img2' => 14, 'tag' => '',       'colors' => [$gray, $black]],
+            // Real products from the shop's photos. Prices are placeholders until the shop sends them.
+            1 => ['name' => 'کت بامبر راه‌راه', 'cat' => 'کت', 'price' => 8900000,
+                  'img' => 'images/products/bomber/1.jpg', 'img2' => 'images/products/bomber/2.jpg', 'tag' => 'جدید',
+                  'colors' => ['#a9c4e2'], 'color_names' => ['آبی'],
+                  'gallery' => ['images/products/bomber/1.jpg', 'images/products/bomber/2.jpg', 'images/products/bomber/3.jpg'],
+                  'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
+                  'desc' => 'کت بامبر سبک با راه‌راه آبی و سفید، یقه و مچ کشی، زیپ فلزی و آرم دوزی‌شده روی سینه و آستین.',
+                  'details' => ['مدل: بامبر', 'رنگ: آبی و سفید', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲'], 'code' => 'AM-1405-001'],
+            2 => ['name' => 'کت کرم زیپ‌دار', 'cat' => 'کت', 'price' => 9600000,
+                  'img' => 'images/products/cream/1.jpg', 'img2' => 'images/products/cream/2.jpg', 'tag' => 'جدید',
+                  'colors' => ['#efe6d4'], 'color_names' => ['کرم'],
+                  'gallery' => ['images/products/cream/1.jpg', 'images/products/cream/2.jpg', 'images/products/cream/3.jpg'],
+                  'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
+                  'desc' => 'کت کوتاه کرم با یقه پیراهنی، جیب‌های زیپ‌دار طلایی و زیپ روی آستین. کالکشن بهار ۲۰۲۶.',
+                  'details' => ['مدل: کت کوتاه', 'رنگ: کرم', 'یراق‌آلات طلایی', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲'], 'code' => 'AM-1405-002'],
+            3 => ['name' => 'کت مونوگرام دورنگ', 'cat' => 'کت', 'price' => 11800000,
+                  'img' => 'images/products/monogram/black.jpg', 'img2' => 'images/products/monogram/brown.jpg', 'tag' => 'پرفروش',
+                  'colors' => ['#2a2724', '#6b4f3a'], 'color_names' => ['مشکی', 'قهوه‌ای'],
+                  'color_images' => ['images/products/monogram/black.jpg', 'images/products/monogram/brown.jpg'],
+                  'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
+                  'desc' => 'کت چرم و جیر با طرح مونوگرام، یقه چرمی و مچ طرح‌دار. کالکشن پاییز و زمستان ۲۰۲۶.',
+                  'details' => ['مدل: کت کوتاه', 'رنگ‌بندی: مشکی، قهوه‌ای', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲'], 'code' => 'AM-1405-003'],
+            4 => ['name' => 'کت جیر مونوگرام', 'cat' => 'کت', 'price' => 12400000,
+                  'img' => 'images/products/suede/1.jpg', 'img2' => 'images/products/suede/2.jpg', 'tag' => '',
+                  'colors' => ['#8a5a3c'], 'color_names' => ['قهوه‌ای'],
+                  'gallery' => ['images/products/suede/1.jpg', 'images/products/suede/2.jpg'],
+                  'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
+                  'desc' => 'کت جیر قهوه‌ای با طرح مونوگرام روی سینه، یقه چرم و جیب‌های دکمه‌دار.',
+                  'details' => ['مدل: کت جیر', 'رنگ: قهوه‌ای', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲'], 'code' => 'AM-1405-004'],
+            5 => ['name' => 'کت سفید طرح‌دار', 'cat' => 'کت', 'price' => 8400000,
+                  'img' => 'images/products/art/1.jpg', 'img2' => 'images/products/art/1.jpg', 'tag' => '',
+                  'colors' => ['#f4f1ea'], 'color_names' => ['سفید'],
+                  'gallery' => ['images/products/art/1.jpg'],
+                  'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
+                  'desc' => 'کت سفید با طرح چاپی هنری روی پشت، مناسب استایل‌های روزمره و خاص.',
+                  'details' => ['رنگ: سفید', 'طرح چاپی پشت کت', 'سایزها: ۳۶، ۳۸، ۴۰، ۴۲'], 'code' => 'AM-1405-005'],
         ];
     }
 

@@ -2,7 +2,7 @@
 defined('_JEXEC') or die;
 
 $products  = amuj_products();
-$items     = [13 => ['size' => '۳۸', 'color' => 'مشکی', 'qty' => 1], 2 => ['size' => 'M', 'color' => 'مشکی', 'qty' => 1]];
+$items     = [13 => ['size' => '۳۸', 'color' => 'مشکی', 'qty' => 1], 2 => ['size' => '۳۸', 'color' => 'کرم', 'qty' => 1]];
 $total     = 0;
 foreach ($items as $id => $item) {
     $total += $products[$id]['price'] * $item['qty'];
@@ -73,7 +73,7 @@ $progress  = min(100, round($total / $free * 100));
         <div class="az-section-head"><h2>شاید بپسندید</h2></div>
         <div class="az-row-slider" uk-slider="finite: true">
             <ul class="uk-slider-items">
-                <?php foreach (array_slice($products, 4, null, true) as $id => $p) : ?>
+                <?php foreach (array_diff_key($products, $items) as $id => $p) : ?>
                     <li><?php amuj_card($id, $p); ?></li>
                 <?php endforeach; ?>
             </ul>

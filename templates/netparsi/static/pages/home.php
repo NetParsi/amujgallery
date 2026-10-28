@@ -2,10 +2,10 @@
 defined('_JEXEC') or die;
 
 $slides = [
-    ['img' => 1,  'title' => 'کالکشن پاییز ۱۴۰۵',  'text' => 'خطوط ساده، پارچه‌های گرم و رنگ‌های خنثی.', 'tab' => 'جدیدترین‌ها'],
-    ['img' => 4,  'title' => 'مانتو و بارانی',      'text' => 'برش‌های بلند و مینیمال برای هر روز.',      'tab' => 'مانتو'],
-    ['img' => 8,  'title' => 'کت و پالتو',          'text' => 'پارچه‌های پشمی و دوخت دقیق برای فصل سرما.', 'tab' => 'پالتو'],
-    ['img' => 5,  'title' => 'حراج فصل',           'text' => 'تا ۵۰٪ تخفیف روی منتخب محصولات.',        'tab' => 'حراج'],
+    ['img' => 'images/products/monogram/black.jpg', 'title' => 'کالکشن پاییز و زمستان', 'text' => 'کت‌های مونوگرام با چرم و جیر، برای روزهای سرد.', 'tab' => 'جدیدترین‌ها'],
+    ['img' => 'images/products/cream/1.jpg',        'title' => 'کت‌های روشن بهاره',     'text' => 'رنگ‌های آرام و یراق طلایی.',                   'tab' => 'کت'],
+    ['img' => 'images/demo-product/harir-green.jpg', 'title' => 'پیراهن حریر',          'text' => 'سبک و روان، در سه رنگ.',                       'tab' => 'پیراهن'],
+    ['img' => 'images/products/bomber/1.jpg',       'title' => 'بامبر راه‌راه',          'text' => 'کلاسیک و روزمره.',                              'tab' => 'حراج'],
 ];
 $products = amuj_products();
 ?>
@@ -59,14 +59,14 @@ $slideDuration = 5000;
 
 <section class="az-section">
     <div class="az-editorial">
-        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img(5, 1200); ?>" alt="" loading="lazy"><span>پیراهن و شومیز</span></a>
-        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img(8, 1200); ?>" alt="" loading="lazy"><span>کت و پالتو</span></a>
+        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img('images/demo-product/harir-white.jpg', 1200); ?>" alt="" loading="lazy"><span>پیراهن و شومیز</span></a>
+        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img('images/products/suede/1.jpg', 1200); ?>" alt="" loading="lazy"><span>کت و پالتو</span></a>
     </div>
 </section>
 
 <section class="az-section">
     <a class="az-wide-banner" href="<?php echo amuj_url('category'); ?>">
-        <img src="<?php echo amuj_img(20, 1920); ?>" alt="" loading="lazy">
+        <img src="<?php echo amuj_img('images/products/cream/2.jpg', 1920); ?>" alt="" loading="lazy">
         <div>
             <h3>AMUJ STUDIO</h3>
             <span class="az-link">کالکشن محدود را ببینید</span>
@@ -80,7 +80,7 @@ $slideDuration = 5000;
         <a href="<?php echo amuj_url('category'); ?>">مشاهده همه</a>
     </div>
     <div class="az-grid">
-        <?php foreach (array_slice($products, 4, 4, true) as $id => $p) : ?>
+        <?php foreach (array_slice($products, 2, 4, true) as $id => $p) : ?>
             <?php amuj_card($id, $p); ?>
         <?php endforeach; ?>
     </div>

@@ -2,7 +2,7 @@
 defined('_JEXEC') or die;
 
 $products = amuj_products();
-$items    = [13 => '۳۸', 2 => 'M'];
+$items    = [13 => '۳۸', 2 => '۳۸'];
 $subtotal = $products[13]['price'] + $products[2]['price'];
 ?>
 <div class="az-checkout">
