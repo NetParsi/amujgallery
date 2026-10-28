@@ -1040,3 +1040,15 @@ body:not(.az-scrolled) .az-header--overlay .az-bell svg { stroke: #fff; }
 #az-filter .uk-offcanvas-close { color: #000; top: 24px; left: var(--az-gutter); right: auto; }
 #az-filter .uk-offcanvas-close:hover { color: var(--az-accent-ink); }
 #az-filter .az-chips button { color: #000; }
+
+/* ---------- Product page tweaks ---------- */
+@media (min-width: 960px) {
+  .az-product-desc, .az-product-buy { padding-top: 14vh; padding-bottom: 48px; }
+  .az-product-buy { max-height: calc(100vh - var(--az-header-h) - 40px); overflow-y: auto; scrollbar-width: none; }
+  .az-product-buy::-webkit-scrollbar { display: none; }
+}
+.az-buy-links { margin-top: 26px; gap: 10px; }
+.az-sizes li { padding: 12px 12px; transition: background-color .2s; }
+.az-sizes li:hover { background: var(--az-accent-soft); }
+.az-sizes li.is-active { background: var(--az-accent); }
+.az-sizes li.is-out:hover { background: transparent; }
