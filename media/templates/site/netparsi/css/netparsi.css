@@ -1576,3 +1576,13 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
 @media (max-width: 959px) { .az-cat-nav a::before { display: none; } }
 /* Swatch ring fully visible: no negative margin (the buy column clips overflow) */
 .az-colors { margin-right: 0; padding: 5px; }
+
+/* Hero with portrait photos: three side by side, one on mobile */
+.az-hero-split { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.az-hero-split img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+.az-hero-shade::after { z-index: 1; }
+.az-hero-caption { z-index: 2; }
+@media (max-width: 959px) {
+  .az-hero-split { grid-template-columns: 1fr; }
+  .az-hero-split img:not(:first-child) { display: none; }
+}

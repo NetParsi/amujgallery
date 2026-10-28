@@ -1,11 +1,16 @@
 <?php
 defined('_JEXEC') or die;
 
+// Portrait shop photos: three per slide side by side (one on mobile)
 $slides = [
-    ['img' => 'images/products/monogram/black.jpg', 'title' => 'کالکشن پاییز و زمستان', 'text' => 'کت‌های مونوگرام با چرم و جیر، برای روزهای سرد.', 'tab' => 'جدیدترین‌ها'],
-    ['img' => 'images/products/cream/1.jpg',        'title' => 'کت‌های روشن بهاره',     'text' => 'رنگ‌های آرام و یراق طلایی.',                   'tab' => 'کت'],
-    ['img' => 'images/demo-product/harir-green.jpg', 'title' => 'پیراهن حریر',          'text' => 'سبک و روان، در سه رنگ.',                       'tab' => 'پیراهن'],
-    ['img' => 'images/products/bomber/1.jpg',       'title' => 'بامبر راه‌راه',          'text' => 'کلاسیک و روزمره.',                              'tab' => 'حراج'],
+    ['imgs' => ['images/products/monogram/black.jpg', 'images/products/monogram/brown.jpg', 'images/products/suede/1.jpg'],
+     'title' => 'کالکشن پاییز و زمستان', 'text' => 'کت‌های مونوگرام با چرم و جیر، برای روزهای سرد.', 'tab' => 'جدیدترین‌ها'],
+    ['imgs' => ['images/products/cream/1.jpg', 'images/products/cream/2.jpg', 'images/products/cream/3.jpg'],
+     'title' => 'کت‌های روشن بهاره', 'text' => 'رنگ‌های آرام و یراق طلایی.', 'tab' => 'کت'],
+    ['imgs' => ['images/demo-product/harir-black.jpg', 'images/demo-product/harir-green.jpg', 'images/demo-product/harir-white.jpg'],
+     'title' => 'پیراهن حریر', 'text' => 'سبک و روان، در سه رنگ.', 'tab' => 'پیراهن'],
+    ['imgs' => ['images/products/bomber/1.jpg', 'images/products/bomber/2.jpg', 'images/products/bomber/3.jpg'],
+     'title' => 'بامبر راه‌راه', 'text' => 'کلاسیک و روزمره.', 'tab' => 'حراج'],
 ];
 $products = amuj_products();
 ?>
@@ -18,7 +23,9 @@ $slideDuration = 5000;
     <ul class="uk-slideshow-items">
         <?php foreach ($slides as $slide) : ?>
             <li class="az-hero-shade">
-                <img src="<?php echo amuj_img($slide['img'], 1920); ?>" alt="" uk-cover>
+                <div class="az-hero-split">
+                    <?php foreach ($slide['imgs'] as $img) : ?><img src="<?php echo amuj_img($img, 1200); ?>" alt=""><?php endforeach; ?>
+                </div>
                 <div class="az-hero-caption">
                     <h2><?php echo $slide['title']; ?></h2>
                     <p><?php echo $slide['text']; ?></p>
