@@ -832,3 +832,14 @@ button.az-user-link { background: none; border: 0; padding: 0; cursor: pointer; 
   #az-user .uk-offcanvas-bar.az-user-panel { width: 100%; padding: 20px var(--az-gutter); }
   .az-user-link.is-signed::before { top: -2px; left: -2px; }
 }
+
+/* Fixes: block buttons include their padding; offcanvas links stay black on hover */
+.az-btn { box-sizing: border-box; }
+#az-user .uk-offcanvas-bar { overflow-x: hidden; }
+#az-user .uk-offcanvas-bar a,
+#az-user .uk-offcanvas-bar a:hover,
+#az-user .uk-offcanvas-bar a:focus { color: #000; }
+#az-user .uk-offcanvas-bar .az-btn, #az-user .uk-offcanvas-bar .az-btn:hover { color: #fff !important; }
+#az-user .uk-offcanvas-bar .az-btn:hover { color: #000 !important; }
+#az-user .az-user-logout:hover { color: #000 !important; }
+.az-wallet { justify-content: flex-start; }

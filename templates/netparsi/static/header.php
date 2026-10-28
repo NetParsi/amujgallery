@@ -257,7 +257,6 @@ $announcements = [
             </div>
             <div class="az-club-meta">
                 <span><?php echo amuj_price($amujUser['remaining']); ?> خرید تا سطح <strong><?php echo $amujUser['next_level']; ?></strong></span>
-                <span><?php echo amuj_fa(number_format($amujUser['points'])); ?> امتیاز</span>
             </div>
         </div>
 
@@ -266,7 +265,6 @@ $announcements = [
                 <span class="az-wallet-label">موجودی کیف پول</span>
                 <strong class="az-wallet-amount"><?php echo amuj_price($amujUser['wallet']); ?></strong>
             </div>
-            <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('account'); ?>">افزایش موجودی</a>
         </div>
 
         <ul class="az-user-links">

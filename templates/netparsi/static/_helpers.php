@@ -88,7 +88,6 @@ if (!function_exists('amuj_url')) {
             'remaining'  => 850000,
             'wallet'     => 1250000,
             'credit'     => 300000,
-            'points'     => 2340,
             'unread'     => 2,
         ];
     }
