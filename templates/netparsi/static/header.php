@@ -1,11 +1,28 @@
 <?php
 defined('_JEXEC') or die;
 
-/** @var bool $amujOverlay */
-$menuGroups = [
-    'فروشگاه'   => array_merge(['جدیدترین‌ها', 'پرفروش‌ها'], amuj_categories(), ['حراج']),
-    'کالکشن‌ها' => ['پاییز و زمستان ۱۴۰۵', 'کالکشن رسمی', 'کالکشن روزمره', 'AMUJ STUDIO'],
+/**
+ * Three-level menu: section > numbered group > links.
+ * When going dynamic this maps 1:1 to a Joomla menu (mod_menu override):
+ * level 1 = sections, level 2 = groups, level 3 = HikaShop category menu items.
+ *
+ * @var bool $amujOverlay
+ */
+$menuTree = [
+    'فروشگاه' => [
+        'جدیدترین‌ها'  => ['جدیدترین‌ها', 'پرفروش‌ها'],
+        'ترندها'       => ['پاییز و زمستان ۱۴۰۵', 'مهمانی و مجلسی'],
+        'دسته‌بندی‌ها' => amuj_categories(),
+    ],
+    'کالکشن‌ها' => [
+        'فصلی'   => ['پاییز و زمستان ۱۴۰۵', 'بهار و تابستان ۱۴۰۵'],
+        'استایل' => ['کالکشن رسمی', 'کالکشن روزمره', 'AMUJ STUDIO'],
+    ],
+    'حراج' => [
+        'تخفیف‌ها' => ['تا ۳۰٪', 'تا ۵۰٪', 'آخرین سایزها'],
+    ],
 ];
+$menuLinks = ['درباره آموژ' => amuj_url('about'), 'راهنما' => amuj_url('help'), 'حساب کاربری' => amuj_url('account')];
 ?>
 <header class="az-header<?php echo !empty($amujOverlay) ? ' az-header--overlay' : ''; ?>">
     <div class="az-header-start">
@@ -22,31 +39,48 @@ $menuGroups = [
     </nav>
 </header>
 
-<div id="az-menu" uk-offcanvas="overlay: true; mode: none">
-    <div class="uk-offcanvas-bar az-menu">
-        <button class="az-menu-close" type="button" uk-toggle="target: #az-menu" aria-label="بستن">
-            <span uk-icon="icon: close; ratio: 1.1"></span>
-        </button>
-        <ul class="az-menu-tabs" uk-switcher="connect: #az-menu-panels; animation: uk-animation-fade">
-            <?php foreach (array_keys($menuGroups) as $group) : ?>
-                <li><a href="#"><?php echo $group; ?></a></li>
-            <?php endforeach; ?>
-        </ul>
-        <ul id="az-menu-panels" class="uk-switcher">
-            <?php foreach ($menuGroups as $items) : ?>
-                <li>
-                    <ul class="az-menu-list">
-                        <?php foreach ($items as $i => $item) : ?>
-                            <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $item === 'حراج' ? ' class="az-sale"' : ''; ?>><?php echo $item; ?></a></li>
+<div id="az-menu" class="az-menu uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body az-menu-dialog">
+        <div class="az-menu-top">
+            <button class="az-menu-close uk-modal-close" type="button" aria-label="بستن">
+                <svg width="38" height="38" viewBox="0 0 38 38"><path d="M2 2l34 34M36 2L2 36" stroke="#000" stroke-width="1.2"/></svg>
+            </button>
+            <a class="az-logo" href="<?php echo amuj_url('home'); ?>">AMUJ</a>
+        </div>
+
+        <div class="az-menu-body">
+            <div>
+                <ul class="az-menu-sections" uk-switcher="connect: #az-menu-panels; toggle: > li > a">
+                    <?php foreach (array_keys($menuTree) as $section) : ?>
+                        <li><a href="#"><?php echo $section; ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+                <ul class="az-menu-extra">
+                    <?php foreach ($menuLinks as $label => $url) : ?>
+                        <li><a href="<?php echo $url; ?>"><?php echo $label; ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <ul id="az-menu-panels" class="uk-switcher az-menu-panels">
+                <?php foreach ($menuTree as $groups) : ?>
+                    <li>
+                        <?php $n = 0; foreach ($groups as $group => $items) : $n++; ?>
+                            <div class="az-menu-group">
+                                <div class="az-menu-group-title">
+                                    <span class="az-num">|<?php echo amuj_fa(str_pad($n, 2, '0', STR_PAD_LEFT)); ?>|</span>
+                                    <?php echo $group; ?>
+                                </div>
+                                <ul class="az-menu-list">
+                                    <?php foreach ($items as $item) : ?>
+                                        <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo (isset($_GET['cat']) && $_GET['cat'] === $item) ? ' class="is-active"' : ''; ?>><?php echo $item; ?></a></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
                         <?php endforeach; ?>
-                    </ul>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-        <ul class="az-menu-foot">
-            <li><a href="<?php echo amuj_url('account'); ?>">حساب کاربری</a></li>
-            <li><a href="<?php echo amuj_url('help'); ?>">راهنما</a></li>
-            <li><a href="<?php echo amuj_url('about'); ?>">درباره آموژ</a></li>
-        </ul>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
 </div>
