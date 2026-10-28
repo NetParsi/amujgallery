@@ -75,204 +75,42 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Notifications: mark all as read (sample only; the club extension will persist it)
-  var readAll = document.querySelector('[data-az-readall]');
-  if (readAll) {
+  document.querySelectorAll('[data-az-readall]').forEach(function (readAll) {
     readAll.addEventListener('click', function () {
-      document.querySelectorAll('.az-note.is-unread').forEach(function (n) { n.classList.remove('is-unread'); });
-      document.querySelectorAll('.az-bell-badge').forEach(function (b) { b.remove(); });
+      document.querySelectorAll('.az-note.is-unread').forEach(function (n) { n.classList.remove('is-unread'); n.dataset.group = 'read'; });
+      document.querySelectorAll('.az-bell-badge, .az-account-nav em').forEach(function (b) { b.remove(); });
       var label = document.querySelector('[data-az-unread-label]');
       if (label) label.textContent = 'همه پیام‌ها خوانده شده';
-      readAll.remove();
-    });
-  }
-
-  // Product page: choosing a color brings that color's photo to the front of the gallery
-  var gallery = document.querySelector('[data-az-gallery]');
-  document.querySelectorAll('[data-az-color]').forEach(function (swatch) {
-    swatch.addEventListener('click', function () {
-      var label = document.querySelector('[data-az-color-label]');
-      if (label) label.textContent = swatch.dataset.name;
-      var photo = gallery && gallery.querySelector('img[data-color="' + swatch.dataset.azColor + '"]');
-      if (!photo || photo === gallery.firstElementChild) return;
-      photo.removeAttribute('loading');
-      gallery.prepend(photo);
-      photo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out' });
-      gallery.scrollTo({ left: 0, behavior: 'smooth' });
-      var top = gallery.getBoundingClientRect().top;
-      if (top < 0) window.scrollBy({ top: top - 140, behavior: 'smooth' });
+      document.querySelectorAll('[data-az-readall]').forEach(function (b) { b.remove(); });
     });
   });
 
-  // Checkout: credit toggle + discount code (sample: AMUJ10 = 10% off) update the payable total
-  var totals = document.querySelector('[data-az-totals]');
-  if (totals) {
-    var toman = function (n) {
-      return Math.round(n).toLocaleString('en-US').replace(/,/g, '٬').replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }) + ' تومان';
-    };
-    var state = { discount: 0, credit: 0 };
-    var creditBox = document.querySelector('[data-az-credit]');
-    var coupon = document.querySelector('[data-az-coupon]');
-    var msg = document.querySelector('[data-az-coupon-msg]');
-
-    var refresh = function () {
-      var sub = Number(totals.dataset.subtotal), ship = Number(totals.dataset.shipping);
-      var dRow = totals.querySelector('[data-az-row-discount]'), cRow = totals.querySelector('[data-az-row-credit]');
-      dRow.hidden = !state.discount; cRow.hidden = !state.credit;
-      dRow.lastElementChild.textContent = '− ' + toman(state.discount);
-      cRow.lastElementChild.textContent = '− ' + toman(state.credit);
-      totals.querySelector('[data-az-pay]').textContent = toman(Math.max(0, sub + ship - state.discount - state.credit));
-    };
-
-    document.querySelectorAll('input[name="ship"]').forEach(function (radio) {
-      radio.addEventListener('change', function () {
-        var cost = Number(radio.value);
-        totals.dataset.shipping = cost;
-        totals.querySelector('[data-az-ship-label]').textContent = '(' + radio.dataset.label + ')';
-        totals.querySelector('[data-az-ship-cost]').textContent = cost ? toman(cost) : 'رایگان';
-        refresh();
-      });
-    });
-
-    if (creditBox) {
-      creditBox.addEventListener('change', function () {
-        state.credit = creditBox.checked ? Number(creditBox.dataset.azCredit) : 0;
-        refresh();
-      });
-    }
-    if (coupon) {
-      coupon.addEventListener('submit', function () {
-        var code = coupon.coupon.value.trim().toUpperCase();
-        msg.classList.remove('is-ok', 'is-error');
-        if (code === 'AMUJ10') {
-          state.discount = Number(totals.dataset.subtotal) * 0.1;
-          msg.textContent = 'کد تخفیف ۱۰٪ اعمال شد.';
-          msg.classList.add('is-ok');
-        } else {
-          state.discount = 0;
-          msg.textContent = code ? 'این کد تخفیف معتبر نیست.' : 'کد تخفیف را وارد کنید.';
-          msg.classList.add('is-error');
-        }
-        refresh();
-      });
-    }
-  }
-
-  // Sign in / sign up: mobile -> SMS code -> (new customer) name + email.
-  // Demo only: code 11111 = existing customer; the auth component replaces these handlers.
-  var auth = document.querySelector('[data-az-auth]');
-  if (auth) {
-    var latin = function (s) {
-      return String(s).replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); })
-        .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); });
-    };
-    var persian = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
-    var steps = auth.querySelectorAll('.az-auth-step');
-    var dots = auth.querySelectorAll('.az-auth-steps li');
-    var mobile = '';
-    var timerId = null;
-
-    var show = function (n) {
-      steps.forEach(function (s) { s.classList.toggle('is-active', s.dataset.step === String(n)); });
-      dots.forEach(function (d, i) { d.classList.toggle('is-active', i < n); });
-      var focus = auth.querySelector('.az-auth-step.is-active input');
-      if (focus) setTimeout(function () { focus.focus(); }, 250);
-    };
-    var busy = function (btn, then) {
-      btn.classList.add('is-loading'); btn.disabled = true;
-      setTimeout(function () { btn.classList.remove('is-loading'); btn.disabled = false; then(); }, 700);
-    };
-    var done = function (title) {
-      auth.querySelector('[data-az-done-title]').textContent = title;
-      show(4);
-      setTimeout(function () { window.location.href = auth.dataset.success; }, 1800);
-    };
-
-    // Step 1
-    var f1 = auth.querySelector('[data-step="1"]');
-    var phoneInput = f1.querySelector('input');
-    phoneInput.addEventListener('input', function () {
-      var v = latin(phoneInput.value).replace(/\D/g, '').slice(0, 11);
-      phoneInput.value = persian(v.replace(/^(\d{4})(\d{0,3})(\d{0,4}).*/, function (m, a, b, c) { return [a, b, c].filter(Boolean).join(' '); }));
-      f1.querySelector('[data-error]').textContent = '';
-      f1.querySelector('button[type="submit"]').disabled = v.length !== 11;
-    });
-    f1.addEventListener('submit', function (e) {
+  // Account lists: filter tabs (orders by status, messages by read state)
+  document.querySelectorAll('[data-az-filter]').forEach(function (tabs) {
+    tabs.addEventListener('click', function (e) {
+      var tab = e.target.closest('[data-filter]');
+      if (!tab) return;
       e.preventDefault();
-      var v = latin(phoneInput.value).replace(/\D/g, '');
-      if (!/^09\d{9}$/.test(v)) { f1.querySelector('[data-error]').textContent = 'شماره موبایل معتبر نیست. نمونه: ۰۹۱۲۳۴۵۶۷۸۹'; return; }
-      mobile = v;
-      busy(f1.querySelector('button[type="submit"]'), function () {
-        auth.querySelector('[data-az-phone]').textContent = phoneInput.value;
-        show(2); startTimer();
+      tabs.querySelectorAll('[data-filter]').forEach(function (t) { t.classList.toggle('is-active', t === tab); });
+      var shown = 0;
+      document.querySelectorAll('[data-group]').forEach(function (row) {
+        var on = tab.dataset.filter === 'all' || row.dataset.group === tab.dataset.filter;
+        row.hidden = !on;
+        if (on) shown++;
       });
+      var empty = document.querySelector('.az-order-empty');
+      if (empty) empty.hidden = shown > 0;
     });
+  });
 
-    // Step 2
-    var f2 = auth.querySelector('[data-step="2"]');
-    var boxes = f2.querySelectorAll('.az-otp input');
-    var code = function () { return Array.prototype.map.call(boxes, function (b) { return latin(b.value); }).join(''); };
-    var syncOtp = function () {
-      f2.querySelector('button[type="submit"]').disabled = code().length !== boxes.length;
-      f2.querySelector('[data-error]').textContent = '';
-      boxes.forEach(function (b) { b.classList.toggle('is-filled', !!b.value); });
-    };
-    boxes.forEach(function (box, i) {
-      box.addEventListener('input', function () {
-        var digits = latin(box.value).replace(/\D/g, '');
-        if (digits.length > 1) { // pasted or autofilled code
-          digits.slice(0, boxes.length - i).split('').forEach(function (d, k) { boxes[i + k].value = persian(d); });
-          boxes[Math.min(i + digits.length, boxes.length) - 1].focus();
-        } else {
-          box.value = persian(digits);
-          if (digits && boxes[i + 1]) boxes[i + 1].focus();
-        }
-        syncOtp();
-        if (code().length === boxes.length) f2.requestSubmit();
-      });
-      box.addEventListener('keydown', function (e) {
-        if (e.key === 'Backspace' && !box.value && boxes[i - 1]) { boxes[i - 1].focus(); boxes[i - 1].value = ''; syncOtp(); }
-      });
+  // Order detail: copy the parcel tracking code
+  document.querySelectorAll('[data-az-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.parentElement.querySelector('[data-az-copy-text]').textContent.replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
+      if (navigator.clipboard) navigator.clipboard.writeText(text);
+      notify('کد رهگیری کپی شد');
     });
-    f2.addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (code().length !== boxes.length) return;
-      busy(f2.querySelector('button[type="submit"]'), function () {
-        clearInterval(timerId);
-        if (code() === '11111') { done('خوش آمدید سارا'); } else { show(3); }
-      });
-    });
-    auth.querySelector('[data-az-back]').addEventListener('click', function () {
-      clearInterval(timerId); boxes.forEach(function (b) { b.value = ''; }); syncOtp(); show(1);
-    });
-
-    var startTimer = function () {
-      var left = 120;
-      var timer = auth.querySelector('[data-az-timer]');
-      var resend = auth.querySelector('[data-az-resend]');
-      timer.hidden = false; resend.hidden = true;
-      clearInterval(timerId);
-      var tick = function () {
-        timer.querySelector('b').textContent = persian(Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'));
-        if (left-- <= 0) { clearInterval(timerId); timer.hidden = true; resend.hidden = false; }
-      };
-      tick(); timerId = setInterval(tick, 1000);
-    };
-    auth.querySelector('[data-az-resend]').addEventListener('click', function () {
-      startTimer(); notify('کد تأیید دوباره ارسال شد');
-    });
-
-    // Step 3
-    var f3 = auth.querySelector('[data-step="3"]');
-    f3.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var name = f3.name.value.trim(), email = f3.email.value.trim();
-      var okName = name.length >= 3, okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      f3.querySelector('[data-error-name]').textContent = okName ? '' : 'نام و نام خانوادگی را وارد کنید.';
-      f3.querySelector('[data-error-email]').textContent = okEmail ? '' : 'ایمیل معتبر وارد کنید.';
-      if (!okName || !okEmail) return;
-      busy(f3.querySelector('button[type="submit"]'), function () { done('خوش آمدید ' + name.split(/\s+/)[0]); });
-    });
-  }
+  });
 
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {

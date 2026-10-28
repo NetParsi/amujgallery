@@ -25,7 +25,12 @@ if (!function_exists('amuj_url')) {
             'thankyou' => ['نتیجه پرداخت', false],
             'login'    => ['ورود / ثبت‌نام', false, true],
             'register' => ['ورود / ثبت‌نام', false, true],
-            'account'  => ['حساب کاربری من', false],
+            'account'  => ['داشبورد | حساب کاربری', false],
+            'orders'   => ['سفارش‌های من', false],
+            'order'    => ['جزئیات سفارش', false],
+            'addresses'=> ['آدرس‌های من', false],
+            'credits'  => ['کیف پول و اعتبارها', false],
+            'messages' => ['پیام‌های من', false],
             'help'     => ['راهنما و پشتیبانی', false],
             'about'    => ['درباره ما', false],
         ];
@@ -67,7 +72,8 @@ if (!function_exists('amuj_url')) {
                     setcookie('amuj_demo_user', $on ? '1' : '', $on ? time() + 86400 * 30 : time() - 3600, '/');
                 }
             } else {
-                $on = !empty($_COOKIE['amuj_demo_user']);
+                // Account pages always show a signed-in sample customer in the demo
+                $on = !empty($_COOKIE['amuj_demo_user']) || in_array($_GET['page'] ?? '', amuj_account_pages(), true);
             }
             $name = $on ? 'سارا محمدی' : null;
         }
@@ -89,6 +95,119 @@ if (!function_exists('amuj_url')) {
             'wallet'     => 1250000,
             'credit'     => 300000,
             'unread'     => 2,
+        ];
+    }
+
+    function amuj_account_pages()
+    {
+        return ['account', 'orders', 'order', 'addresses', 'credits', 'messages'];
+    }
+
+    /** Customer panel menu: page key => label */
+    function amuj_account_menu()
+    {
+        return [
+            'account'   => 'داشبورد',
+            'orders'    => 'سفارش‌های من',
+            'addresses' => 'آدرس‌ها',
+            'credits'   => 'کیف پول و اعتبارها',
+            'messages'  => 'پیام‌های من',
+        ];
+    }
+
+    /** Opens the shared customer-panel layout (side menu + content column) */
+    function amuj_account_open($active)
+    {
+        $user   = amuj_current_user();
+        $unread = count(array_filter(amuj_notifications(), function ($n) { return $n['unread']; }));
+        ?>
+        <div class="az-account">
+            <aside class="az-account-side">
+                <div class="az-account-hello">
+                    <strong><?php echo $user['name']; ?></strong>
+                    <span>سطح <?php echo $user['level']; ?></span>
+                </div>
+                <nav class="az-account-nav" aria-label="حساب کاربری">
+                    <?php foreach (amuj_account_menu() as $key => $label) : ?>
+                        <a href="<?php echo amuj_url($key); ?>"<?php echo ($key === $active || ($active === 'order' && $key === 'orders')) ? ' class="is-active" aria-current="page"' : ''; ?>>
+                            <?php echo $label; ?>
+                            <?php if ($key === 'messages' && $unread) : ?><em><?php echo amuj_fa($unread); ?></em><?php endif; ?>
+                        </a>
+                    <?php endforeach; ?>
+                    <a class="az-account-logout" href="<?php echo amuj_url('home', ['demo_user' => 0]); ?>">خروج</a>
+                </nav>
+            </aside>
+            <div class="az-account-main">
+        <?php
+    }
+
+    function amuj_account_close()
+    {
+        echo '</div></div>';
+    }
+
+    /** Order statuses in sequence (sample). Dynamic: HikaShop order statuses. */
+    function amuj_order_steps()
+    {
+        return ['ثبت سفارش', 'تأیید پرداخت', 'آماده‌سازی', 'تحویل به پست', 'تحویل شده'];
+    }
+
+    /** Customer orders (sample). step = index in amuj_order_steps(); -1 = cancelled */
+    function amuj_orders()
+    {
+        return [
+            'AM-140508-2731' => ['date' => '۸ آبان ۱۴۰۵', 'step' => 2, 'items' => [13 => ['۳۸', 'مشکی'], 2 => ['M', 'مشکی']],
+                                 'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => ''],
+            'AM-140421-1984' => ['date' => '۲۱ مهر ۱۴۰۵', 'step' => 3, 'items' => [5 => ['S', 'مشکی'], 9 => ['M', 'کرم'], 7 => ['S', 'بژ']],
+                                 'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => '۱۲۳۴۵۶۷۸۹۰۱۲۳۴۵۶۷۸۹۰۱۲'],
+            'AM-140317-0442' => ['date' => '۱۷ شهریور ۱۴۰۵', 'step' => 4, 'items' => [1 => ['M', 'بژ']],
+                                 'shipping' => 0, 'method' => 'تحویل حضوری', 'pay' => 'کیف پول', 'tracking' => ''],
+            'AM-140302-0118' => ['date' => '۲ شهریور ۱۴۰۵', 'step' => -1, 'items' => [8 => ['S', 'مشکی']],
+                                 'shipping' => 85000, 'method' => 'پست پیشتاز', 'pay' => 'درگاه اینترنتی', 'tracking' => ''],
+        ];
+    }
+
+    function amuj_order_total(array $order)
+    {
+        $products = amuj_products();
+        $total    = $order['shipping'];
+        foreach (array_keys($order['items']) as $id) {
+            $total += $products[$id]['price'];
+        }
+        return $total;
+    }
+
+    /** Status label + css modifier for an order */
+    function amuj_order_status(array $order)
+    {
+        if ($order['step'] < 0) {
+            return ['لغو شده', 'cancelled'];
+        }
+        $labels = ['در انتظار پرداخت', 'در حال پردازش', 'در حال آماده‌سازی', 'ارسال شده', 'تحویل شده'];
+        return [$labels[$order['step']], $order['step'] >= 4 ? 'done' : ($order['step'] === 3 ? 'shipped' : 'active')];
+    }
+
+    /** Wallet and credit history (sample). Dynamic: the customer-club extension. */
+    function amuj_transactions()
+    {
+        return [
+            ['date' => '۸ آبان ۱۴۰۵', 'title' => 'اعتبار هدیه ارتقای سطح', 'type' => 'credit', 'amount' => 300000],
+            ['date' => '۲۱ مهر ۱۴۰۵', 'title' => 'پرداخت بخشی از سفارش AM-140421-1984', 'type' => 'wallet', 'amount' => -450000],
+            ['date' => '۱۵ مهر ۱۴۰۵', 'title' => 'بازگشت وجه سفارش لغوشده AM-140302-0118', 'type' => 'wallet', 'amount' => 1590000],
+            ['date' => '۱۷ شهریور ۱۴۰۵', 'title' => 'پرداخت سفارش AM-140317-0442', 'type' => 'wallet', 'amount' => -2290000],
+            ['date' => '۱ شهریور ۱۴۰۵', 'title' => 'اعتبار هدیه تولد', 'type' => 'credit', 'amount' => 150000],
+            ['date' => '۱ شهریور ۱۴۰۵', 'title' => 'استفاده از اعتبار در سفارش AM-140317-0442', 'type' => 'credit', 'amount' => -150000],
+        ];
+    }
+
+    /** Saved addresses (sample). Dynamic: HikaShop addresses. */
+    function amuj_addresses()
+    {
+        return [
+            ['label' => 'خانه', 'name' => 'سارا محمدی', 'phone' => '۰۹۱۲۱۲۳۴۵۶۷', 'province' => 'تهران', 'city' => 'تهران',
+             'address' => 'ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴', 'postal' => '۱۹۸۴۷۱۵۶۳۲', 'default' => true],
+            ['label' => 'محل کار', 'name' => 'سارا محمدی', 'phone' => '۰۹۱۲۱۲۳۴۵۶۷', 'province' => 'تهران', 'city' => 'تهران',
+             'address' => 'خیابان ولیعصر، بالاتر از پارک ساعی، کوچه نیلوفر، پلاک ۸، طبقه ۳', 'postal' => '۱۵۱۱۷۴۴۳۱۱', 'default' => false],
         ];
     }
 

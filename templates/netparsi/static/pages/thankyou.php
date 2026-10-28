@@ -74,7 +74,7 @@ $user     = amuj_current_user();
         <?php endif; ?>
 
         <div class="az-thanks-actions">
-            <a class="az-btn" href="<?php echo amuj_url('account'); ?>">پیگیری سفارش</a>
+            <a class="az-btn" href="<?php echo amuj_url('order'); ?>">پیگیری سفارش</a>
             <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('home'); ?>">ادامه خرید</a>
         </div>
     <?php endif; ?>

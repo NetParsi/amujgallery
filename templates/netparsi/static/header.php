@@ -239,12 +239,10 @@ $announcements = [
      * custom customer-club extension is installed; it can render into the same markup.
      */
     $userLinks = [
-        ['سفارش‌های من', amuj_url('account'), ''],
-        ['آدرس‌ها', amuj_url('account'), ''],
-        ['اعتبارهای من', amuj_url('account'), amuj_price($amujUser['credit'])],
-        ['پیام‌های من', amuj_url('account'), $amujUser['unread'] ? amuj_fa($amujUser['unread']) . ' پیام جدید' : ''],
-        ['علاقه‌مندی‌ها', amuj_url('account'), ''],
-        ['اطلاعات حساب', amuj_url('account'), ''],
+        ['سفارش‌های من', amuj_url('orders'), ''],
+        ['آدرس‌ها', amuj_url('addresses'), ''],
+        ['کیف پول و اعتبارها', amuj_url('credits'), amuj_price($amujUser['credit'])],
+        ['پیام‌های من', amuj_url('messages'), $amujUser['unread'] ? amuj_fa($amujUser['unread']) . ' پیام جدید' : ''],
     ];
     ?>
 <div id="az-user" uk-offcanvas="overlay: true; flip: true">
@@ -325,7 +323,7 @@ $announcements = [
         </ul>
 
         <div class="az-user-foot">
-            <a class="az-btn az-btn--block az-btn--ghost" href="<?php echo amuj_url('account'); ?>">مشاهده همه پیام‌ها</a>
+            <a class="az-btn az-btn--block az-btn--ghost" href="<?php echo amuj_url('messages'); ?>">مشاهده همه پیام‌ها</a>
         </div>
     </div>
 </div>
