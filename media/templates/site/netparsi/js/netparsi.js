@@ -96,23 +96,29 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Category grid density (2 / 4 / 6 columns), remembered per browser
+  // Category grid density: 4 / 5 / 6 columns on desktop, 1 / 2 on mobile, each remembered
   var grid = document.getElementById('az-grid');
   var switches = document.querySelectorAll('.az-grid-switch button');
+  var desktop = window.matchMedia('(min-width: 960px)');
+  var colsKey = function () { return desktop.matches ? 'azColsDesktop' : 'azColsMobile'; };
+  var colsDefault = function () { return desktop.matches ? '4' : '2'; };
 
-  function setCols(cols) {
-    if (!grid) return;
-    grid.classList.remove('cols-2', 'cols-4', 'cols-6');
-    grid.classList.add('cols-' + cols);
+  function setCols(cols, remember) {
+    grid.className = grid.className.replace(/\bcols-\d\b/g, '').trim() + ' cols-' + cols;
     switches.forEach(function (b) { b.classList.toggle('is-active', b.dataset.cols === String(cols)); });
-    try { localStorage.setItem('azCols', cols); } catch (e) {}
+    if (remember) { try { localStorage.setItem(colsKey(), cols); } catch (e) {} }
+  }
+
+  function restoreCols() {
+    var saved = null;
+    try { saved = localStorage.getItem(colsKey()); } catch (e) {}
+    setCols(saved || colsDefault(), false);
   }
 
   if (grid && switches.length) {
-    var saved = null;
-    try { saved = localStorage.getItem('azCols'); } catch (e) {}
-    setCols(saved || 4);
-    switches.forEach(function (b) { b.addEventListener('click', function () { setCols(b.dataset.cols); }); });
+    restoreCols();
+    switches.forEach(function (b) { b.addEventListener('click', function () { setCols(b.dataset.cols, true); }); });
+    if (desktop.addEventListener) desktop.addEventListener('change', restoreCols);
   }
 
   // Single-choice selectors: sizes, colors, filter chips

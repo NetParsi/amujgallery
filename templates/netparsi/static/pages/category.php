@@ -6,38 +6,47 @@ $current  = isset($_GET['cat']) && in_array($_GET['cat'], $subnav, true) ? $_GET
 $products = amuj_products();
 // Repeat the demo set so the grid looks full
 $list = array_merge(array_keys($products), array_keys($products));
-// Editorial tiles (two columns wide) inserted before these positions
-$features = [
-    4  => [3, 'کالکشن پاییز ۱۴۰۵', 'برش‌های بلند، رنگ‌های خنثی'],
-    14 => [8, 'پالتوهای پشمی', 'گرم و مینیمال'],
-];
 ?>
-<div class="az-cat-head">
-    <nav class="az-subnav">
-        <?php foreach ($subnav as $item) : ?>
-            <a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $item === $current ? ' class="is-active"' : ''; ?>><?php echo $item; ?></a>
-        <?php endforeach; ?>
-    </nav>
-    <div class="az-toolbar">
-        <button type="button" uk-toggle="target: #az-filter">فیلتر +</button>
-        <div class="az-grid-switch" aria-label="نمایش">
-            <button type="button" data-cols="2"><i></i><i></i></button>
-            <button type="button" data-cols="4"><i></i><i></i><i></i><i></i></button>
-            <button type="button" data-cols="6"><i></i><i></i><i></i><i></i><i></i><i></i></button>
+<?php
+/*
+ * Desktop: sticky side column (numbered subcategories, filter, grid density) beside the grid.
+ * Mobile: one swipeable row of subcategories + filter / density bar.
+ * Dynamic: the subcategory list = child categories of the current HikaShop category.
+ */
+?>
+<div class="az-cat">
+    <aside class="az-cat-side">
+        <nav class="az-cat-nav" aria-label="زیردسته‌ها">
+            <?php foreach ($subnav as $i => $item) : ?>
+                <a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $item === $current ? ' class="is-active" aria-current="page"' : ''; ?>>
+                    <span class="az-num">|<?php echo amuj_fa(str_pad($i + 1, 2, '0', STR_PAD_LEFT)); ?>|</span><span class="az-cat-nav-label"><?php echo $item; ?></span>
+                </a>
+            <?php endforeach; ?>
+        </nav>
+        <div class="az-cat-tools">
+            <button class="az-cat-filter" type="button" uk-toggle="target: #az-filter">فیلتر</button>
+            <div class="az-grid-switch" role="group" aria-label="تعداد ستون‌ها">
+                <span class="az-grid-switch-label">نمایش</span>
+                <?php foreach ([4, 5, 6] as $n) : ?>
+                    <button type="button" class="az-desk-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo amuj_fa($n); ?></button>
+                <?php endforeach; ?>
+                <?php foreach ([1, 2] as $n) : ?>
+                    <button type="button" class="az-mob-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo amuj_fa($n); ?></button>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
-</div>
+    </aside>
 
-<div class="az-cat-body">
-    <div class="az-cat-title"><?php echo $current; ?> — <?php echo amuj_fa(count($list)); ?> محصول</div>
-    <div class="az-grid cols-4" id="az-grid">
-        <?php foreach ($list as $i => $id) : ?>
-            <?php if (isset($features[$i])) : amuj_feature(...$features[$i]); endif; ?>
-            <?php amuj_card($id, $products[$id]); ?>
-        <?php endforeach; ?>
-    </div>
-    <div class="az-load-more">
-        <button class="az-btn az-btn--ghost" type="button">نمایش بیشتر</button>
+    <div class="az-cat-main">
+        <div class="az-cat-title"><?php echo $current; ?> — <?php echo amuj_fa(count($list)); ?> محصول</div>
+        <div class="az-grid" id="az-grid">
+            <?php foreach ($list as $id) : ?>
+                <?php amuj_card($id, $products[$id]); ?>
+            <?php endforeach; ?>
+        </div>
+        <div class="az-load-more">
+            <button class="az-btn az-btn--ghost" type="button">نمایش بیشتر</button>
+        </div>
     </div>
 </div>
 
