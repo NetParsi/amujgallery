@@ -109,7 +109,7 @@ if ($staticPage) {
     . ($pageclass ? ' ' . $pageclass : '')
     . ($this->direction == 'rtl' ? ' rtl' : '')
     . ($staticPage ? ' az-page-' . $staticPage : '');
-?>">
+?>" data-az-cart="<?php echo Uri::root(); ?>index.php?option=com_hikashop&amp;ctrl=product&amp;task=updatecart&amp;tmpl=raw">
 <?php if (!$amujBare) include __DIR__ . '/static/header.php'; ?>
 <main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?><?php echo $amujBare ? ' az-main--bare' : ''; ?>">
     <jdoc:include type="message" />

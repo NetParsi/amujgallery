@@ -367,11 +367,52 @@ document.addEventListener('DOMContentLoaded', function () {
     UIkit.offcanvas(addedPanel).show();
   };
 
+  // HikaShop cart: posts the chosen variant, then opens the panel. Without a variant id (static demo) only the panel opens.
+  var cartUrl = document.body.dataset.azCart;
+  var addToCart = function (variantId, data, btn) {
+    if (!cartUrl || !variantId) { openAdded(data); return; }
+    if (btn) { btn.disabled = true; btn.classList.add('is-busy'); }
+    var body = new URLSearchParams({ product_id: variantId, quantity: 1, add: 1 });
+    fetch(cartUrl, { method: 'POST', body: body, credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ret) throw new Error((res && res.message) || '');
+        openAdded(data);
+      })
+      .catch(function (err) { notify(err && err.message ? err.message : 'افزودن به سبد انجام نشد. دوباره تلاش کنید.'); })
+      .then(function () { if (btn) { btn.disabled = false; btn.classList.remove('is-busy'); } });
+  };
+
+  // Product page: sizes that are sold out in the chosen colour
+  var productBox = document.querySelector('[data-az-product][data-az-variants]');
+  var variantMap = productBox ? JSON.parse(productBox.dataset.azVariants || '{}') : {};
+  var chosenColor = function () {
+    var s = productBox && productBox.querySelector('[data-az-color].is-active');
+    return s ? s.dataset.value : '0';
+  };
+  var markSizes = function () {
+    if (!productBox) return;
+    productBox.querySelectorAll('[data-az-sizes] li[data-value]').forEach(function (li) {
+      if (li.dataset.value === '0') return;
+      var v = variantMap[chosenColor() + '|' + li.dataset.value];
+      var out = !v || !v[1];
+      li.classList.toggle('is-out', out);
+      if (out) li.classList.remove('is-active');
+      var tag = li.querySelector('[data-az-out]');
+      if (tag) tag.hidden = !out;
+    });
+  };
+  if (productBox) {
+    productBox.querySelectorAll('[data-az-color]').forEach(function (s) {
+      s.addEventListener('click', function () { setTimeout(markSizes, 0); });
+    });
+  }
+
   document.querySelectorAll('[data-az-add]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var box = btn.closest('[data-az-product]');
       var sizes = box && box.querySelector('[data-az-sizes]');
-      var chosen = sizes && sizes.querySelector('li.is-active span');
+      var chosen = sizes && sizes.querySelector('li.is-active:not(.is-out) span');
       var error = box && box.querySelector('[data-az-size-error]');
       if (sizes && !chosen) {
         if (error) error.hidden = false;
@@ -380,8 +421,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (error) error.hidden = true;
       var label = document.querySelector('[data-az-color-label]');
-      openAdded({ name: box.dataset.name, price: box.dataset.price, img: box.dataset.img,
-                  color: label ? label.textContent : '', size: chosen ? chosen.textContent : '' });
+      var sizeLi = chosen && chosen.closest('li');
+      var variant = box.dataset.azVariants ? variantMap[chosenColor() + '|' + (sizeLi ? sizeLi.dataset.value : '0')] : null;
+      addToCart(variant ? variant[0] : 0, { name: box.dataset.name, price: box.dataset.price, img: box.dataset.img,
+                  color: label ? label.textContent : '', size: chosen ? chosen.textContent : '' }, btn);
     });
   });
   document.querySelectorAll('[data-az-sizes]').forEach(function (sizes) {
@@ -501,7 +544,8 @@ document.addEventListener('DOMContentLoaded', function () {
       quick.closest('.az-card').classList.add('is-open');
     } else if (size && !size.classList.contains('is-out')) {
       var card = size.closest('.az-card');
-      openAdded({ name: card.dataset.name, price: card.dataset.price, img: card.dataset.img, size: size.textContent });
+      addToCart(parseInt(size.dataset.variant || '0', 10), { name: card.dataset.name, price: card.dataset.price, img: card.dataset.img,
+                  color: card.dataset.color || '', size: size.textContent });
     } else if (fav) {
       fav.classList.toggle('is-active');
       notify(fav.classList.contains('is-active') ? 'به علاقه‌مندی‌ها اضافه شد' : 'از علاقه‌مندی‌ها حذف شد');

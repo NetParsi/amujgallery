@@ -107,6 +107,127 @@ if (!function_exists('amuj_url')) {
         return array_values(array_filter($sections, function ($s) { return $s['groups']; }));
     }
 
+    /** Swatch colour of a HikaShop "رنگ" value */
+    function amuj_color_hex($name)
+    {
+        $map = ['سفید' => '#f6f3ec', 'مشکی' => '#000', 'سبز' => '#bcd6b4', 'آبی' => '#a9c4e2', 'کرم' => '#efe6d4',
+            'قهوه‌ای' => '#6b4f3a', 'بژ' => '#c8b8a0', 'سرمه‌ای' => '#1f2a44', 'طوسی' => '#8a8a8a', 'قرمز' => '#a3262a'];
+
+        return $map[$name] ?? '#ccc';
+    }
+
+    /**
+     * HikaShop products as card / product-page data, in the order of $ids.
+     * Colours and sizes come from the characteristics with alias "color" and "size";
+     * a colour's photo is the first image of its variants.
+     */
+    function amuj_hika_products(array $ids)
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+        if (!$ids || !function_exists('hikashop_table')) {
+            return [];
+        }
+
+        $db     = \Joomla\CMS\Factory::getDbo();
+        $in     = implode(',', $ids);
+        $upload = trim(hikashop_config()->get('uploadfolder', 'images/com_hikashop/upload/'), '/') . '/';
+        $itemid = (int) \Joomla\CMS\Factory::getApplication()->getInput()->getInt('Itemid', 0);
+
+        $rows = $db->setQuery('SELECT product_id, product_name, product_alias, product_code, product_created, product_description, product_quantity'
+            . ' FROM ' . hikashop_table('product') . " WHERE product_id IN ($in) AND product_published = 1")->loadObjectList('product_id');
+
+        $prices = $db->setQuery('SELECT price_product_id, MIN(price_value) AS price FROM ' . hikashop_table('price')
+            . " WHERE price_product_id IN ($in) GROUP BY price_product_id")->loadObjectList('price_product_id');
+
+        $files = [];
+        foreach ($db->setQuery('SELECT file_ref_id, file_path FROM ' . hikashop_table('file')
+            . " WHERE file_type = 'product' AND file_ref_id IN ($in) ORDER BY file_ordering, file_id")->loadObjectList() as $f) {
+            $files[$f->file_ref_id][] = $upload . $f->file_path;
+        }
+
+        $kinds = [];
+        foreach ($db->setQuery('SELECT characteristic_id, characteristic_alias FROM ' . hikashop_table('characteristic')
+            . ' WHERE characteristic_parent_id = 0')->loadObjectList() as $c) {
+            $kinds[$c->characteristic_id] = $c->characteristic_alias;
+        }
+
+        $variantRows = $db->setQuery('SELECT p.product_id, p.product_parent_id, p.product_quantity, p.product_published,'
+            . ' c.characteristic_id, c.characteristic_parent_id, c.characteristic_value, c.characteristic_ordering'
+            . ' FROM ' . hikashop_table('product') . ' p'
+            . ' JOIN ' . hikashop_table('variant') . ' v ON v.variant_product_id = p.product_id'
+            . ' JOIN ' . hikashop_table('characteristic') . ' c ON c.characteristic_id = v.variant_characteristic_id'
+            . " WHERE p.product_parent_id IN ($in) AND p.product_type = 'variant'"
+            . ' ORDER BY c.characteristic_ordering')->loadObjectList();
+
+        $variants = [];
+        $variantIds = [];
+        foreach ($variantRows as $v) {
+            $kind = $kinds[$v->characteristic_parent_id] ?? '';
+            $variants[$v->product_parent_id][$v->product_id]['available'] = $v->product_published && (int) $v->product_quantity !== 0;
+            $variants[$v->product_parent_id][$v->product_id][$kind] = [(int) $v->characteristic_id, $v->characteristic_value, (int) $v->characteristic_ordering];
+            $variantIds[] = (int) $v->product_id;
+        }
+        $variantFiles = [];
+        if ($variantIds) {
+            foreach ($db->setQuery('SELECT file_ref_id, file_path FROM ' . hikashop_table('file')
+                . " WHERE file_type = 'product' AND file_ref_id IN (" . implode(',', $variantIds) . ') ORDER BY file_ordering, file_id')->loadObjectList() as $f) {
+                $variantFiles[$f->file_ref_id] = $variantFiles[$f->file_ref_id] ?? $upload . $f->file_path;
+            }
+        }
+
+        $out = [];
+        foreach ($ids as $id) {
+            if (!isset($rows[$id])) {
+                continue;
+            }
+            $r = $rows[$id];
+            $images = $files[$id] ?? ['media/com_hikashop/images/barcode.png'];
+
+            $colors = $sizes = $colorImages = $map = [];
+            $sizeAvailable = [];
+            foreach ($variants[$id] ?? [] as $vid => $v) {
+                $c = $v['color'] ?? [0, '', 0];
+                $s = $v['size'] ?? [0, '', 0];
+                $colors[$c[0]] = [$c[1], $c[2]];
+                $sizes[$s[0]]  = [$s[1], $s[2]];
+                $map[$c[0] . '|' . $s[0]] = [$vid, $v['available']];
+                $sizeAvailable[$s[0]] = ($sizeAvailable[$s[0]] ?? false) || $v['available'];
+                if (isset($variantFiles[$vid]) && !isset($colorImages[$c[0]])) {
+                    $colorImages[$c[0]] = $variantFiles[$vid];
+                }
+            }
+            uasort($colors, function ($a, $b) { return $a[1] <=> $b[1]; });
+            uasort($sizes, function ($a, $b) { return $a[1] <=> $b[1]; });
+            $colors = array_map(function ($c) { return $c[0]; }, $colors);
+            $sizes  = array_map(function ($s) { return $s[0]; }, $sizes);
+            unset($colors[0], $sizes[0]);
+
+            $out[$id] = [
+                'id'           => $id,
+                'name'         => $r->product_name,
+                'code'         => $r->product_code,
+                'desc'         => $r->product_description,
+                'price'        => (float) ($prices[$id]->price ?? 0),
+                'img'          => $images[0],
+                'img2'         => $images[1] ?? $images[0],
+                'images'       => $images,
+                'tag'          => (int) $r->product_created > time() - 30 * 86400 ? 'جدید' : '',
+                'url'          => hikashop_contentLink('product&task=show&cid=' . $id . '&name=' . $r->product_alias . ($itemid ? '&Itemid=' . $itemid : ''), $r),
+                'color_ids'    => array_keys($colors),
+                'color_names'  => array_values($colors),
+                'colors'       => array_map('amuj_color_hex', array_values($colors)),
+                'color_images' => $colorImages,
+                'size_ids'     => array_keys($sizes),
+                'sizes'        => $sizes ? array_values($sizes) : ['تک‌سایز'],
+                'sizes_out'    => array_values(array_map(function ($sid) use ($sizes) { return $sizes[$sid]; },
+                    array_keys(array_filter($sizeAvailable, function ($a, $sid) { return !$a && $sid; }, ARRAY_FILTER_USE_BOTH)))),
+                'variants'     => $map,
+            ];
+        }
+
+        return $out;
+    }
+
     /** Store categories (women's clothing only) */
     function amuj_categories()
     {
@@ -468,7 +589,7 @@ if (!function_exists('amuj_url')) {
         $sizes  = $p['sizes'] ?? ['XS', 'S', 'M', 'L', 'XL'];
         $out    = $p['sizes_out'] ?? (isset($p['url']) ? [] : array_filter($sizes, function ($i) use ($id) { return ($id + $i) % 7 === 0; }, ARRAY_FILTER_USE_KEY));
         ?>
-        <article class="az-card" data-name="<?php echo $p['name']; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
+        <article class="az-card" data-name="<?php echo $p['name']; ?>" data-color="<?php echo $p['color_names'][0] ?? ''; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
             <div class="az-card-media">
                 <a class="az-card-link" href="<?php echo $url; ?>">
                     <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
@@ -482,8 +603,11 @@ if (!function_exists('amuj_url')) {
                 <div class="az-card-sizes">
                     <span>انتخاب سایز</span>
                     <ul>
-                        <?php foreach ($sizes as $size) : ?>
-                            <li<?php echo in_array($size, $out, true) ? ' class="is-out"' : ''; ?>><?php echo $size; ?></li>
+                        <?php foreach ($sizes as $i => $size) :
+                            // HikaShop: quick add puts the first colour in this size into the cart
+                            $variant = isset($p['variants'], $p['size_ids'][$i])
+                                ? ($p['variants'][($p['color_ids'][0] ?? 0) . '|' . $p['size_ids'][$i]][0] ?? 0) : 0; ?>
+                            <li<?php echo in_array($size, $out, true) ? ' class="is-out"' : ''; ?><?php echo $variant ? ' data-variant="' . $variant . '"' : ''; ?>><?php echo $size; ?></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>

@@ -42,19 +42,8 @@ if ($active && $active->level > 1) {
     }
 }
 
-// All images of the listed products (first = main, second = hover image)
-$images = [];
-if ($rows) {
-    $ids = array_map(function ($r) { return (int) $r->product_id; }, $rows);
-    $db  = Factory::getDbo();
-    $db->setQuery('SELECT file_ref_id, file_path FROM ' . hikashop_table('file')
-        . ' WHERE file_type = "product" AND file_ref_id IN (' . implode(',', $ids) . ') ORDER BY file_ref_id, file_ordering, file_id');
-    foreach ($db->loadObjectList() as $f) {
-        $images[$f->file_ref_id][] = $f->file_path;
-    }
-}
-$upload = trim($this->config->get('uploadfolder', 'images/com_hikashop/upload/'), '/') . '/';
-$newSince = time() - 30 * 86400;
+// Card data (images, price, colours / sizes from the variants)
+$cards = amuj_hika_products(array_map(function ($r) { return (int) $r->product_id; }, $rows));
 ?>
 <div class="az-cat">
     <aside class="az-cat-side">
@@ -86,26 +75,9 @@ $newSince = time() - 30 * 86400;
 
         <?php if ($rows) : ?>
             <div class="az-grid" id="az-grid">
-                <?php foreach ($rows as $row) :
-                    $this->row = $row;
-                    $files = $images[$row->product_id] ?? [];
-                    $img   = $files ? $upload . $files[0] : 'media/com_hikashop/images/barcode.png';
-                    $price = 0;
-                    if (!empty($row->prices)) {
-                        $first = reset($row->prices);
-                        $price = (float) ($first->price_value_with_tax ?? $first->price_value);
-                    }
-                    amuj_card((int) $row->product_id, [
-                        'name'  => $row->product_name,
-                        'price' => $price,
-                        'img'   => $img,
-                        'img2'  => isset($files[1]) ? $upload . $files[1] : $img,
-                        'tag'   => (int) $row->product_created > $newSince ? 'جدید' : '',
-                        'url'   => hikashop_contentLink('product&task=show&cid=' . (int) $row->product_id . '&name=' . $row->alias . $this->itemid . $this->category_pathway, $row),
-                        // Real sizes / colours come from HikaShop characteristics (product page step)
-                        'sizes' => ['۳۶', '۳۸', '۴۰', '۴۲'],
-                    ]);
-                endforeach; ?>
+                <?php foreach ($cards as $id => $card) {
+                    amuj_card($id, $card);
+                } ?>
             </div>
 
             <?php if ($limit > 0 && $start + $limit < $total) : ?>
