@@ -28,9 +28,9 @@ $faq = [
     <div id="contact" class="uk-grid-large uk-child-width-1-2@m uk-margin-xlarge-top" uk-grid>
         <div>
             <h2 class="az-title">تماس با ما</h2>
-            <p>تلفن پشتیبانی: <?php echo amuj_fa('021-00000000'); ?> (شنبه تا پنجشنبه، ۹ تا ۲۱)</p>
-            <p>ایمیل: info@amujgallery.ir</p>
-            <p>آدرس فروشگاه: تهران، ...</p>
+            <p>تلفن و واتس‌اپ: <a class="az-link" href="tel:+989354466989" dir="ltr">۰۹۳۵۴۴۶۶۹۸۹</a></p>
+            <p>اینستاگرام: <a class="az-link" href="https://www.instagram.com/amuj.gallery" target="_blank" rel="noopener" dir="ltr">@amuj.gallery</a></p>
+            <p>نشانی: تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴</p>
         </div>
         <div>
             <h2 class="az-title">ارسال پیام</h2>

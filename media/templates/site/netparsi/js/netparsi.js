@@ -66,6 +66,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Notifications: mark all as read (sample only; the club extension will persist it)
+  var readAll = document.querySelector('[data-az-readall]');
+  if (readAll) {
+    readAll.addEventListener('click', function () {
+      document.querySelectorAll('.az-note.is-unread').forEach(function (n) { n.classList.remove('is-unread'); });
+      document.querySelectorAll('.az-bell-badge').forEach(function (b) { b.remove(); });
+      var label = document.querySelector('[data-az-unread-label]');
+      if (label) label.textContent = 'همه پیام‌ها خوانده شده';
+      readAll.remove();
+    });
+  }
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {

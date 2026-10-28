@@ -26,15 +26,18 @@ $columns = [
         'قوانین و مقررات'   => amuj_url('help'),
         'حریم خصوصی'        => amuj_url('help'),
     ]],
-    'footer-3' => ['حساب من', [
-        'ورود / ثبت‌نام'     => amuj_url('login'),
-        'سفارش‌های من'       => amuj_url('account'),
-        'علاقه‌مندی‌ها'      => amuj_url('account'),
-        'آدرس‌ها'            => amuj_url('account'),
-        'سبد خرید'           => amuj_url('cart'),
-    ]],
+    'footer-3' => ['دسته‌بندی‌ها', array_combine(amuj_categories(), array_map(function ($c) {
+        return amuj_url('category', ['cat' => $c]);
+    }, amuj_categories()))],
 ];
-$social = ['اینستاگرام' => '#', 'تلگرام' => '#', 'واتس‌اپ' => '#', 'پینترست' => '#', 'آپارات' => '#'];
+$contact = [
+    'phone'     => '۰۹۳۵۴۴۶۶۹۸۹',
+    'tel'       => '+989354466989',
+    'whatsapp'  => 'https://wa.me/989354466989',
+    'instagram' => 'https://www.instagram.com/amuj.gallery',
+    'address'   => 'تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴',
+];
+$social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' => $contact['whatsapp']];
 ?>
 <footer class="az-footer">
     <div class="az-footer-inner">
@@ -80,10 +83,9 @@ $social = ['اینستاگرام' => '#', 'تلگرام' => '#', 'واتس‌ا�
                             <jdoc:include type="modules" name="footer-contact" style="none" />
                         <?php else : ?>
                             <ul class="az-footer-contact">
-                                <li><span>پشتیبانی</span><a href="tel:+982100000000" dir="ltr"><?php echo amuj_fa('021 - 0000 0000'); ?></a></li>
-                                <li><span>ساعت پاسخگویی</span>شنبه تا پنجشنبه، ۹ تا ۲۱</li>
-                                <li><span>ایمیل</span><a href="mailto:info@amujgallery.ir">info@amujgallery.ir</a></li>
-                                <li><span>فروشگاه</span>تهران، ...</li>
+                                <li><span>تلفن و واتس‌اپ</span><a href="tel:<?php echo $contact['tel']; ?>" dir="ltr"><?php echo $contact['phone']; ?></a></li>
+                                <li><span>اینستاگرام</span><a href="<?php echo $contact['instagram']; ?>" target="_blank" rel="noopener" dir="ltr">@amuj.gallery</a></li>
+                                <li><span>نشانی</span><?php echo $contact['address']; ?></li>
                             </ul>
                         <?php endif; ?>
                     </div>
@@ -94,7 +96,7 @@ $social = ['اینستاگرام' => '#', 'تلگرام' => '#', 'واتس‌ا�
         <div class="az-footer-mid">
             <ul class="az-social">
                 <?php foreach ($social as $label => $url) : ?>
-                    <li><a href="<?php echo $url; ?>"><?php echo $label; ?></a></li>
+                    <li><a href="<?php echo $url; ?>" target="_blank" rel="noopener"><?php echo $label; ?></a></li>
                 <?php endforeach; ?>
             </ul>
             <div class="az-trust">

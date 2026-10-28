@@ -46,6 +46,8 @@ $icoUser   = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle
 $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg>';
 $icoUserKeep = str_replace('class="az-ico"', 'class="az-ico az-ico--keep"', $icoUser);
 $amujUser    = amuj_current_user();
+$amujNotes   = $amujUser ? amuj_notifications() : [];
+$unreadCount = count(array_filter($amujNotes, function ($n) { return $n['unread']; }));
 
 /*
  * Header slots are Joomla module positions (see templateDetails.xml). While a position
@@ -88,6 +90,14 @@ $announcements = [
     </div>
     <nav class="az-header-end" aria-label="دسترسی سریع">
         <a class="az-search-trigger" href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><span class="az-txt">جستجو</span><?php echo $icoSearch; ?></a>
+        <?php if ($hasModules('header-notifications')) : ?>
+            <jdoc:include type="modules" name="header-notifications" style="none" />
+        <?php elseif ($amujUser) : ?>
+            <button class="az-bell" type="button" uk-toggle="target: #az-notify" aria-label="اعلان‌ها<?php echo $unreadCount ? '، ' . amuj_fa($unreadCount) . ' خوانده‌نشده' : ''; ?>">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+                <?php if ($unreadCount) : ?><span class="az-bell-badge"><?php echo amuj_fa($unreadCount); ?></span><?php endif; ?>
+            </button>
+        <?php endif; ?>
         <?php if ($hasModules('header-user')) : ?>
             <jdoc:include type="modules" name="header-user" style="none" />
         <?php else : ?>
@@ -281,6 +291,41 @@ $announcements = [
         <div class="az-user-foot">
             <a class="az-btn az-btn--block" href="<?php echo amuj_url('account'); ?>">مشاهده حساب کاربری</a>
             <a class="az-user-logout" href="<?php echo amuj_url('home', ['demo_user' => 0]); ?>">خروج از حساب</a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($amujUser) : ?>
+<div id="az-notify" uk-offcanvas="overlay: true; flip: true">
+    <div class="uk-offcanvas-bar az-user-panel az-notify-panel">
+        <div class="az-user-top">
+            <div>
+                <div class="az-user-hello">اعلان‌ها</div>
+                <div class="az-user-phone" data-az-unread-label><?php echo $unreadCount ? amuj_fa($unreadCount) . ' پیام خوانده‌نشده' : 'همه پیام‌ها خوانده شده'; ?></div>
+            </div>
+            <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
+        </div>
+
+        <?php if ($unreadCount) : ?>
+            <button class="az-notify-readall" type="button" data-az-readall>علامت‌گذاری همه به‌عنوان خوانده‌شده</button>
+        <?php endif; ?>
+
+        <ul class="az-notify-list">
+            <?php foreach ($amujNotes as $i => $note) : ?>
+                <li class="az-note az-note--<?php echo $note['type']; ?><?php echo $note['unread'] ? ' is-unread' : ''; ?>" style="--i: <?php echo $i; ?>">
+                    <div class="az-note-meta">
+                        <span class="az-note-type"><?php echo $note['label']; ?></span>
+                        <time><?php echo $note['time']; ?></time>
+                    </div>
+                    <strong class="az-note-title"><?php echo $note['title']; ?></strong>
+                    <p class="az-note-text"><?php echo $note['text']; ?></p>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <div class="az-user-foot">
+            <a class="az-btn az-btn--block az-btn--ghost" href="<?php echo amuj_url('account'); ?>">مشاهده همه پیام‌ها</a>
         </div>
     </div>
 </div>

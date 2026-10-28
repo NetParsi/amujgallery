@@ -92,6 +92,24 @@ if (!function_exists('amuj_url')) {
         ];
     }
 
+    /**
+     * Customer notifications (sample). Automatic ones come from the customer-club
+     * extension (credit added, level up); manual ones are sent by the shop.
+     */
+    function amuj_notifications()
+    {
+        return [
+            ['type' => 'credit', 'label' => 'اعتبار', 'title' => '۳۰۰٬۰۰۰ تومان اعتبار به حساب شما اضافه شد',
+             'text' => 'این اعتبار تا ۳۰ آذر ۱۴۰۵ قابل استفاده است.', 'time' => '۲ ساعت پیش', 'unread' => true],
+            ['type' => 'level', 'label' => 'باشگاه مشتریان', 'title' => 'تبریک! سطح شما به «نقره‌ای» ارتقا یافت',
+             'text' => 'از این پس از ارسال رایگان و پیش‌خرید کالکشن‌های جدید بهره‌مند می‌شوید.', 'time' => 'دیروز', 'unread' => true],
+            ['type' => 'manual', 'label' => 'گالری آموژ', 'title' => 'کالکشن پاییز ۱۴۰۵ برای اعضای باشگاه زودتر در دسترس است',
+             'text' => 'تا پایان هفته، پیش از عرضه عمومی خرید کنید.', 'time' => '۳ روز پیش', 'unread' => false],
+            ['type' => 'credit', 'label' => 'اعتبار', 'title' => '۱۵۰٬۰۰۰ تومان اعتبار هدیه تولد',
+             'text' => 'تولدتان مبارک! این هدیه کوچک از طرف آموژ است.', 'time' => '۲ هفته پیش', 'unread' => false],
+        ];
+    }
+
     /** Inline brand logo (images/amuj-logo.svg) so it can follow currentColor */
     function amuj_logo()
     {
