@@ -2,10 +2,10 @@
 defined('_JEXEC') or die;
 
 $slides = [
-    ['img' => 1,  'title' => 'کالکشن پاییز ۱۴۰۵',  'text' => 'خطوط ساده، پارچه‌های گرم و رنگ‌های خنثی.', 'tab' => 'زنانه'],
-    ['img' => 13, 'title' => 'کت و شلوار مردانه',   'text' => 'دوخت دقیق برای روزهای رسمی و غیررسمی.',  'tab' => 'مردانه'],
-    ['img' => 16, 'title' => 'کودکان | بازگشت به مدرسه', 'text' => 'راحت، بادوام و شاد.',                  'tab' => 'کودکان'],
-    ['img' => 19, 'title' => 'حراج فصل',           'text' => 'تا ۵۰٪ تخفیف روی منتخب محصولات.',        'tab' => 'حراج'],
+    ['img' => 1,  'title' => 'کالکشن پاییز ۱۴۰۵',  'text' => 'خطوط ساده، پارچه‌های گرم و رنگ‌های خنثی.', 'tab' => 'جدیدترین‌ها'],
+    ['img' => 4,  'title' => 'مانتو و بارانی',      'text' => 'برش‌های بلند و مینیمال برای هر روز.',      'tab' => 'مانتو'],
+    ['img' => 8,  'title' => 'کت و پالتو',          'text' => 'پارچه‌های پشمی و دوخت دقیق برای فصل سرما.', 'tab' => 'پالتو'],
+    ['img' => 5,  'title' => 'حراج فصل',           'text' => 'تا ۵۰٪ تخفیف روی منتخب محصولات.',        'tab' => 'حراج'],
 ];
 $products = amuj_products();
 ?>
@@ -45,7 +45,7 @@ $products = amuj_products();
 
 <section class="az-section">
     <div class="az-editorial">
-        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img(5, 1200); ?>" alt="" loading="lazy"><span>بافت‌ها</span></a>
+        <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img(5, 1200); ?>" alt="" loading="lazy"><span>پیراهن و شومیز</span></a>
         <a href="<?php echo amuj_url('category'); ?>"><img src="<?php echo amuj_img(8, 1200); ?>" alt="" loading="lazy"><span>کت و پالتو</span></a>
     </div>
 </section>

@@ -3,9 +3,8 @@ defined('_JEXEC') or die;
 
 /** @var bool $amujOverlay */
 $menuGroups = [
-    'زنانه'  => ['جدیدترین‌ها', 'پرفروش‌ها', 'کت و پالتو', 'بلیزر', 'پیراهن و شومیز', 'بافت', 'شلوار', 'جین', 'دامن', 'مانتو', 'کفش', 'کیف', 'اکسسوری', 'حراج'],
-    'مردانه' => ['جدیدترین‌ها', 'کت و کاپشن', 'کت تک', 'پیراهن', 'تی‌شرت', 'سویشرت', 'شلوار', 'جین', 'کفش', 'اکسسوری', 'حراج'],
-    'کودکان' => ['دختر ۶ تا ۱۴ سال', 'پسر ۶ تا ۱۴ سال', 'نوزاد دختر', 'نوزاد پسر', 'کفش', 'اکسسوری'],
+    'فروشگاه'   => array_merge(['جدیدترین‌ها', 'پرفروش‌ها'], amuj_categories(), ['حراج']),
+    'کالکشن‌ها' => ['پاییز و زمستان ۱۴۰۵', 'کالکشن رسمی', 'کالکشن روزمره', 'AMUJ STUDIO'],
 ];
 ?>
 <header class="az-header<?php echo !empty($amujOverlay) ? ' az-header--overlay' : ''; ?>">
@@ -38,7 +37,7 @@ $menuGroups = [
                 <li>
                     <ul class="az-menu-list">
                         <?php foreach ($items as $i => $item) : ?>
-                            <li><a href="<?php echo amuj_url('category'); ?>"<?php echo $item === 'حراج' ? ' class="az-sale"' : ''; ?>><?php echo $item; ?></a></li>
+                            <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $item === 'حراج' ? ' class="az-sale"' : ''; ?>><?php echo $item; ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </li>

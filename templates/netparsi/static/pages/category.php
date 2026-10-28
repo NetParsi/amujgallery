@@ -1,15 +1,21 @@
 <?php
 defined('_JEXEC') or die;
 
-$subnav   = ['مشاهده همه', 'جدیدترین‌ها', 'کت و پالتو', 'بلیزر', 'پیراهن', 'بافت', 'شلوار', 'جین', 'دامن', 'مانتو', 'کفش', 'کیف'];
+$subnav   = array_merge(['مشاهده همه'], amuj_categories());
+$current  = isset($_GET['cat']) && in_array($_GET['cat'], $subnav, true) ? $_GET['cat'] : 'مانتو';
 $products = amuj_products();
 // Repeat the demo set so the grid looks full
 $list = array_merge(array_keys($products), array_keys($products));
+// Editorial tiles (two columns wide) inserted before these positions
+$features = [
+    4  => [3, 'کالکشن پاییز ۱۴۰۵', 'برش‌های بلند، رنگ‌های خنثی'],
+    14 => [8, 'پالتوهای پشمی', 'گرم و مینیمال'],
+];
 ?>
 <div class="az-cat-head">
     <nav class="az-subnav">
-        <?php foreach ($subnav as $i => $item) : ?>
-            <a href="<?php echo amuj_url('category'); ?>"<?php echo $i === 1 ? ' class="is-active"' : ''; ?>><?php echo $item; ?></a>
+        <?php foreach ($subnav as $item) : ?>
+            <a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $item === $current ? ' class="is-active"' : ''; ?>><?php echo $item; ?></a>
         <?php endforeach; ?>
     </nav>
     <div class="az-toolbar">
@@ -23,9 +29,10 @@ $list = array_merge(array_keys($products), array_keys($products));
 </div>
 
 <div class="az-cat-body">
-    <div class="az-cat-title">زنانه / جدیدترین‌ها — <?php echo amuj_fa(count($list)); ?> محصول</div>
+    <div class="az-cat-title"><?php echo $current; ?> — <?php echo amuj_fa(count($list)); ?> محصول</div>
     <div class="az-grid cols-4" id="az-grid">
-        <?php foreach ($list as $id) : ?>
+        <?php foreach ($list as $i => $id) : ?>
+            <?php if (isset($features[$i])) : amuj_feature(...$features[$i]); endif; ?>
             <?php amuj_card($id, $products[$id]); ?>
         <?php endforeach; ?>
     </div>

@@ -17,7 +17,7 @@ if (!function_exists('amuj_url')) {
     {
         return [
             'home'     => ['گالری آموژ', true],
-            'category' => ['زنانه | جدیدترین‌ها', false],
+            'category' => ['مانتو | گالری آموژ', false],
             'product'  => ['جزئیات محصول', false],
             'search'   => ['جستجو', false],
             'cart'     => ['سبد خرید', false],
@@ -29,6 +29,12 @@ if (!function_exists('amuj_url')) {
             'help'     => ['راهنما و پشتیبانی', false],
             'about'    => ['درباره ما', false],
         ];
+    }
+
+    /** Store categories (women's clothing only) */
+    function amuj_categories()
+    {
+        return ['مانتو', 'کت', 'پالتو', 'بارانی', 'پیراهن', 'ست', 'شلوار', 'دامن', 'شومیز', 'اکسسوری'];
     }
 
     function amuj_url($page = 'home', array $query = [])
@@ -63,13 +69,11 @@ if (!function_exists('amuj_url')) {
             '1515886657613-9f3515b0c78f', '1496747611176-843222e1e57c', '1509631179647-0177331693ae',
             '1539109136881-3be0616acf4b', '1485968579580-b6d095142e6e', '1469334031218-e382a71b716b',
             '1529139574466-a303027c1d8b', '1594633312681-425c7b97ccd1', '1554412933-514a83d2f3c8',
-            '1525507119028-ed4c629a60a3', '1503342217505-b0a15ec3261c', '1516826957135-700dedea698c',
-            '1507679799987-c73779587ccf', '1519085360753-af0119f7cbe7', '1488161628813-04466f872be2',
-            '1503944583220-79d8926ad5e2', '1519238263530-99bdd11df2ea', '1591047139829-d91aecb6caea',
-            '1490481651871-ab68de25d43d', '1483985988355-763728e1935b', '1445205170230-053b83016050',
-            '1434389677669-e08b4cac3105', '1487222477894-8943e31ef7b2', '1475180098004-ca77a66827be',
-            '1520975954732-35dd22299614', '1581044777550-4cfa60707c03', '1544441893-675973e31985',
-            '1552374196-1ab2a1c593e8', '1622519407650-3df9883f76a5',
+            '1525507119028-ed4c629a60a3', '1591047139829-d91aecb6caea', '1490481651871-ab68de25d43d',
+            '1483985988355-763728e1935b', '1445205170230-053b83016050', '1434389677669-e08b4cac3105',
+            '1487222477894-8943e31ef7b2', '1475180098004-ca77a66827be', '1520975954732-35dd22299614',
+            '1581044777550-4cfa60707c03', '1544441893-675973e31985', '1552374196-1ab2a1c593e8',
+            '1622519407650-3df9883f76a5',
         ];
 
         $id = $photos[($n - 1) % count($photos)];
@@ -79,37 +83,72 @@ if (!function_exists('amuj_url')) {
 
     function amuj_products()
     {
+        $black = '#000'; $beige = '#c8b8a0'; $brown = '#6b4f3a'; $navy = '#1f2a44'; $cream = '#efe9df'; $gray = '#8a8a8a';
+
         return [
-            1  => ['name' => 'کت بلند پشمی',            'price' => 4890000, 'img' => 4,  'img2' => 1,  'tag' => 'جدید'],
-            2  => ['name' => 'پیراهن ساتن یقه‌دار',      'price' => 1690000, 'img' => 2,  'img2' => 3,  'tag' => ''],
-            3  => ['name' => 'شلوار راسته کرپ',          'price' => 1390000, 'img' => 3,  'img2' => 7,  'tag' => ''],
-            4  => ['name' => 'بلیزر کراپ',               'price' => 2790000, 'img' => 1,  'img2' => 5,  'tag' => 'جدید'],
-            5  => ['name' => 'دامن میدی پلیسه',          'price' => 1590000, 'img' => 6,  'img2' => 2,  'tag' => ''],
-            6  => ['name' => 'سویشرت بافت درشت',         'price' => 1990000, 'img' => 5,  'img2' => 4,  'tag' => ''],
-            7  => ['name' => 'مانتو کتان مینیمال',       'price' => 2290000, 'img' => 7,  'img2' => 6,  'tag' => 'پرفروش'],
-            8  => ['name' => 'پالتو کمربنددار',          'price' => 5490000, 'img' => 8,  'img2' => 9,  'tag' => ''],
-            9  => ['name' => 'تاپ بافت رکابی',           'price' => 890000,  'img' => 9,  'img2' => 8,  'tag' => ''],
-            10 => ['name' => 'جین بگ فاق بلند',          'price' => 1790000, 'img' => 10, 'img2' => 1,  'tag' => ''],
-            11 => ['name' => 'تی‌شرت پنبه‌ای مردانه',    'price' => 690000,  'img' => 11, 'img2' => 12, 'tag' => ''],
-            12 => ['name' => 'کت تک مردانه',             'price' => 3990000, 'img' => 13, 'img2' => 14, 'tag' => 'جدید'],
+            1  => ['name' => 'مانتو کتان بلند',          'cat' => 'مانتو',   'price' => 2290000, 'img' => 4,  'img2' => 1,  'tag' => 'جدید',   'colors' => [$beige, $black, $cream]],
+            2  => ['name' => 'کت بلیزر کراپ',            'cat' => 'کت',      'price' => 2790000, 'img' => 1,  'img2' => 5,  'tag' => '',       'colors' => [$black, $cream]],
+            3  => ['name' => 'پالتو پشمی کمربنددار',     'cat' => 'پالتو',   'price' => 5490000, 'img' => 8,  'img2' => 9,  'tag' => 'جدید',   'colors' => [$brown, $black, $gray, $beige]],
+            4  => ['name' => 'بارانی کلاسیک دوبل',       'cat' => 'بارانی',  'price' => 4190000, 'img' => 3,  'img2' => 7,  'tag' => '',       'colors' => [$beige, $navy]],
+            5  => ['name' => 'پیراهن ساتن میدی',         'cat' => 'پیراهن',  'price' => 1690000, 'img' => 2,  'img2' => 3,  'tag' => '',       'colors' => [$black, $brown, $navy]],
+            6  => ['name' => 'ست کت و شلوار کرپ',        'cat' => 'ست',      'price' => 3890000, 'img' => 5,  'img2' => 4,  'tag' => 'پرفروش', 'colors' => [$black, $cream]],
+            7  => ['name' => 'شلوار راسته فاق بلند',     'cat' => 'شلوار',   'price' => 1390000, 'img' => 7,  'img2' => 6,  'tag' => '',       'colors' => [$black, $beige, $gray, $navy, $cream]],
+            8  => ['name' => 'دامن پلیسه میدی',          'cat' => 'دامن',    'price' => 1590000, 'img' => 6,  'img2' => 2,  'tag' => '',       'colors' => [$black, $beige]],
+            9  => ['name' => 'شومیز حریر یقه‌دار',       'cat' => 'شومیز',   'price' => 1190000, 'img' => 9,  'img2' => 8,  'tag' => '',       'colors' => [$cream, $black, $navy]],
+            10 => ['name' => 'شال نخی بلند',             'cat' => 'اکسسوری', 'price' => 490000,  'img' => 10, 'img2' => 1,  'tag' => '',       'colors' => [$beige, $black, $brown, $cream, $gray, $navy]],
+            11 => ['name' => 'مانتو جلوباز لینن',        'cat' => 'مانتو',   'price' => 1990000, 'img' => 11, 'img2' => 12, 'tag' => 'جدید',   'colors' => [$cream, $beige]],
+            12 => ['name' => 'پالتو بلند اورسایز',       'cat' => 'پالتو',   'price' => 5990000, 'img' => 13, 'img2' => 14, 'tag' => '',       'colors' => [$gray, $black]],
         ];
     }
 
     function amuj_card($id, array $p)
     {
+        $url    = amuj_url('product', ['id' => $id]);
+        $colors = $p['colors'] ?? [];
         ?>
         <article class="az-card">
-            <a class="az-card-media" href="<?php echo amuj_url('product', ['id' => $id]); ?>">
-                <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
-                <img class="az-card-alt" src="<?php echo amuj_img($p['img2'], 700); ?>" alt="" loading="lazy">
+            <div class="az-card-media">
+                <a class="az-card-link" href="<?php echo $url; ?>">
+                    <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
+                    <img class="az-card-alt" src="<?php echo amuj_img($p['img2'], 700); ?>" alt="" loading="lazy">
+                </a>
                 <?php if ($p['tag']) : ?><span class="az-card-tag"><?php echo $p['tag']; ?></span><?php endif; ?>
-            </a>
-            <div class="az-card-info">
-                <a href="<?php echo amuj_url('product', ['id' => $id]); ?>" class="az-card-name"><?php echo $p['name']; ?></a>
-                <button class="az-card-add" type="button" aria-label="افزودن به سبد">+</button>
+                <button class="az-card-fav" type="button" aria-label="افزودن به علاقه‌مندی‌ها">
+                    <svg width="14" height="18" viewBox="0 0 14 18"><path d="M1 1h12v16l-6-4.5L1 17z" stroke="#000" stroke-width="1.1"/></svg>
+                </button>
+                <button class="az-card-quick" type="button" aria-label="افزودن سریع">+</button>
+                <div class="az-card-sizes">
+                    <span>انتخاب سایز</span>
+                    <ul>
+                        <?php foreach (['XS', 'S', 'M', 'L', 'XL'] as $i => $size) : ?>
+                            <li<?php echo ($id + $i) % 7 === 0 ? ' class="is-out"' : ''; ?>><?php echo $size; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
+            <a class="az-card-name" href="<?php echo $url; ?>"><?php echo $p['name']; ?></a>
             <div class="az-card-price"><?php echo amuj_price($p['price']); ?></div>
+            <?php if (count($colors) > 1) : ?>
+                <div class="az-card-colors">
+                    <?php foreach (array_slice($colors, 0, 3) as $hex) : ?><i style="background:<?php echo $hex; ?>"></i><?php endforeach; ?>
+                    <?php if (count($colors) > 3) : ?><span>+<?php echo amuj_fa(count($colors) - 3); ?></span><?php endif; ?>
+                </div>
+            <?php endif; ?>
         </article>
+        <?php
+    }
+
+    /** Large editorial tile that spans two grid columns */
+    function amuj_feature($img, $title, $text = '')
+    {
+        ?>
+        <a class="az-feature" href="<?php echo amuj_url('product', ['id' => 1]); ?>">
+            <img src="<?php echo amuj_img($img, 1400); ?>" alt="" loading="lazy">
+            <span class="az-feature-caption">
+                <strong><?php echo $title; ?></strong>
+                <?php if ($text) : ?><small><?php echo $text; ?></small><?php endif; ?>
+            </span>
+        </a>
         <?php
     }
 }
