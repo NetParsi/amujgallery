@@ -143,7 +143,7 @@ $announcements = [
                                     <span class="az-num">|<?php echo amuj_fa(str_pad($n, 2, '0', STR_PAD_LEFT)); ?>|</span>
                                     <?php echo $group; ?>
                                 </div>
-                                <ul class="az-menu-list">
+                                <ul class="az-menu-list<?php echo count($items) > 6 ? ' az-menu-list--cols' : ''; ?>">
                                     <?php foreach ($items as $item) :
                                         $classes = trim(($item === 'حراج' ? 'az-sale ' : '') . ((isset($_GET['cat']) && $_GET['cat'] === $item) ? 'is-active' : '')); ?>
                                         <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>" data-az-img="<?php echo $menuImg($item); ?>"<?php echo $classes ? ' class="' . $classes . '"' : ''; ?>><?php echo $item; ?></a></li>

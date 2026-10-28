@@ -693,3 +693,22 @@ body:not(.az-scrolled) .az-header--overlay .az-bag::before { border-color: #fff;
 }
 .az-menu-promo::after { content: ""; position: absolute; inset: 55% 0 0 0; background: linear-gradient(to top, rgba(0,0,0,.45), transparent); }
 .az-menu-promo span { z-index: 1; }
+
+/* Desktop menu fits the viewport: no page scroll, image fills the remaining height */
+@media (min-width: 960px) {
+  .az-menu.uk-modal { overflow: hidden; }
+  .az-menu .az-menu-dialog {
+    height: 100vh; min-height: 0; overflow: hidden;
+    display: flex; flex-direction: column; padding-bottom: 32px;
+  }
+  .az-menu-top { flex: none; margin-bottom: 40px; }
+  .az-menu-body { flex: 1; min-height: 0; }
+  .az-menu-body > div, .az-menu-panels { min-height: 0; max-height: 100%; overflow-y: auto; scrollbar-width: none; }
+  .az-menu-body > div::-webkit-scrollbar, .az-menu-panels::-webkit-scrollbar { display: none; }
+  .az-menu-visual { position: relative; top: auto; height: 100%; max-height: none; aspect-ratio: auto; }
+}
+@media (min-width: 960px) {
+  .az-menu-list--cols { column-count: 2; column-gap: 40px; max-width: 360px; }
+  .az-menu-list--cols li { break-inside: avoid; }
+  .az-menu-group { margin-bottom: 30px; }
+}
