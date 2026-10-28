@@ -38,7 +38,7 @@ defined('_JEXEC') or die;
                 <button type="button" class="az-auth-link" data-az-back>ویرایش شماره</button></p>
             <div class="az-otp" dir="ltr">
                 <?php for ($i = 0; $i < 5; $i++) : ?>
-                    <input type="text" inputmode="numeric" maxlength="1" aria-label="رقم <?php echo amuj_fa($i + 1); ?>" autocomplete="<?php echo $i === 0 ? 'one-time-code' : 'off'; ?>">
+                    <input type="text" inputmode="numeric" aria-label="رقم <?php echo amuj_fa($i + 1); ?>" autocomplete="<?php echo $i === 0 ? 'one-time-code' : 'off'; ?>">
                 <?php endfor; ?>
             </div>
             <span class="az-auth-error" data-error></span>
