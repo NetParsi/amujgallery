@@ -103,23 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Cart: shipping estimate by province, updates the totals
-  var cartBox = document.querySelector('[data-az-cart]');
-  if (cartBox) {
-    var fa = function (n) {
-      return Number(n).toLocaleString('en-US').replace(/,/g, '٬').replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }) + ' تومان';
-    };
-    var subtotal = Number(cartBox.dataset.subtotal);
-    var free = subtotal >= Number(cartBox.dataset.free);
-    cartBox.querySelector('[data-az-ship]').addEventListener('change', function () {
-      var opt = this.options[this.selectedIndex];
-      var cost = this.value === '' ? null : (free ? 0 : Number(this.value));
-      cartBox.querySelector('[data-az-ship-cost]').textContent = cost === null ? 'وابسته به آدرس' : (cost ? fa(cost) : 'رایگان');
-      cartBox.querySelector('[data-az-ship-method]').textContent = this.value ? '— ' + opt.dataset.method : '';
-      document.querySelectorAll('[data-az-cart-total]').forEach(function (el) { el.textContent = fa(subtotal + (cost || 0)); });
-    });
-  }
-
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {

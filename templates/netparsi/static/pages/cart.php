@@ -10,7 +10,6 @@ foreach ($items as $id => $item) {
 $free      = amuj_free_shipping();
 $remaining = max(0, $free - $total);
 $progress  = min(100, round($total / $free * 100));
-$rates     = amuj_shipping_rates();
 ?>
 <div class="az-cart">
     <ul class="az-tabs">
@@ -34,7 +33,7 @@ $rates     = amuj_shipping_rates();
             <?php endforeach; ?>
         </div>
 
-        <aside class="az-summary az-cart-summary" data-az-cart data-subtotal="<?php echo $total; ?>" data-free="<?php echo $free; ?>">
+        <aside class="az-summary az-cart-summary">
             <h2 class="az-title">خلاصه سبد</h2>
 
             <div class="az-freeship<?php echo $remaining ? '' : ' is-done'; ?>">
@@ -50,21 +49,12 @@ $rates     = amuj_shipping_rates();
 
             <div class="az-summary-row"><span>جمع کالاها (<?php echo amuj_fa(count($items)); ?>)</span><span><?php echo amuj_price($total); ?></span></div>
 
-            <div class="az-field az-ship-field">
-                <label for="az-ship-province">هزینه ارسال بر اساس استان</label>
-                <select id="az-ship-province" class="az-select" data-az-ship>
-                    <option value="">انتخاب استان</option>
-                    <?php foreach ($rates as $province => [$method, $cost]) : ?>
-                        <option value="<?php echo $cost; ?>" data-method="<?php echo $method; ?>"><?php echo $province; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
             <div class="az-summary-row">
-                <span>هزینه ارسال <small class="az-muted" data-az-ship-method></small></span>
-                <span data-az-ship-cost><?php echo $remaining ? 'وابسته به آدرس' : 'رایگان'; ?></span>
+                <span>هزینه ارسال</span>
+                <span class="az-muted"><?php echo $remaining ? 'وابسته به آدرس' : 'رایگان'; ?></span>
             </div>
 
-            <div class="az-summary-row is-total"><span>جمع کل</span><span data-az-cart-total><?php echo amuj_price($total); ?></span></div>
+            <div class="az-summary-row is-total"><span>جمع کل</span><span><?php echo amuj_price($total); ?></span></div>
 
             <a class="az-btn az-btn--block az-cart-next" href="<?php echo amuj_url('checkout'); ?>">ادامه فرایند خرید</a>
             <p class="az-small az-muted uk-margin-small-top">هزینه ارسال نهایی پس از ثبت آدرس در مرحله بعد محاسبه می‌شود.</p>
@@ -86,7 +76,7 @@ $rates     = amuj_shipping_rates();
 <!-- Mobile: total and continue button stay pinned to the bottom -->
 <div class="az-cart-bar">
     <div>
-        <div class="az-total">جمع کل: <span data-az-cart-total><?php echo amuj_price($total); ?></span></div>
+        <div class="az-total">جمع کل: <span><?php echo amuj_price($total); ?></span></div>
         <div class="az-small az-muted"><?php echo $remaining ? amuj_price($remaining) . ' تا ارسال رایگان' : 'ارسال رایگان'; ?></div>
     </div>
     <a class="az-btn" href="<?php echo amuj_url('checkout'); ?>">ادامه</a>

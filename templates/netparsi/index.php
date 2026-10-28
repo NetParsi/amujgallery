@@ -43,6 +43,13 @@ $itemid   = $input->getCmd('Itemid', '');
 $sitename = htmlspecialchars($app->get('sitename'), ENT_QUOTES, 'UTF-8');
 $menu     = $app->getMenu()->getActive();
 $pageclass = $menu !== null ? $menu->getParams()->get('pageclass_sfx', '') : '';
+
+// Theme CSS/JS carry their file time as version, so browsers never keep a stale copy after an update
+$tplMediaPath = JPATH_ROOT . '/media/templates/site/netparsi/';
+$tplMediaUrl  = Uri::root(true) . '/media/templates/site/netparsi/';
+$wa->registerStyle('netparsiStyle', $tplMediaUrl . 'css/netparsi.css', ['version' => (string) @filemtime($tplMediaPath . 'css/netparsi.css')]);
+$wa->registerScript('netparsiScript', $tplMediaUrl . 'js/netparsi.js', ['version' => (string) @filemtime($tplMediaPath . 'js/netparsi.js')]);
+
 $wa
         ->usePreset('uikitPreset')
         ->usePreset('netparsiPreset')
