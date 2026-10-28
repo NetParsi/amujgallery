@@ -1563,3 +1563,14 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
 .az-cat-nav a, .az-buy-links a, .az-back, .az-auth-home { width: fit-content; align-self: flex-start; }
 .az-cat-nav a:hover { box-shadow: none; }
 .az-cat-nav a:hover .az-cat-nav-label { box-shadow: inset 0 -5px 0 var(--az-accent-soft); }
+
+/* Category side list: a short line instead of numbers; it grows on hover and when active */
+.az-cat-nav .az-num { display: none; }
+.az-cat-nav a { align-items: center; gap: 0; }
+.az-cat-nav a::before {
+  content: ""; flex: none; width: 10px; height: 1px; margin-left: 10px;
+  background: #c9c9c6; transition: width .35s cubic-bezier(.2,.7,.2,1), background-color .25s;
+}
+.az-cat-nav a:hover::before { width: 22px; background: #000; }
+.az-cat-nav a.is-active::before { width: 30px; height: 2px; background: var(--az-accent-ink); }
+@media (max-width: 959px) { .az-cat-nav a::before { display: none; } }
