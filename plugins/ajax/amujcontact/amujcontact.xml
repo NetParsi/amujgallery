@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="ajax" method="upgrade">
+    <name>فرم تماس آموژ</name>
+    <author>NetParsi</author>
+    <creationDate>2026-10</creationDate>
+    <version>1.0.0</version>
+    <license>GNU General Public License version 2 or later</license>
+    <description>فرم «تماس با ما» گالری آموژ (نام، موبایل، موضوع، پیام) را دریافت و به ایمیل تعیین‌شده ارسال می‌کند. آدرس ارسال: index.php?option=com_ajax&amp;group=ajax&amp;plugin=amujcontact&amp;format=raw</description>
+    <namespace path="src">Joomla\Plugin\Ajax\Amujcontact</namespace>
+    <files>
+        <folder plugin="amujcontact">services</folder>
+        <folder>src</folder>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="recipient" type="email" label="ایمیل دریافت پیام‌ها"
+                       description="پیام‌های فرم تماس به این ایمیل فرستاده می‌شوند. اگر خالی باشد، ایمیل اصلی سایت (تنظیمات سراسری) استفاده می‌شود."
+                       validate="email" filter="string"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>
