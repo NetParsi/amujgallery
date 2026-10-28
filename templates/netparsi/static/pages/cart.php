@@ -13,11 +13,17 @@ $progress  = min(100, round($total / $free * 100));
 
 // Empty cart state (demo: ?empty=1). Dynamic: HikaShop cart with no products.
 if (isset($_GET['empty'])) : ?>
-    <div class="az-cart-empty">
-        <svg class="az-cart-empty-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 22h36l-3 34H17z"/><path d="M24 22v-4a8 8 0 0 1 16 0v4"/></svg>
+    <div class="az-thanks az-state">
+        <div class="az-status-icon" aria-hidden="true">
+            <svg viewBox="0 0 96 96">
+                <circle class="az-status-ring" cx="48" cy="48" r="44"/>
+                <path class="az-status-mark" pathLength="70" d="M32 40h32l-3 27H35z"/>
+                <path class="az-status-mark az-status-mark--late" pathLength="70" d="M40 40v-5a8 8 0 0 1 16 0v5"/>
+            </svg>
+        </div>
         <h1>سبد خرید شما خالی است</h1>
-        <p class="az-muted">کالاهایی که به سبد اضافه کنید اینجا نمایش داده می‌شوند.</p>
-        <div class="az-error-actions">
+        <p class="az-muted">کالاهایی که به سبد اضافه کنید اینجا نمایش داده می‌شوند. از جدیدترین‌های کالکشن دیدن کنید.</p>
+        <div class="az-thanks-actions">
             <a class="az-btn" href="<?php echo amuj_url('category'); ?>">مشاهده محصولات</a>
             <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('wishlist'); ?>">علاقه‌مندی‌های من</a>
         </div>

@@ -1644,3 +1644,12 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
 .az-error-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
 .az-error-debug { max-width: 900px; margin: 30px auto; padding: 14px; background: var(--az-soft); font-size: 12px; white-space: pre-wrap; }
 @media (max-width: 959px) { .az-error-code { font-size: 90px; } }
+
+/* Empty cart and error page share the payment-result look */
+.az-state { margin-top: 40px; }
+.az-state .az-status-mark--late { animation-delay: 1s; }
+.az-state-code { display: block; margin-top: 16px; font-size: 13px; color: var(--az-accent-ink); animation: azRise .6s cubic-bezier(.2,.7,.2,1) .85s both; }
+.az-state-code + h1 { margin-top: 4px; }
+.az-state .az-thanks-actions { margin-bottom: 0; }
+.az-state--error .az-status-ring { fill: var(--az-soft); stroke: #cfcfcb; }
+.az-state--error .az-status-mark { stroke: #000; }
