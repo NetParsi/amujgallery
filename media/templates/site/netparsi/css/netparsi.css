@@ -1711,3 +1711,7 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-hero-tabs .az-hero-progress { height: 3px; cursor: pointer; }
 }
 @media (max-width: 959px) { .az-hero-tabs li { padding: 12px 0; cursor: pointer; } }
+@media (max-width: 959px) {
+  .az-hero-tabs li { position: relative; }
+  .az-hero-tabs a { display: block !important; position: absolute; inset: 0; font-size: 0; color: transparent; overflow: hidden; }
+}
