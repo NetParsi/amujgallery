@@ -1743,3 +1743,8 @@ h1.az-cat-title { font: inherit; font-size: 14px; line-height: inherit; color: v
 .az-empty-cat { padding: 60px 0; text-align: center; }
 .az-empty-cat .az-btn { margin-top: 18px; }
 .az-load-more a.az-btn { display: inline-flex; }
+
+/* ---------- HikaShop cart page (html/com_hikashop/cart/show.php) ---------- */
+.az-component:has(> .az-cart), .az-component:has(> .az-state) { padding: 0; }
+button.az-remove { background: none; border: 0; padding: 0; font-family: inherit; }
+.az-cart-row.is-busy { opacity: .45; pointer-events: none; transition: opacity .2s; }

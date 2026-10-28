@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var openAdded = function (data) {
     if (!addedPanel || !window.UIkit) { notify('به سبد خرید اضافه شد'); return; }
-    cartCount++;
+    cartCount = typeof data.count === 'number' ? data.count : cartCount + 1;
     document.querySelectorAll('.az-bag').forEach(function (b) { b.textContent = faDigits(cartCount); b.classList.remove('is-bump'); void b.offsetWidth; b.classList.add('is-bump'); });
     addedPanel.querySelector('[data-az-added-img]').src = data.img || '';
     addedPanel.querySelector('[data-az-added-name]').textContent = data.name || '';
@@ -377,6 +377,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (r) { return r.json(); })
       .then(function (res) {
         if (!res || !res.ret) throw new Error((res && res.message) || '');
+        // HikaShop returns the whole cart: the header count follows the real quantity
+        if (res.products) {
+          data.count = res.products.reduce(function (n, p) { return n + (p.quantity || 0); }, 0);
+        }
         openAdded(data);
       })
       .catch(function (err) { notify(err && err.message ? err.message : 'افزودن به سبد انجام نشد. دوباره تلاش کنید.'); })
@@ -524,6 +528,33 @@ document.addEventListener('DOMContentLoaded', function () {
       out.textContent = String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
     });
   });
+
+  // HikaShop cart page: quantity and remove are saved in HikaShop, then the page reloads with new totals
+  var cartPage = document.querySelector('[data-az-cart-page]');
+  if (cartPage && cartUrl) {
+    var saveLine = function (row, quantity) {
+      row.classList.add('is-busy');
+      var body = new URLSearchParams({ cart_product_id: row.dataset.azLine, quantity: quantity });
+      fetch(cartUrl, { method: 'POST', body: body, credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.messages && res.messages.length) notify(res.messages[0].msg || res.messages[0]);
+          window.location.reload();
+        })
+        .catch(function () { row.classList.remove('is-busy'); notify('ذخیره سبد انجام نشد. دوباره تلاش کنید.'); });
+    };
+    var timer;
+    cartPage.addEventListener('click', function (e) {
+      var row = e.target.closest('[data-az-line]');
+      if (!row) return;
+      if (e.target.closest('[data-az-remove]')) { saveLine(row, 0); return; }
+      if (e.target.closest('.az-qty button')) {
+        // the quantity handler above already updated the number; save after a short pause
+        clearTimeout(timer);
+        timer = setTimeout(function () { saveLine(row, row.querySelector('.az-qty span').dataset.n); }, 500);
+      }
+    });
+  }
 
   function notify(message) {
     if (window.UIkit) UIkit.notification({ message: message, pos: 'bottom-center', timeout: 2000 });

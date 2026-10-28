@@ -494,9 +494,54 @@ if (!function_exists('amuj_url')) {
         ];
     }
 
+    /**
+     * Page URL. A page that has gone dynamic has a menu item with the same alias in the
+     * hidden menu "amuj-pages" (e.g. cart); that item wins over the static demo page.
+     */
     function amuj_url($page = 'home', array $query = [])
     {
+        static $dynamic = null;
+
+        if ($dynamic === null) {
+            $dynamic = [];
+            if (class_exists('\Joomla\CMS\Factory')) {
+                foreach (\Joomla\CMS\Factory::getApplication()->getMenu('site')->getItems('menutype', 'amuj-pages') as $item) {
+                    $dynamic[$item->alias] = (int) $item->id;
+                }
+            }
+        }
+
+        if (isset($dynamic[$page]) && !$query) {
+            return \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $dynamic[$page]);
+        }
+
         return AMUJ_BASE . 'index.php?' . http_build_query(['page' => $page] + $query);
+    }
+
+    /** Number of items in the visitor's HikaShop cart (static demo: 2) */
+    function amuj_cart_count()
+    {
+        static $count = null;
+
+        if ($count !== null) {
+            return $count;
+        }
+        if (!function_exists('hikashop_get') && is_file(JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php')) {
+            include_once JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php';
+        }
+        if (!function_exists('hikashop_get')) {
+            return $count = 2;
+        }
+
+        $cartClass = hikashop_get('class.cart');
+        $cartId    = $cartClass->getCurrentCartId('cart');
+        $count     = 0;
+        if ($cartId) {
+            $count = (int) \Joomla\CMS\Factory::getDbo()->setQuery('SELECT SUM(cart_product_quantity) FROM ' . hikashop_table('cart_product')
+                . ' WHERE cart_id = ' . (int) $cartId . ' AND cart_product_option_parent_id = 0')->loadResult();
+        }
+
+        return $count;
     }
 
     function amuj_fa($value)
