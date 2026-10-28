@@ -22,7 +22,7 @@ if (!function_exists('amuj_url')) {
             'search'   => ['جستجو', false],
             'cart'     => ['سبد خرید', false],
             'checkout' => ['تکمیل سفارش', false],
-            'thankyou' => ['سفارش ثبت شد', false],
+            'thankyou' => ['نتیجه پرداخت', false],
             'login'    => ['ورود', false],
             'register' => ['ایجاد حساب کاربری', false],
             'account'  => ['حساب کاربری من', false],
