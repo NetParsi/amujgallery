@@ -147,6 +147,11 @@ if (!function_exists('amuj_url')) {
      */
     function amuj_img($n, $width = 900)
     {
+        // A real image path (e.g. images/demo-product/x.jpg) is used as is
+        if (!is_numeric($n)) {
+            return AMUJ_BASE . ltrim($n, '/');
+        }
+
         $local = 'images/demo/' . $n . '.jpg';
 
         if (is_file(AMUJ_ROOT . '/' . $local)) {
@@ -173,7 +178,20 @@ if (!function_exists('amuj_url')) {
     {
         $black = '#000'; $beige = '#c8b8a0'; $brown = '#6b4f3a'; $navy = '#1f2a44'; $cream = '#efe9df'; $gray = '#8a8a8a';
 
+        $harir = 'images/demo-product/harir-';
+
         return [
+            // Real product for the presentation (first everywhere)
+            13 => ['name' => 'پیراهن حریر', 'cat' => 'پیراهن', 'price' => 2890000,
+                   'img' => $harir . 'black.jpg', 'img2' => $harir . 'green.jpg', 'tag' => 'جدید',
+                   'colors'       => ['#f6f3ec', $black, '#bcd6b4'],
+                   'color_names'  => ['سفید', 'مشکی', 'سبز'],
+                   'color_images' => [$harir . 'white.jpg', $harir . 'black.jpg', $harir . 'green.jpg'],
+                   'active_color' => 1,
+                   'sizes'        => ['فری سایز (۳۶ تا ۴۲)'],
+                   'desc'         => 'پیراهن حریر سبک و روان با رُفل‌های لایه‌ای در دامن، گل‌های پارچه‌ای روی یقه و آستین پفی با مچ کش‌دار. فری‌سایز و مناسب سایزهای ۳۶ تا ۴۲.',
+                   'details'      => ['جنس: حریر', 'قد: ۸۰ سانتی‌متر', 'سایز: فری سایز (۳۶ تا ۴۲)', 'رنگ‌بندی: سفید، مشکی، سبز'],
+                   'code'         => 'AM-1405-013'],
             1  => ['name' => 'مانتو کتان بلند',          'cat' => 'مانتو',   'price' => 2290000, 'img' => 4,  'img2' => 1,  'tag' => 'جدید',   'colors' => [$beige, $black, $cream]],
             2  => ['name' => 'کت بلیزر کراپ',            'cat' => 'کت',      'price' => 2790000, 'img' => 1,  'img2' => 5,  'tag' => '',       'colors' => [$black, $cream]],
             3  => ['name' => 'پالتو پشمی کمربنددار',     'cat' => 'پالتو',   'price' => 5490000, 'img' => 8,  'img2' => 9,  'tag' => 'جدید',   'colors' => [$brown, $black, $gray, $beige]],

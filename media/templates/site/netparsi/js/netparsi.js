@@ -86,6 +86,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Product page: choosing a color brings that color's photo to the front of the gallery
+  var gallery = document.querySelector('[data-az-gallery]');
+  document.querySelectorAll('[data-az-color]').forEach(function (swatch) {
+    swatch.addEventListener('click', function () {
+      var label = document.querySelector('[data-az-color-label]');
+      if (label) label.textContent = swatch.dataset.name;
+      var photo = gallery && gallery.querySelector('img[data-color="' + swatch.dataset.azColor + '"]');
+      if (!photo || photo === gallery.firstElementChild) return;
+      photo.removeAttribute('loading');
+      gallery.prepend(photo);
+      photo.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-out' });
+      gallery.scrollTo({ left: 0, behavior: 'smooth' });
+      var top = gallery.getBoundingClientRect().top;
+      if (top < 0) window.scrollBy({ top: top - 140, behavior: 'smooth' });
+    });
+  });
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {
