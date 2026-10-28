@@ -84,7 +84,7 @@ $list = array_merge(array_keys($products), array_keys($products));
 
         <div class="uk-margin-large-top uk-flex" style="gap:8px">
             <button class="az-btn az-btn--ghost uk-width-1-2" type="button">پاک کردن</button>
-            <button class="az-btn uk-width-1-2 uk-offcanvas-close" type="button" style="position:static">مشاهده نتایج</button>
+            <button class="az-btn uk-width-1-2 uk-offcanvas-close" type="button" style="position:static">فیلتر</button>
         </div>
     </div>
 </div>

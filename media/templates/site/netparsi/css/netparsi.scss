@@ -1016,3 +1016,27 @@ body:not(.az-scrolled) .az-header--overlay .az-bell svg { stroke: #fff; }
   .az-cat-main .az-grid { padding: 0 4px; }
   .az-cat .az-grid-switch i { width: 5px; height: 13px; }
 }
+
+/* Category mobile fixes */
+.az-cat-filter { display: inline-flex; align-items: center; height: 28px; line-height: 1; }
+.az-filter-bar .az-btn { white-space: nowrap; }
+@media (max-width: 959px) {
+  .az-cat-nav { scroll-padding: 0 var(--az-gutter); }
+  .az-cat-nav::after { content: ""; flex: 0 0 1px; }
+  .az-cat-tools { min-height: 28px; }
+  .az-cat .az-grid-switch { height: 28px; }
+  /* 1 column = one wide block, 2 columns = two blocks */
+  .az-cat .az-grid-switch button { height: 28px; }
+  .az-cat .az-grid-switch button[data-cols="1"] i { width: 14px; height: 16px; }
+  .az-cat .az-grid-switch button[data-cols="2"] i { width: 6px; height: 16px; }
+  /* Filter panel: full screen on phones */
+  #az-filter .uk-offcanvas-bar.az-filter-bar { width: 100%; padding: 24px var(--az-gutter); }
+}
+@media (max-width: 959px) {
+  .az-cat .az-grid-switch button.az-mob-only { display: inline-flex !important; }
+}
+/* Filter panel: undo UIkit's light-on-dark offcanvas colors */
+#az-filter .uk-offcanvas-bar, #az-filter .uk-offcanvas-bar h4, #az-filter .uk-offcanvas-bar .az-title { color: #000; }
+#az-filter .uk-offcanvas-close { color: #000; top: 24px; left: var(--az-gutter); right: auto; }
+#az-filter .uk-offcanvas-close:hover { color: var(--az-accent-ink); }
+#az-filter .az-chips button { color: #000; }
