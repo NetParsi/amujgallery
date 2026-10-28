@@ -16,11 +16,18 @@
       "uri": "uikit.min.js"
     },
     {
+      "name": "uikitIcons",
+      "type": "script",
+      "uri": "uikit-icons.min.js",
+      "dependencies": ["uikitScript"]
+    },
+    {
       "name": "uikitPreset",
       "type": "preset",
       "dependencies": [
         "uikitStyle#style",
-        "uikitScript#script"
+        "uikitScript#script",
+        "uikitIcons#script"
       ]
     },
 

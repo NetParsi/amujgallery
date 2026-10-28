@@ -48,8 +48,32 @@ $wa
         ->usePreset('netparsiPreset')
 ;
 
+$wa->registerAndUseStyle('amujFonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap');
+
 $this->setMetaData('viewport', 'width=device-width, initial-scale=1, maximum-scale=1');
-$this->setMetaData('theme-color', '#e70000');
+$this->setMetaData('theme-color', '#ffffff');
+
+// Static demo pages: index.php?page=name renders static/pages/name.php
+define('AMUJ_BASE', Uri::root());
+define('AMUJ_ROOT', JPATH_ROOT);
+require_once __DIR__ . '/static/_helpers.php';
+
+$amujPages  = amuj_pages();
+$staticPage = $input->getCmd('page', '');
+
+if ($staticPage === '' && $active && $active->home && $option === 'com_content') {
+    $staticPage = 'home';
+}
+
+if (!isset($amujPages[$staticPage])) {
+    $staticPage = '';
+}
+
+$amujOverlay = $staticPage ? $amujPages[$staticPage][1] : false;
+
+if ($staticPage) {
+    $this->setTitle($amujPages[$staticPage][0]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">
@@ -65,10 +89,19 @@ $this->setMetaData('theme-color', '#e70000');
     . ($task ? ' task-' . $task : ' no-task')
     . ($itemid ? ' itemid-' . $itemid : '')
     . ($pageclass ? ' ' . $pageclass : '')
-    . ($this->direction == 'rtl' ? ' rtl' : '');
+    . ($this->direction == 'rtl' ? ' rtl' : '')
+    . ($staticPage ? ' az-page-' . $staticPage : '');
 ?>">
-<jdoc:include type="message" />
-<jdoc:include type="component" />
+<?php include __DIR__ . '/static/header.php'; ?>
+<main class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?>">
+    <jdoc:include type="message" />
+    <?php if ($staticPage) : ?>
+        <?php include __DIR__ . '/static/pages/' . $staticPage . '.php'; ?>
+    <?php else : ?>
+        <div class="az-component"><jdoc:include type="component" /></div>
+    <?php endif; ?>
+</main>
+<?php include __DIR__ . '/static/footer.php'; ?>
 <jdoc:include type="modules" name="debug" style="none" />
 </body>
 </html>
