@@ -1754,4 +1754,5 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-component:has(> .az-auth-page) { padding: 0; }
 
 /* Text pages from Joomla articles (html/com_content/article): same edges as the static pages */
-.az-component:has(> .az-policy), .az-component:has(> .az-about-hero) { padding: 0; }
+.az-component:has(> .az-policy), .az-component:has(> .az-about-hero), .az-component:has(> .az-contact) { padding: 0; }
+.az-page-head div.az-muted p { margin: 0; }

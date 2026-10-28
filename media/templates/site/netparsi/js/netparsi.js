@@ -137,16 +137,30 @@ document.addEventListener('DOMContentLoaded', function () {
   if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      var ok = contactForm.name.value.trim().length > 2 && contactForm.phone.value.replace(/\D/g, '').length >= 10 && contactForm.message.value.trim().length > 3;
-      contactForm.querySelector('[data-error]').textContent = ok ? '' : 'لطفاً نام، شماره موبایل و متن پیام را کامل وارد کنید.';
+      // (form.name is the form's own name attribute, so fields are read by selector)
+      var field = function (n) { return contactForm.querySelector('[name="' + n + '"]'); };
+      var errorEl = contactForm.querySelector('[data-error]');
+      var phone = field('phone').value.replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); }).replace(/\D/g, '');
+      var ok = field('name').value.trim().length > 2 && /^09\d{9}$/.test(phone) && field('message').value.trim().length > 3;
+      errorEl.textContent = ok ? '' : 'لطفاً نام، شماره موبایل (مثل ۰۹۱۲۳۴۵۶۷۸۹) و متن پیام را کامل وارد کنید.';
       if (!ok) return;
       var btn = contactForm.querySelector('button[type="submit"]');
       btn.classList.add('is-loading');
-      setTimeout(function () {
-        btn.classList.remove('is-loading');
+      btn.disabled = true;
+      var finish = function () {
         contactForm.querySelectorAll('.az-field, button[type="submit"]').forEach(function (el) { el.hidden = true; });
         contactForm.querySelector('.az-contact-done').hidden = false;
-      }, 800);
+      };
+      // Static demo page has no action: just show the thank-you
+      if (!contactForm.getAttribute('action')) { setTimeout(finish, 800); return; }
+      fetch(contactForm.action, { method: 'POST', body: new FormData(contactForm), credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res.ok) { finish(); return; }
+          errorEl.textContent = res.message;
+        })
+        .catch(function () { errorEl.textContent = 'ارسال پیام انجام نشد. لطفاً دوباره امتحان کنید.'; })
+        .then(function () { btn.classList.remove('is-loading'); btn.disabled = false; });
     });
   }
 
