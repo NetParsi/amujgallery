@@ -123,6 +123,16 @@ document.addEventListener('DOMContentLoaded', function () {
       totals.querySelector('[data-az-pay]').textContent = toman(Math.max(0, sub + ship - state.discount - state.credit));
     };
 
+    document.querySelectorAll('input[name="ship"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        var cost = Number(radio.value);
+        totals.dataset.shipping = cost;
+        totals.querySelector('[data-az-ship-label]').textContent = '(' + radio.dataset.label + ')';
+        totals.querySelector('[data-az-ship-cost]').textContent = cost ? toman(cost) : 'رایگان';
+        refresh();
+      });
+    });
+
     if (creditBox) {
       creditBox.addEventListener('change', function () {
         state.credit = creditBox.checked ? Number(creditBox.dataset.azCredit) : 0;

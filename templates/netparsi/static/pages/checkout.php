@@ -27,9 +27,9 @@ $subtotal = $products[13]['price'] + $products[2]['price'];
         </form>
 
         <h2 class="az-title uk-margin-large-top">روش ارسال</h2>
-        <label class="az-option"><span><input type="radio" name="ship" checked>پست پیشتاز — ۳ تا ۵ روز کاری</span><span><?php echo amuj_price(85000); ?></span></label>
-        <label class="az-option"><span><input type="radio" name="ship">پیک فوری (تهران) — همان روز</span><span><?php echo amuj_price(120000); ?></span></label>
-        <label class="az-option"><span><input type="radio" name="ship">تحویل حضوری از فروشگاه</span><span>رایگان</span></label>
+        <label class="az-option"><span><input type="radio" name="ship" value="85000" data-label="پست پیشتاز" checked>پست پیشتاز — ۳ تا ۵ روز کاری</span><span><?php echo amuj_price(85000); ?></span></label>
+        <label class="az-option"><span><input type="radio" name="ship" value="120000" data-label="پیک فوری تهران">پیک فوری (تهران) — همان روز</span><span><?php echo amuj_price(120000); ?></span></label>
+        <label class="az-option"><span><input type="radio" name="ship" value="0" data-label="تحویل حضوری">تحویل حضوری از فروشگاه</span><span>رایگان</span></label>
 
         <h2 class="az-title uk-margin-large-top">روش پرداخت</h2>
         <label class="az-option"><span><input type="radio" name="pay" checked>درگاه پرداخت اینترنتی (کلیه کارت‌های عضو شتاب)</span></label>
@@ -54,7 +54,7 @@ $subtotal = $products[13]['price'] + $products[2]['price'];
          * code AMUJ10 = 10% off. Dynamic: HikaShop coupon field + the club extension.
          */
         $credit   = ($amujUser = amuj_current_user()) ? $amujUser['credit'] : 300000;
-        $shipping = amuj_shipping_rates()['تهران'][1];
+        $shipping = 85000; // the checked shipping method below
         ?>
         <div class="az-co-block">
             <label class="az-co-credit">
@@ -77,7 +77,7 @@ $subtotal = $products[13]['price'] + $products[2]['price'];
 
         <div data-az-totals data-subtotal="<?php echo $subtotal; ?>" data-shipping="<?php echo $shipping; ?>">
             <div class="az-summary-row"><span>جمع محصولات</span><span><?php echo amuj_price($subtotal); ?></span></div>
-            <div class="az-summary-row"><span>هزینه ارسال <small class="az-muted">(پیک فوری تهران)</small></span><span><?php echo amuj_price($shipping); ?></span></div>
+            <div class="az-summary-row"><span>هزینه ارسال <small class="az-muted" data-az-ship-label>(پست پیشتاز)</small></span><span data-az-ship-cost><?php echo amuj_price($shipping); ?></span></div>
             <div class="az-summary-row az-co-minus" data-az-row-discount hidden><span>تخفیف</span><span></span></div>
             <div class="az-summary-row az-co-minus" data-az-row-credit hidden><span>اعتبار</span><span></span></div>
             <div class="az-summary-row is-total"><span>مبلغ قابل پرداخت</span><span data-az-pay><?php echo amuj_price($subtotal + $shipping); ?></span></div>
