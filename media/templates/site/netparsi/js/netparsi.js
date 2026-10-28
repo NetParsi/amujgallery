@@ -59,6 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Footer columns collapse into an accordion on mobile
+  document.querySelectorAll('.az-footer-head').forEach(function (head) {
+    head.addEventListener('click', function () {
+      if (window.matchMedia('(min-width: 960px)').matches) return;
+      var col = head.closest('.az-footer-col');
+      col.classList.toggle('is-open');
+      head.setAttribute('aria-expanded', col.classList.contains('is-open'));
+    });
+  });
+
   // Category grid density (2 / 4 / 6 columns), remembered per browser
   var grid = document.getElementById('az-grid');
   var switches = document.querySelectorAll('.az-grid-switch button');

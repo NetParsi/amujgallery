@@ -18,6 +18,12 @@
 		<position>header-user</position>
 		<position>header-notifications</position>
 		<position>header-cart</position>
+		<position>newsletter</position>
+		<position>footer-1</position>
+		<position>footer-2</position>
+		<position>footer-3</position>
+		<position>footer-contact</position>
+		<position>footer-trust</position>
 		<position>debug</position>
 	</positions>
 	<media destination="templates/site/netparsi" folder="media">
