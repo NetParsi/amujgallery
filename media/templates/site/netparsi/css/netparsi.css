@@ -999,3 +999,20 @@ body:not(.az-scrolled) .az-header--overlay .az-bell svg { stroke: #fff; }
 @media (min-width: 960px) {
   .az-cat-side { height: calc(100vh - var(--az-header-h) - var(--az-bar-h) - 60px); min-height: 460px; }
 }
+
+/* Grid density switch as bar icons (one bar per column) */
+.az-cat .az-grid-switch { align-items: center; gap: 16px; }
+.az-cat .az-grid-switch button {
+  display: inline-flex; gap: 2px; align-items: center; padding: 4px 0;
+  opacity: .28; box-shadow: none; transition: opacity .2s;
+}
+.az-cat .az-grid-switch button:hover { opacity: .6; }
+.az-cat .az-grid-switch button.is-active { opacity: 1; box-shadow: none; font-weight: inherit; }
+.az-cat .az-grid-switch i { display: block; width: 4px; height: 12px; background: #000; }
+
+/* Outer edge spacing equals the gap between images */
+.az-cat-main .az-grid { padding-left: 4px; }
+@media (max-width: 959px) {
+  .az-cat-main .az-grid { padding: 0 4px; }
+  .az-cat .az-grid-switch i { width: 5px; height: 13px; }
+}

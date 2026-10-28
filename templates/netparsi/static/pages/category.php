@@ -28,10 +28,10 @@ $list = array_merge(array_keys($products), array_keys($products));
             <div class="az-grid-switch" role="group" aria-label="تعداد ستون‌ها">
                 <span class="az-grid-switch-label">نمایش</span>
                 <?php foreach ([4, 5, 6] as $n) : ?>
-                    <button type="button" class="az-desk-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo amuj_fa($n); ?></button>
+                    <button type="button" class="az-desk-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo str_repeat('<i></i>', $n); ?></button>
                 <?php endforeach; ?>
                 <?php foreach ([1, 2] as $n) : ?>
-                    <button type="button" class="az-mob-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo amuj_fa($n); ?></button>
+                    <button type="button" class="az-mob-only" data-cols="<?php echo $n; ?>" aria-label="<?php echo amuj_fa($n); ?> ستون"><?php echo str_repeat('<i></i>', $n); ?></button>
                 <?php endforeach; ?>
             </div>
         </div>
