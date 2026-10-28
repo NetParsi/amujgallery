@@ -182,7 +182,7 @@ if (!function_exists('amuj_url')) {
 
         return [
             // Real product for the presentation (first everywhere)
-            13 => ['name' => 'پیراهن حریر', 'cat' => 'پیراهن', 'price' => 2890000,
+            13 => ['name' => 'پیراهن حریر', 'cat' => 'پیراهن', 'price' => 15500000,
                    'img' => $harir . 'black.jpg', 'img2' => $harir . 'green.jpg', 'tag' => 'جدید',
                    'colors'       => ['#f6f3ec', $black, '#bcd6b4'],
                    'color_names'  => ['سفید', 'مشکی', 'سبز'],
