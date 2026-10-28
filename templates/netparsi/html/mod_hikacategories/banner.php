@@ -4,17 +4,11 @@
  */
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Uri\Uri;
-
 if (empty($categories)) {
     return;
 }
 
-defined('AMUJ_BASE') || define('AMUJ_BASE', Uri::root());
-defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
-require_once JPATH_THEMES . '/netparsi/static/_helpers.php';
-
-$e = static fn ($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+require __DIR__ . '/_amuj.php';
 ?>
 <?php foreach ($categories as $category) :
     $text = trim(strip_tags($category->description)) ?: 'مشاهده کالکشن'; ?>
