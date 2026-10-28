@@ -11,27 +11,34 @@ $free      = amuj_free_shipping();
 $remaining = max(0, $free - $total);
 $progress  = min(100, round($total / $free * 100));
 ?>
-<div class="az-cart">
-    <ul class="az-tabs">
-        <li><a class="is-active" href="<?php echo amuj_url('cart'); ?>">سبد خرید (<?php echo amuj_fa(count($items)); ?>)</a></li>
-        <li><a href="#">علاقه‌مندی‌ها</a></li>
-    </ul>
+<?php // Same frame as checkout: centered, main column + 380px summary box ?>
+<div class="az-checkout az-cart">
+    <div class="az-cart-main">
+        <div class="az-steps">
+            <span class="is-active">۱. سبد خرید</span>
+            <span>۲. ارسال</span>
+            <span>۳. پرداخت</span>
+        </div>
 
-    <div class="az-cart-layout">
-        <div class="az-cart-items">
+        <h1 class="az-title az-cart-title">سبد خرید <span class="az-muted">(<?php echo amuj_fa(count($items)); ?> کالا)</span></h1>
+
+        <div class="az-cart-list">
             <?php foreach ($items as $id => $item) : $p = $products[$id]; ?>
-                <div class="az-cart-item">
-                    <a href="<?php echo amuj_url('product', ['id' => $id]); ?>"><img src="<?php echo amuj_img($p['img'], 600); ?>" alt=""></a>
-                    <div class="az-meta">
-                        <div><?php echo $p['name']; ?></div>
-                        <div><?php echo amuj_price($p['price']); ?></div>
-                        <div class="az-muted"><?php echo $item['color']; ?> | سایز <?php echo $item['size']; ?></div>
-                        <div class="az-qty"><button type="button" data-step="-">−</button><span data-n="<?php echo $item['qty']; ?>"><?php echo amuj_fa($item['qty']); ?></span><button type="button" data-step="+">+</button></div>
-                        <a class="az-remove">حذف</a>
+                <div class="az-cart-row">
+                    <a class="az-cart-row-img" href="<?php echo amuj_url('product', ['id' => $id]); ?>"><img src="<?php echo amuj_img($p['img'], 300); ?>" alt=""></a>
+                    <div class="az-cart-row-info">
+                        <a class="az-cart-row-name" href="<?php echo amuj_url('product', ['id' => $id]); ?>"><?php echo $p['name']; ?></a>
+                        <span class="az-muted"><?php echo $item['color']; ?> | سایز <?php echo $item['size']; ?></span>
+                        <div class="az-cart-row-actions">
+                            <div class="az-qty"><button type="button" data-step="-">−</button><span data-n="<?php echo $item['qty']; ?>"><?php echo amuj_fa($item['qty']); ?></span><button type="button" data-step="+">+</button></div>
+                            <a class="az-remove">حذف</a>
+                        </div>
                     </div>
+                    <strong class="az-cart-row-price"><?php echo amuj_price($p['price']); ?></strong>
                 </div>
             <?php endforeach; ?>
         </div>
+    </div>
 
         <aside class="az-summary az-cart-summary">
             <h2 class="az-title">خلاصه سبد</h2>
@@ -59,9 +66,10 @@ $progress  = min(100, round($total / $free * 100));
             <a class="az-btn az-btn--block az-cart-next" href="<?php echo amuj_url('checkout'); ?>">ادامه فرایند خرید</a>
             <p class="az-small az-muted uk-margin-small-top">هزینه ارسال نهایی پس از ثبت آدرس در مرحله بعد محاسبه می‌شود.</p>
         </aside>
-    </div>
+</div>
 
-    <section class="az-section" style="padding-left:0;padding-right:0">
+<div class="az-cart-more">
+    <section class="az-section">
         <div class="az-section-head"><h2>شاید بپسندید</h2></div>
         <div class="az-row-slider" uk-slider="finite: true">
             <ul class="uk-slider-items">
