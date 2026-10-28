@@ -1725,3 +1725,14 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-product-gallery .az-zoom { flex: 0 0 85%; scroll-snap-align: start; }
   .az-product-gallery .az-zoom img { flex: none; width: 100%; }
 }
+
+/* Photo zoom on mobile: thumbnails in a small row under the photo instead of over it */
+@media (max-width: 959px) {
+  .uk-lightbox > .uk-position-center-right:has(.uk-lightbox-thumbnav) {
+    top: auto !important; bottom: 18px; left: 0; right: 0; margin: 0; transform: none !important; display: flex; justify-content: center;
+  }
+  .uk-lightbox-thumbnav.uk-thumbnav-vertical { flex-direction: row; gap: 6px; margin: 0; padding: 0; }
+  .uk-lightbox-thumbnav.uk-thumbnav-vertical > * { padding: 0; margin: 0; }
+  .uk-lightbox-thumbnav img { width: 44px; height: auto; }
+  .uk-lightbox-thumbnav > .uk-active img { outline: 1px solid #000; outline-offset: 2px; }
+}
