@@ -21,7 +21,7 @@ $action  = Uri::root() . 'index.php?option=com_ajax&group=ajax&plugin=amujcontac
     <header class="az-page-head">
         <span class="az-num"><?php echo $this->escape($item->title); ?></span>
         <h1>خوشحال می‌شویم از شما بشنویم</h1>
-        <div class="az-muted"><?php echo $item->text; ?></div>
+        <p class="az-muted"><?php echo strip_tags($item->text, '<a><strong><b><em><br>'); ?></p>
     </header>
 
     <div class="az-contact-grid">
