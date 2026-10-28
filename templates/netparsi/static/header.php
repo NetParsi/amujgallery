@@ -25,6 +25,22 @@ $menuTree = [
 $menuLinks = ['درباره آموژ' => amuj_url('about'), 'راهنما' => amuj_url('help'), 'حساب کاربری' => amuj_url('account')];
 $cartCount = amuj_fa(2);
 
+/*
+ * Menu images: shown beside the menu on desktop (follows hover) and as cards on mobile.
+ * Dynamic: the "Link Image" field of each Joomla menu item.
+ */
+$sectionImages = ['فروشگاه' => 1, 'کالکشن‌ها' => 20, 'حراج' => 5];
+$itemImages    = ['مانتو' => 4, 'کت' => 1, 'پالتو' => 8, 'بارانی' => 3, 'پیراهن' => 2, 'ست' => 5, 'شلوار' => 7,
+    'دامن' => 6, 'شومیز' => 9, 'اکسسوری' => 10, 'جدیدترین‌ها' => 11, 'پرفروش‌ها' => 13, 'حراج' => 5];
+$menuImg = function ($label) use ($itemImages) {
+    return $itemImages[$label] ?? (abs(crc32($label)) % 22) + 1;
+};
+$menuPromos = [
+    'فروشگاه'   => [['جدیدترین‌ها', 11], ['پالتو', 8]],
+    'کالکشن‌ها' => [['پاییز و زمستان ۱۴۰۵', 20], ['AMUJ STUDIO', 19]],
+    'حراج'      => [['تا ۵۰٪', 5], ['آخرین سایزها', 6]],
+];
+
 $icoSearch = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
 $icoUser   = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
 $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg>';
@@ -73,13 +89,13 @@ $announcements = [
         <?php if ($hasModules('header-user')) : ?>
             <jdoc:include type="modules" name="header-user" style="none" />
         <?php else : ?>
-            <a class="az-desk" href="<?php echo amuj_url('login'); ?>">ورود</a>
+            <a class="az-user-link" href="<?php echo amuj_url('login'); ?>" aria-label="ورود به حساب"><?php echo str_replace('class="az-ico"', 'class="az-ico az-ico--keep"', $icoUser); ?><span class="az-txt">ورود</span></a>
         <?php endif; ?>
         <a class="az-desk" href="<?php echo amuj_url('help'); ?>">راهنما</a>
         <?php if ($hasModules('header-cart')) : ?>
             <jdoc:include type="modules" name="header-cart" style="none" />
         <?php else : ?>
-            <a class="az-cart-link" href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید"><span class="az-txt">سبد (<?php echo $cartCount; ?>)</span><span class="az-bag"><?php echo $cartCount; ?></span></a>
+            <a class="az-cart-link" href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید، <?php echo $cartCount; ?> کالا"><span class="az-txt">سبد</span><span class="az-bag"><?php echo $cartCount; ?></span></a>
         <?php endif; ?>
     </nav>
 </header>
@@ -100,7 +116,7 @@ $announcements = [
             <div>
                 <ul class="az-menu-sections" uk-switcher="connect: #az-menu-panels; toggle: > li > a">
                     <?php foreach (array_keys($menuTree) as $section) : ?>
-                        <li><a href="#"><?php echo $section; ?></a></li>
+                        <li><a href="#" data-az-img="<?php echo $sectionImages[$section]; ?>"><?php echo $section; ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 <ul class="az-menu-extra">
@@ -111,8 +127,16 @@ $announcements = [
             </div>
 
             <ul id="az-menu-panels" class="uk-switcher az-menu-panels">
-                <?php foreach ($menuTree as $groups) : ?>
+                <?php foreach ($menuTree as $section => $groups) : ?>
                     <li>
+                        <div class="az-menu-promos">
+                            <?php foreach ($menuPromos[$section] as [$label, $img]) : ?>
+                                <a class="az-menu-promo" href="<?php echo amuj_url('category', ['cat' => $label]); ?>">
+                                    <img src="<?php echo amuj_img($img, 500); ?>" alt="" loading="lazy">
+                                    <span><?php echo $label; ?></span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
                         <?php $n = 0; foreach ($groups as $group => $items) : $n++; ?>
                             <div class="az-menu-group">
                                 <div class="az-menu-group-title">
@@ -122,7 +146,7 @@ $announcements = [
                                 <ul class="az-menu-list">
                                     <?php foreach ($items as $item) :
                                         $classes = trim(($item === 'حراج' ? 'az-sale ' : '') . ((isset($_GET['cat']) && $_GET['cat'] === $item) ? 'is-active' : '')); ?>
-                                        <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>"<?php echo $classes ? ' class="' . $classes . '"' : ''; ?>><?php echo $item; ?></a></li>
+                                        <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>" data-az-img="<?php echo $menuImg($item); ?>"<?php echo $classes ? ' class="' . $classes . '"' : ''; ?>><?php echo $item; ?></a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
@@ -130,6 +154,23 @@ $announcements = [
                     </li>
                 <?php endforeach; ?>
             </ul>
+
+            <?php
+            // Desktop image panel: one layer per image, the hovered item's layer fades in
+            $panelImages = array_unique(array_merge(array_values($sectionImages), array_values($itemImages)));
+            foreach ($menuTree as $groups) {
+                foreach ($groups as $items) {
+                    foreach ($items as $item) {
+                        $panelImages[] = $menuImg($item);
+                    }
+                }
+            }
+            ?>
+            <div class="az-menu-visual" aria-hidden="true">
+                <?php foreach (array_unique($panelImages) as $img) : ?>
+                    <img src="<?php echo amuj_img($img, 900); ?>" data-az-layer="<?php echo $img; ?>" alt="" loading="lazy"<?php echo $img === $sectionImages['فروشگاه'] ? ' class="is-active"' : ''; ?>>
+                <?php endforeach; ?>
+            </div>
 
             <ul class="az-menu-extra az-menu-extra--mobile">
                 <?php foreach ($menuLinks as $label => $url) : ?>

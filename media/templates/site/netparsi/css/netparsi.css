@@ -643,3 +643,53 @@ body:not(.az-scrolled) .az-header--overlay .az-bag::before { border-color: #fff;
   .az-topbar { font-size: 12px; }
   .az-topbar-track span { padding: 0 36px; }
 }
+
+/* ---------- Header icons, bigger burger, menu imagery ---------- */
+.az-burger { width: 34px; gap: 9px; padding: 10px 0; margin-top: 4px; }
+.az-burger span { height: 1.5px; }
+
+.az-header-end { align-items: center; }
+.az-ico--keep { display: inline-block; }
+.az-user-link, .az-cart-link { display: inline-flex; align-items: center; gap: 7px; }
+.az-header-end .az-bag { display: inline-flex; }
+.az-header-end .az-ico { width: 20px; height: 20px; }
+
+/* Desktop: image beside the menu that follows the hovered item */
+.az-menu-body { grid-template-columns: 280px minmax(0, 1fr) minmax(300px, 30vw); }
+.az-menu-visual {
+  position: sticky; top: 20px; align-self: start;
+  aspect-ratio: 3 / 4; max-height: calc(100vh - 170px); width: 100%;
+  overflow: hidden; background: var(--az-soft);
+}
+.az-menu-visual img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transform: scale(1.06);
+  transition: opacity .6s ease, transform 1.4s cubic-bezier(.2,.7,.2,1);
+}
+.az-menu-visual img.is-active { opacity: 1; transform: none; }
+.az-menu-promos { display: none; }
+
+@media (max-width: 959px) {
+  .az-burger { width: 30px; gap: 8px; }
+  .az-menu-visual { display: none; }
+  .az-header-end .az-ico { width: 21px; height: 21px; }
+
+  /* Mobile: Zara-style image cards at the top of each section */
+  .az-menu-promos {
+    display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
+    margin: 0 calc(var(--az-gutter) * -1) 32px; padding: 0 var(--az-gutter);
+  }
+  .az-menu-promos::-webkit-scrollbar { display: none; }
+  .az-menu-promo { position: relative; flex: 0 0 46%; aspect-ratio: 3 / 4; overflow: hidden; background: var(--az-soft); }
+  .az-menu-promo img { width: 100%; height: 100%; object-fit: cover; }
+  .az-menu-promo span {
+    position: absolute; right: 10px; bottom: 10px; left: 10px;
+    color: #fff; font-family: var(--az-title-font); font-size: 17px; text-shadow: 0 1px 10px rgba(0,0,0,.4);
+  }
+}
+@media (min-width: 960px) and (max-width: 1199px) {
+  .az-menu-body { grid-template-columns: 240px minmax(0, 1fr); }
+  .az-menu-visual { display: none; }
+}
+.az-menu-promo::after { content: ""; position: absolute; inset: 55% 0 0 0; background: linear-gradient(to top, rgba(0,0,0,.45), transparent); }
+.az-menu-promo span { z-index: 1; }

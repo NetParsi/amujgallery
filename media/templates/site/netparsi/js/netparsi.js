@@ -38,6 +38,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Desktop menu: the image beside the menu follows the hovered section / link
+  var menuEl = document.getElementById('az-menu');
+  if (menuEl && menuEl.querySelector('[data-az-layer]')) {
+    var layers = menuEl.querySelectorAll('[data-az-layer]');
+    var showLayer = function (key) {
+      layers.forEach(function (l) { l.classList.toggle('is-active', l.dataset.azLayer === String(key)); });
+    };
+    var sectionImg = function () {
+      var a = menuEl.querySelector('.az-menu-sections .uk-active a') || menuEl.querySelector('.az-menu-sections a');
+      return a ? a.dataset.azImg : null;
+    };
+    menuEl.addEventListener('mouseover', function (e) {
+      var t = e.target.closest('[data-az-img]');
+      if (t) showLayer(t.dataset.azImg);
+    });
+    menuEl.querySelector('.az-menu-panels').addEventListener('mouseleave', function () {
+      var k = sectionImg();
+      if (k) showLayer(k);
+    });
+  }
+
   // Category grid density (2 / 4 / 6 columns), remembered per browser
   var grid = document.getElementById('az-grid');
   var switches = document.querySelectorAll('.az-grid-switch button');
