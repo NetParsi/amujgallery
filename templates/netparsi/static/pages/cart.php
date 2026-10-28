@@ -2,7 +2,7 @@
 defined('_JEXEC') or die;
 
 $products = amuj_products();
-$items    = [1 => ['size' => 'S', 'qty' => 1], 4 => ['size' => 'M', 'qty' => 1]];
+$items    = [13 => ['size' => '۳۸', 'color' => 'مشکی', 'qty' => 1], 2 => ['size' => 'M', 'color' => 'مشکی', 'qty' => 1]];
 $total    = 0;
 ?>
 <div class="az-cart">
@@ -18,7 +18,7 @@ $total    = 0;
                 <div class="az-meta">
                     <div><?php echo $p['name']; ?></div>
                     <div><?php echo amuj_price($p['price']); ?></div>
-                    <div class="az-muted">مشکی | <?php echo $item['size']; ?></div>
+                    <div class="az-muted"><?php echo $item['color']; ?> | سایز <?php echo $item['size']; ?></div>
                     <div class="az-qty"><button type="button" data-step="-">−</button><span data-n="<?php echo $item['qty']; ?>"><?php echo amuj_fa($item['qty']); ?></span><button type="button" data-step="+">+</button></div>
                     <a class="az-remove">حذف</a>
                 </div>
