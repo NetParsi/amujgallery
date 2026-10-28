@@ -77,7 +77,7 @@ $singleSize = count($sizes) === 1;
 
         <div class="az-buy-links">
             <a href="#">راهنمای سایز</a>
-            <a href="<?php echo amuj_url('help'); ?>">ارسال، تعویض و مرجوعی</a>
+            <a href="<?php echo amuj_url('policy', ['doc' => 'returns']); ?>">ارسال، تعویض و مرجوعی</a>
         </div>
     </aside>
 </div>

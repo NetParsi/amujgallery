@@ -33,6 +33,8 @@ if (!function_exists('amuj_url')) {
             'messages' => ['پیام‌های من', false],
             'help'     => ['راهنما و پشتیبانی', false],
             'about'    => ['درباره ما', false],
+            'contact'  => ['تماس با ما', false],
+            'policy'   => ['قوانین و راهنما', false],
         ];
     }
 

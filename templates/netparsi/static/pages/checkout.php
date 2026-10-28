@@ -83,6 +83,6 @@ $subtotal = $products[13]['price'] + $products[2]['price'];
             <div class="az-summary-row is-total"><span>مبلغ قابل پرداخت</span><span data-az-pay><?php echo amuj_price($subtotal + $shipping); ?></span></div>
         </div>
         <a class="az-btn az-btn--block uk-margin-top" href="<?php echo amuj_url('thankyou'); ?>">پرداخت و ثبت سفارش</a>
-        <p class="az-small az-muted uk-margin-small-top">با ثبت سفارش، <a class="az-link" href="#">قوانین و مقررات</a> را می‌پذیرید.</p>
+        <p class="az-small az-muted uk-margin-small-top">با ثبت سفارش، <a class="az-link" href="<?php echo amuj_url('policy', ['doc' => 'terms']); ?>">قوانین و مقررات</a> را می‌پذیرید.</p>
     </aside>
 </div>

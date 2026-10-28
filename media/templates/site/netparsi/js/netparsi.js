@@ -132,6 +132,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Contact form (sample: validates and shows a thank-you; the form extension sends it)
+  var contactForm = document.querySelector('[data-az-contact]');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = contactForm.name.value.trim().length > 2 && contactForm.phone.value.replace(/\D/g, '').length >= 10 && contactForm.message.value.trim().length > 3;
+      contactForm.querySelector('[data-error]').textContent = ok ? '' : 'لطفاً نام، شماره موبایل و متن پیام را کامل وارد کنید.';
+      if (!ok) return;
+      var btn = contactForm.querySelector('button[type="submit"]');
+      btn.classList.add('is-loading');
+      setTimeout(function () {
+        btn.classList.remove('is-loading');
+        contactForm.querySelectorAll('.az-field, button[type="submit"]').forEach(function (el) { el.hidden = true; });
+        contactForm.querySelector('.az-contact-done').hidden = false;
+      }, 800);
+    });
+  }
+
   // Swipe rows (category / account menus): bring the active item into view
   document.querySelectorAll('.az-cat-nav .is-active, .az-account-nav .is-active').forEach(function (a) {
     var row = a.parentElement;

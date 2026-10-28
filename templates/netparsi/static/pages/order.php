@@ -77,7 +77,7 @@ amuj_account_open('order');
 
 <div class="az-order-actions">
     <a class="az-btn az-btn--ghost" href="#" onclick="window.print(); return false;">چاپ فاکتور</a>
-    <?php if ($order['step'] === 4) : ?><a class="az-btn az-btn--ghost" href="<?php echo amuj_url('help'); ?>">درخواست مرجوعی</a><?php endif; ?>
-    <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('help'); ?>#contact">پشتیبانی سفارش</a>
+    <?php if ($order['step'] === 4) : ?><a class="az-btn az-btn--ghost" href="<?php echo amuj_url('policy', ['doc' => 'returns']); ?>">درخواست مرجوعی</a><?php endif; ?>
+    <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('contact'); ?>">پشتیبانی سفارش</a>
 </div>
 <?php amuj_account_close(); ?>

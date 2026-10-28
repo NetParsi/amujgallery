@@ -28,7 +28,7 @@ defined('_JEXEC') or die;
                 <span class="az-auth-error" data-error></span>
             </div>
             <button class="az-btn az-btn--block" type="submit" disabled>ارسال کد تأیید</button>
-            <p class="az-auth-terms">ورود شما به معنای پذیرش <a class="az-link" href="<?php echo amuj_url('help'); ?>">قوانین و حریم خصوصی</a> گالری آموژ است.</p>
+            <p class="az-auth-terms">ورود شما به معنای پذیرش <a class="az-link" href="<?php echo amuj_url('policy', ['doc' => 'privacy']); ?>">قوانین و حریم خصوصی</a> گالری آموژ است.</p>
         </form>
 
         <!-- Step 2: code -->

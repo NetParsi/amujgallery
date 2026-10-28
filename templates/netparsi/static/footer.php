@@ -11,20 +11,20 @@ $hasModules = function ($position) {
 
 $columns = [
     'footer-1' => ['خرید آنلاین', [
-        'راهنمای خرید'      => amuj_url('help'),
-        'شیوه‌های پرداخت'   => amuj_url('help'),
-        'ارسال و تحویل'     => amuj_url('help'),
-        'تعویض و مرجوعی'    => amuj_url('help'),
+        'سؤالات متداول'     => amuj_url('help'),
+        'شرایط خرید و پرداخت' => amuj_url('policy', ['doc' => 'terms']),
+        'ارسال و تحویل'     => amuj_url('policy', ['doc' => 'shipping']),
+        'تعویض و مرجوعی'    => amuj_url('policy', ['doc' => 'returns']),
         'پیگیری سفارش'      => amuj_url('account'),
         'راهنمای سایز'      => amuj_url('help'),
     ]],
     'footer-2' => ['گالری آموژ', [
         'درباره ما'          => amuj_url('about'),
-        'تماس با ما'         => amuj_url('help') . '#contact',
+        'تماس با ما'         => amuj_url('contact'),
         'فروشگاه‌های حضوری' => amuj_url('about'),
         'فرصت‌های شغلی'     => amuj_url('about'),
-        'قوانین و مقررات'   => amuj_url('help'),
-        'حریم خصوصی'        => amuj_url('help'),
+        'قوانین و مقررات'   => amuj_url('policy', ['doc' => 'terms']),
+        'حریم خصوصی'        => amuj_url('policy', ['doc' => 'privacy']),
     ]],
     'footer-3' => ['دسته‌بندی‌ها', array_combine(amuj_categories(), array_map(function ($c) {
         return amuj_url('category', ['cat' => $c]);
