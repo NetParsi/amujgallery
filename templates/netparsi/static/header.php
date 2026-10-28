@@ -235,13 +235,13 @@ $announcements = [
 
 <?php if ($amujUser) :
     /*
-     * Customer panel. Club level / wallet / credit are sample values until the
+     * Customer panel. Club level / wallet are sample values until the
      * custom customer-club extension is installed; it can render into the same markup.
      */
     $userLinks = [
         ['سفارش‌های من', amuj_url('orders'), ''],
         ['آدرس‌ها', amuj_url('addresses'), ''],
-        ['کیف پول و اعتبارها', amuj_url('credits'), amuj_price($amujUser['credit'])],
+        ['کیف پول', amuj_url('credits'), amuj_price($amujUser['wallet'])],
         ['پیام‌های من', amuj_url('messages'), $amujUser['unread'] ? amuj_fa($amujUser['unread']) . ' پیام جدید' : ''],
     ];
     ?>

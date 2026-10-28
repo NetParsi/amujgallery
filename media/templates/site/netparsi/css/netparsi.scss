@@ -1402,3 +1402,22 @@ a.az-dash-stat:hover { background: #ebebe8; box-shadow: none; }
 }
 /* RTL: each step line connects to the previous step on its right */
 .az-track li::after { right: auto; left: 50%; }
+
+/* ---------- Dashboard: wallet + profile with birthday ---------- */
+.az-dash-grid--club { grid-template-columns: 1.4fr 1fr; }
+.az-account-phone { display: block; margin-top: 2px; color: var(--az-gray) !important; text-align: right; font-size: 13px; }
+.az-wallet-hero { max-width: 460px; }
+.az-profile { border: 1px solid var(--az-line); padding: 20px 22px; }
+.az-profile .az-dl { grid-template-columns: 150px minmax(0, 1fr); margin: 0; align-items: center; }
+.az-profile dd { min-height: 30px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.az-profile dd.is-new { animation: azPopIn .4s ease-out; color: var(--az-accent-ink); font-weight: 500; }
+.az-btn--sm { min-height: 32px; padding: 0 14px; font-size: 13px; }
+.az-profile-hint { margin: 16px 0 0; padding: 12px 14px; background: var(--az-accent-soft); font-size: 13px; }
+.az-modal--sm { width: 440px; }
+.az-birthday-form { display: grid; grid-template-columns: 1fr 1.4fr 1.2fr; gap: 0 14px; margin-top: 18px; }
+.az-birthday-form .az-auth-error, .az-birthday-form .az-btn { grid-column: 1 / -1; }
+.az-birthday-form .az-auth-error { margin: 0 0 8px; min-height: 0; }
+@media (max-width: 959px) {
+  .az-dash-grid--club { grid-template-columns: 1fr; }
+  .az-profile .az-dl { grid-template-columns: 110px minmax(0, 1fr); }
+}

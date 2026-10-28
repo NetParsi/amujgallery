@@ -112,6 +112,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Dashboard: save birthday from the popup (sample; the club extension stores it)
+  var bdayForm = document.querySelector('[data-az-birthday-form]');
+  if (bdayForm) {
+    bdayForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var d = bdayForm.day, m = bdayForm.month, y = bdayForm.year;
+      if (!d.value || !m.value || !y.value) {
+        bdayForm.querySelector('[data-error]').textContent = 'روز، ماه و سال تولد را انتخاب کنید.';
+        return;
+      }
+      var cell = document.querySelector('[data-az-birthday]');
+      cell.textContent = d.options[d.selectedIndex].text + ' ' + m.value + ' ' + y.options[y.selectedIndex].text;
+      cell.classList.add('is-new');
+      var hint = document.querySelector('[data-az-birthday-hint]');
+      if (hint) hint.remove();
+      if (window.UIkit) UIkit.modal('#az-birthday').hide();
+      notify('تاریخ تولد شما ثبت شد');
+    });
+  }
+
   // Swipe rows (category / account menus): bring the active item into view
   document.querySelectorAll('.az-cat-nav .is-active, .az-account-nav .is-active').forEach(function (a) {
     var row = a.parentElement;

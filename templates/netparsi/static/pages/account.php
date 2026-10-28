@@ -13,7 +13,7 @@ amuj_account_open('account');
 ?>
 <h1 class="az-account-title">سلام <?php echo $user['first']; ?>، خوش آمدید</h1>
 
-<div class="az-dash-grid">
+<div class="az-dash-grid az-dash-grid--club">
     <div class="az-club az-dash-club">
         <div class="az-club-head">
             <span class="az-club-label">باشگاه مشتریان آموژ</span>
@@ -27,11 +27,65 @@ amuj_account_open('account');
     <a class="az-dash-stat" href="<?php echo amuj_url('credits'); ?>">
         <span>موجودی کیف پول</span>
         <strong><?php echo amuj_price($user['wallet']); ?></strong>
+        <small class="az-muted">قابل استفاده در پرداخت سفارش‌ها</small>
     </a>
-    <a class="az-dash-stat" href="<?php echo amuj_url('credits'); ?>">
-        <span>اعتبار قابل استفاده</span>
-        <strong><?php echo amuj_price($user['credit']); ?></strong>
-    </a>
+</div>
+
+<section class="az-dash-section">
+    <div class="az-dash-head"><h2>اطلاعات حساب</h2></div>
+    <div class="az-profile">
+        <dl class="az-dl">
+            <dt>نام و نام خانوادگی</dt><dd><?php echo $user['name']; ?></dd>
+            <dt>شماره موبایل</dt><dd dir="ltr" class="uk-text-right"><?php echo $user['mobile']; ?></dd>
+            <dt>ایمیل</dt><dd dir="ltr" class="uk-text-right"><?php echo $user['email']; ?></dd>
+            <dt>تاریخ تولد</dt>
+            <dd data-az-birthday>
+                <?php if ($user['birthday']) : ?>
+                    <?php echo $user['birthday']; ?>
+                <?php else : ?>
+                    <span class="az-muted" data-az-birthday-text>ثبت نشده</span>
+                    <button class="az-btn az-btn--ghost az-btn--sm" type="button" uk-toggle="target: #az-birthday" data-az-birthday-btn>ثبت تاریخ تولد</button>
+                <?php endif; ?>
+            </dd>
+        </dl>
+        <?php if (!$user['birthday']) : ?>
+            <p class="az-profile-hint" data-az-birthday-hint>تاریخ تولد خود را ثبت کنید تا در روز تولدتان هدیه کیف پول دریافت کنید.</p>
+        <?php endif; ?>
+    </div>
+</section>
+
+<?php
+// Birthday popup (Persian calendar). Dynamic: saved to the customer profile by the club extension.
+$months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+?>
+<div id="az-birthday" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body az-modal az-modal--sm">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <h2 class="az-title">ثبت تاریخ تولد</h2>
+        <p class="az-muted az-small">تاریخ تولد فقط یک بار ثبت می‌شود و برای ارسال هدیه تولد استفاده خواهد شد.</p>
+        <form class="az-birthday-form" data-az-birthday-form>
+            <div class="az-field"><label>روز</label>
+                <select class="az-select" name="day" required>
+                    <option value="">روز</option>
+                    <?php for ($d = 1; $d <= 31; $d++) : ?><option value="<?php echo $d; ?>"><?php echo amuj_fa($d); ?></option><?php endfor; ?>
+                </select>
+            </div>
+            <div class="az-field"><label>ماه</label>
+                <select class="az-select" name="month" required>
+                    <option value="">ماه</option>
+                    <?php foreach ($months as $m) : ?><option><?php echo $m; ?></option><?php endforeach; ?>
+                </select>
+            </div>
+            <div class="az-field"><label>سال</label>
+                <select class="az-select" name="year" required>
+                    <option value="">سال</option>
+                    <?php for ($y = 1390; $y >= 1320; $y--) : ?><option value="<?php echo $y; ?>"><?php echo amuj_fa($y); ?></option><?php endfor; ?>
+                </select>
+            </div>
+            <p class="az-auth-error" data-error></p>
+            <button class="az-btn az-btn--block" type="submit">ذخیره تاریخ تولد</button>
+        </form>
+    </div>
 </div>
 
 <section class="az-dash-section">

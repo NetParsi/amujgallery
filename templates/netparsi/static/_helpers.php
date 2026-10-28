@@ -29,7 +29,7 @@ if (!function_exists('amuj_url')) {
             'orders'   => ['سفارش‌های من', false],
             'order'    => ['جزئیات سفارش', false],
             'addresses'=> ['آدرس‌های من', false],
-            'credits'  => ['کیف پول و اعتبارها', false],
+            'credits'  => ['کیف پول', false],
             'messages' => ['پیام‌های من', false],
             'help'     => ['راهنما و پشتیبانی', false],
             'about'    => ['درباره ما', false],
@@ -93,7 +93,9 @@ if (!function_exists('amuj_url')) {
             'progress'   => 68,
             'remaining'  => 850000,
             'wallet'     => 1250000,
-            'credit'     => 300000,
+            'mobile'     => '۰۹۱۲۱۲۳۴۵۶۷',
+            'email'      => 'sara.mohammadi@example.com',
+            'birthday'   => '', // empty = not entered yet (dashboard shows the add button)
             'unread'     => 2,
         ];
     }
@@ -110,7 +112,7 @@ if (!function_exists('amuj_url')) {
             'account'   => 'داشبورد',
             'orders'    => 'سفارش‌های من',
             'addresses' => 'آدرس‌ها',
-            'credits'   => 'کیف پول و اعتبارها',
+            'credits'   => 'کیف پول',
             'messages'  => 'پیام‌های من',
         ];
     }
@@ -126,6 +128,7 @@ if (!function_exists('amuj_url')) {
                 <div class="az-account-hello">
                     <strong><?php echo $user['name']; ?></strong>
                     <span>سطح <?php echo $user['level']; ?></span>
+                    <span class="az-account-phone" dir="ltr"><?php echo $user['mobile']; ?></span>
                 </div>
                 <nav class="az-account-nav" aria-label="حساب کاربری">
                     <?php foreach (amuj_account_menu() as $key => $label) : ?>
@@ -187,16 +190,15 @@ if (!function_exists('amuj_url')) {
         return [$labels[$order['step']], $order['step'] >= 4 ? 'done' : ($order['step'] === 3 ? 'shipped' : 'active')];
     }
 
-    /** Wallet and credit history (sample). Dynamic: the customer-club extension. */
+    /** Wallet history (sample). Dynamic: the customer-club extension. */
     function amuj_transactions()
     {
         return [
-            ['date' => '۸ آبان ۱۴۰۵', 'title' => 'اعتبار هدیه ارتقای سطح', 'type' => 'credit', 'amount' => 300000],
+            ['date' => '۸ آبان ۱۴۰۵', 'title' => 'هدیه ارتقای سطح به نقره‌ای', 'type' => 'wallet', 'amount' => 300000],
             ['date' => '۲۱ مهر ۱۴۰۵', 'title' => 'پرداخت بخشی از سفارش AM-140421-1984', 'type' => 'wallet', 'amount' => -450000],
             ['date' => '۱۵ مهر ۱۴۰۵', 'title' => 'بازگشت وجه سفارش لغوشده AM-140302-0118', 'type' => 'wallet', 'amount' => 1590000],
             ['date' => '۱۷ شهریور ۱۴۰۵', 'title' => 'پرداخت سفارش AM-140317-0442', 'type' => 'wallet', 'amount' => -2290000],
-            ['date' => '۱ شهریور ۱۴۰۵', 'title' => 'اعتبار هدیه تولد', 'type' => 'credit', 'amount' => 150000],
-            ['date' => '۱ شهریور ۱۴۰۵', 'title' => 'استفاده از اعتبار در سفارش AM-140317-0442', 'type' => 'credit', 'amount' => -150000],
+            ['date' => '۱ شهریور ۱۴۰۵', 'title' => 'هدیه تولد', 'type' => 'wallet', 'amount' => 150000],
         ];
     }
 
@@ -218,13 +220,13 @@ if (!function_exists('amuj_url')) {
     function amuj_notifications()
     {
         return [
-            ['type' => 'credit', 'label' => 'اعتبار', 'title' => '۳۰۰٬۰۰۰ تومان اعتبار به حساب شما اضافه شد',
-             'text' => 'این اعتبار تا ۳۰ آذر ۱۴۰۵ قابل استفاده است.', 'time' => '۲ ساعت پیش', 'unread' => true],
+            ['type' => 'credit', 'label' => 'کیف پول', 'title' => '۳۰۰٬۰۰۰ تومان به کیف پول شما اضافه شد',
+             'text' => 'هدیه ارتقای سطح شما به «نقره‌ای». این مبلغ در پرداخت سفارش‌ها قابل استفاده است.', 'time' => '۲ ساعت پیش', 'unread' => true],
             ['type' => 'level', 'label' => 'باشگاه مشتریان', 'title' => 'تبریک! سطح شما به «نقره‌ای» ارتقا یافت',
              'text' => 'از این پس از ارسال رایگان و پیش‌خرید کالکشن‌های جدید بهره‌مند می‌شوید.', 'time' => 'دیروز', 'unread' => true],
             ['type' => 'manual', 'label' => 'گالری آموژ', 'title' => 'کالکشن پاییز ۱۴۰۵ برای اعضای باشگاه زودتر در دسترس است',
              'text' => 'تا پایان هفته، پیش از عرضه عمومی خرید کنید.', 'time' => '۳ روز پیش', 'unread' => false],
-            ['type' => 'credit', 'label' => 'اعتبار', 'title' => '۱۵۰٬۰۰۰ تومان اعتبار هدیه تولد',
+            ['type' => 'credit', 'label' => 'کیف پول', 'title' => '۱۵۰٬۰۰۰ تومان هدیه تولد به کیف پول شما اضافه شد',
              'text' => 'تولدتان مبارک! این هدیه کوچک از طرف آموژ است.', 'time' => '۲ هفته پیش', 'unread' => false],
         ];
     }

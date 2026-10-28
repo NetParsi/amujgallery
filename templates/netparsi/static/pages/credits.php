@@ -6,19 +6,12 @@ $rows = amuj_transactions();
 
 amuj_account_open('credits');
 ?>
-<h1 class="az-account-title">کیف پول و اعتبارها</h1>
+<h1 class="az-account-title">کیف پول</h1>
 
-<div class="az-dash-grid az-dash-grid--two">
-    <div class="az-dash-stat az-dash-stat--big">
-        <span>موجودی کیف پول</span>
-        <strong><?php echo amuj_price($user['wallet']); ?></strong>
-        <small class="az-muted">قابل استفاده در پرداخت سفارش‌ها</small>
-    </div>
-    <div class="az-dash-stat az-dash-stat--big az-dash-stat--accent">
-        <span>اعتبار هدیه</span>
-        <strong><?php echo amuj_price($user['credit']); ?></strong>
-        <small class="az-muted">اعتبار ارتقای سطح، تا ۳۰ آذر ۱۴۰۵</small>
-    </div>
+<div class="az-dash-stat az-dash-stat--big az-dash-stat--accent az-wallet-hero">
+    <span>موجودی کیف پول</span>
+    <strong><?php echo amuj_price($user['wallet']); ?></strong>
+    <small class="az-muted">تمام موجودی در پرداخت سفارش‌ها قابل استفاده است.</small>
 </div>
 
 <section class="az-dash-section">
@@ -29,7 +22,7 @@ amuj_account_open('credits');
                 <span class="az-tx-icon az-tx-icon--<?php echo $in ? 'in' : 'out'; ?>" aria-hidden="true"><?php echo $in ? '+' : '−'; ?></span>
                 <div class="az-tx-info">
                     <strong><?php echo $r['title']; ?></strong>
-                    <span class="az-muted"><?php echo $r['date']; ?> · <?php echo $r['type'] === 'credit' ? 'اعتبار' : 'کیف پول'; ?></span>
+                    <span class="az-muted"><?php echo $r['date']; ?></span>
                 </div>
                 <strong class="az-tx-amount <?php echo $in ? 'is-in' : 'is-out'; ?>"><?php echo ($in ? '+ ' : '− ') . amuj_price(abs($r['amount'])); ?></strong>
             </div>
