@@ -1553,3 +1553,9 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-cart-row-info { grid-row: 1; }
   .az-cart-more .az-section { padding-top: 40px; }
 }
+@media (max-width: 959px) {
+  .az-cart-row { grid-template-columns: 88px minmax(0, 1fr); grid-template-rows: auto auto; row-gap: 6px; }
+  .az-cart-row-img { grid-column: 1; grid-row: 1 / span 2; }
+  .az-cart-row-info { grid-column: 2; grid-row: 1; }
+  .az-cart-row-price { grid-column: 2; grid-row: 2; margin-top: 0; }
+}
