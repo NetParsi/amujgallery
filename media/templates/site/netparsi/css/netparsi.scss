@@ -1679,3 +1679,35 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-menu-list li { margin: 0; break-inside: avoid; }
   .az-menu-list a { display: flex; align-items: center; min-height: 44px; font-size: 16px; }
 }
+
+/* ---------- Mobile menu: fewer lines, icon tiles for about / help / account ---------- */
+@media (max-width: 959px) {
+  .az-menu-panels > li { border-bottom: 0; }
+  .az-menu-group { border-top: 0; }
+  .az-menu-group + .az-menu-group { margin-top: 2px; }
+  .az-menu-group-title { min-height: 50px; }
+  .az-menu-extra--mobile {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    margin: 22px var(--az-gutter) 0; padding: 0; border-top: 0;
+  }
+  .az-menu-extra--mobile li { margin: 0; }
+  .az-menu-extra--mobile a {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    min-height: 84px; padding: 12px 6px; background: var(--az-soft); color: #000 !important;
+    font-size: 14px; line-height: 1.4; text-align: center; transition: background-color .2s;
+  }
+  .az-menu-extra--mobile a:hover, .az-menu-extra--mobile a:active { background: var(--az-accent-soft); box-shadow: none; }
+  .az-menu-extra--mobile svg { width: 24px; height: 24px; fill: none; stroke: #000; stroke-width: 1.3; stroke-linecap: round; }
+}
+
+/* ---------- Home slider on mobile: centered caption, progress bars without labels ---------- */
+@media (max-width: 959px) {
+  .az-hero-caption { right: var(--az-gutter); left: var(--az-gutter); bottom: 74px; max-width: none; text-align: center; }
+  .az-hero-caption h2 { font-size: 30px; }
+  .az-hero-caption p { margin-bottom: 18px; }
+  .az-hero-tabs { gap: 6px; bottom: 34px; padding: 0 var(--az-gutter); }
+  .az-hero-tabs li { flex: 0 1 56px; min-width: 0; gap: 0; }
+  .az-hero-tabs a { display: none; }
+  .az-hero-tabs .az-hero-progress { height: 3px; cursor: pointer; }
+}
+@media (max-width: 959px) { .az-hero-tabs li { padding: 12px 0; cursor: pointer; } }

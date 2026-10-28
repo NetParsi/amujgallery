@@ -194,9 +194,17 @@ $announcements = [
                 <?php endforeach; ?>
             </div>
 
+            <?php
+            // Mobile: about / help / account as large icon tiles at the end of the menu
+            $extraIcons = [
+                'درباره آموژ' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>',
+                'راهنما'      => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17v.5"/></svg>',
+                'حساب کاربری' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+            ];
+            ?>
             <ul class="az-menu-extra az-menu-extra--mobile">
                 <?php foreach ($menuLinks as $label => $url) : ?>
-                    <li><a href="<?php echo $url; ?>"><?php echo $label; ?></a></li>
+                    <li><a href="<?php echo $url; ?>"><?php echo $extraIcons[$label] ?? ''; ?><span><?php echo $label; ?></span></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>
