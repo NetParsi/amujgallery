@@ -1421,3 +1421,4 @@ a.az-dash-stat:hover { background: #ebebe8; box-shadow: none; }
   .az-dash-grid--club { grid-template-columns: 1fr; }
   .az-profile .az-dl { grid-template-columns: 110px minmax(0, 1fr); }
 }
+.az-profile dd[dir="ltr"] { justify-content: flex-end; }
