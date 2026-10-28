@@ -58,6 +58,14 @@ define('AMUJ_BASE', Uri::root());
 define('AMUJ_ROOT', JPATH_ROOT);
 require_once __DIR__ . '/static/_helpers.php';
 
+// Demo live-search endpoint (replaced by mod_netparsisearch's com_ajax endpoint later)
+if ($input->getInt('amujsearch')) {
+    $app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
+    $app->sendHeaders();
+    echo json_encode(amuj_search($input->getString('q', '')), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    $app->close();
+}
+
 $amujPages  = amuj_pages();
 $staticPage = $input->getCmd('page', '');
 

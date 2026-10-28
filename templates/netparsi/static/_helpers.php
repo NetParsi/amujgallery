@@ -151,4 +151,65 @@ if (!function_exists('amuj_url')) {
         </a>
         <?php
     }
+
+    /** Normalise Persian/Arabic letters and digits for matching */
+    function amuj_fold($text)
+    {
+        $text = strtr((string) $text, ['ي' => 'ی', 'ك' => 'ک', 'ة' => 'ه', 'أ' => 'ا', 'إ' => 'ا', '‌' => ' ',
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9']);
+
+        return mb_strtolower(trim(preg_replace('/\s+/u', ' ', $text)));
+    }
+
+    /**
+     * Demo live search over amuj_products(). Returns the same shape as
+     * mod_netparsisearch: {q, total, groups: [{key, items: [...]}]}
+     */
+    function amuj_search($q)
+    {
+        $q     = mb_substr(trim((string) $q), 0, 80);
+        $terms = array_filter(explode(' ', amuj_fold($q)), function ($t) { return mb_strlen($t) > 0; });
+
+        if (mb_strlen(amuj_fold($q)) < 2) {
+            return ['q' => $q, 'total' => 0, 'groups' => []];
+        }
+
+        $matches = function ($haystack) use ($terms) {
+            $haystack = amuj_fold($haystack);
+            foreach ($terms as $term) {
+                if (mb_strpos($haystack, $term) === false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        $products = [];
+        foreach (amuj_products() as $id => $p) {
+            if ($matches($p['name'] . ' ' . $p['cat'])) {
+                $products[] = [
+                    'id'    => $id,
+                    'title' => $p['name'],
+                    'url'   => amuj_url('product', ['id' => $id]),
+                    'image' => amuj_img($p['img'], 400),
+                    'price' => amuj_price($p['price']),
+                    'meta'  => $p['cat'],
+                ];
+            }
+        }
+
+        $categories = [];
+        foreach (amuj_categories() as $cat) {
+            if ($matches($cat)) {
+                $categories[] = ['title' => $cat, 'url' => amuj_url('category', ['cat' => $cat]), 'image' => '', 'price' => '', 'meta' => ''];
+            }
+        }
+
+        $groups = array_values(array_filter([
+            ['key' => 'hcategories', 'items' => $categories],
+            ['key' => 'products', 'items' => array_slice($products, 0, 12)],
+        ], function ($g) { return !empty($g['items']); }));
+
+        return ['q' => $q, 'total' => count($products) + count($categories), 'groups' => $groups];
+    }
 }
