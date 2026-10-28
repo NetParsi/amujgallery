@@ -112,6 +112,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Swipe rows (category / account menus): bring the active item into view
+  document.querySelectorAll('.az-cat-nav .is-active, .az-account-nav .is-active').forEach(function (a) {
+    var row = a.parentElement;
+    if (row.scrollWidth > row.clientWidth) {
+      row.scrollLeft += a.getBoundingClientRect().left - row.getBoundingClientRect().left - (row.clientWidth - a.offsetWidth) / 2;
+    }
+  });
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {
