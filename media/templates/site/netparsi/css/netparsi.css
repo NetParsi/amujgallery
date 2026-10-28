@@ -2,19 +2,41 @@
    AMUJ — minimal fashion store theme (UIkit 3, RTL)
    ========================================================= */
 
+@font-face {
+  font-family: 'Noora';
+  src: url('../fonts/Noora-VF.woff2') format('woff2'),
+       url('../fonts/Noora-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Doran';
+  src: url('../fonts/Doran-VF.woff2') format('woff2'),
+       url('../fonts/Doran-VF.woff') format('woff');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* Brand palette: black, soft gray, sage (#b2cc9d) */
 :root {
   --az-black: #000;
   --az-white: #fff;
-  --az-gray: #737373;
-  --az-line: #e5e5e5;
-  --az-soft: #f5f5f5;
-  --az-red: #d10000;
+  --az-gray: #7a7a78;
+  --az-line: #e4e4e1;
+  --az-soft: #f3f3f1;
+  --az-accent: #b2cc9d;
+  --az-accent-soft: #eef3ea;
+  --az-accent-ink: #5f7a4b;
+  --az-red: var(--az-accent-ink);
   --az-gutter: 32px;
   --az-header-h: 120px;
   --az-header-compact: 64px;
-  --az-font: 'Vazirmatn', Tahoma, sans-serif;
-  --az-logo-font: 'Bodoni Moda', 'Didot', 'Times New Roman', serif;
+  --az-logo-h: 96px;
+  --az-font: 'Noora', Tahoma, sans-serif;
+  --az-title-font: 'Doran', 'Noora', Tahoma, sans-serif;
 }
+
+::selection { background: var(--az-accent); color: #000; }
 
 html, body {
   font-family: var(--az-font);
@@ -100,22 +122,15 @@ img { max-width: 100%; }
 }
 .az-burger span { display: block; height: 1px; background: var(--az-black); }
 .az-burger span:last-child { width: 60%; }
-.az-logo {
-  font-family: var(--az-logo-font);
-  font-size: 92px;
-  line-height: .9;
-  letter-spacing: -2px;
-  font-weight: 400;
-  direction: ltr;
-}
+.az-logo { display: block; line-height: 0; color: var(--az-black); }
+.az-logo svg { display: block; height: var(--az-logo-h); width: auto; transition: height .3s; }
 .az-header-end { display: flex; gap: 28px; font-size: 14px; padding-top: 10px; }
 .az-header-end a:hover { text-decoration: underline; }
 
 /* Smart header: compact after scrolling, hidden while scrolling down */
 .az-header { transition: transform .35s ease, height .3s, padding .3s, background-color .3s; }
-.az-logo { transition: font-size .3s, letter-spacing .3s; }
-.az-scrolled .az-header { height: var(--az-header-compact); padding-top: 12px; background: var(--az-white); }
-.az-scrolled .az-logo { font-size: 40px; letter-spacing: -1px; }
+.az-scrolled .az-header { height: var(--az-header-compact); padding-top: 10px; background: var(--az-white); }
+.az-scrolled .az-logo { --az-logo-h: 44px; }
 .az-header-hidden .az-header { transform: translateY(-100%); }
 .az-search-trigger {
   min-width: 190px;
@@ -392,10 +407,10 @@ img { max-width: 100%; }
 /* ---------- Responsive ---------- */
 @media (max-width: 959px) {
   :root { --az-gutter: 16px; --az-header-h: 76px; --az-header-compact: 56px; }
-  .az-scrolled .az-logo { font-size: 34px; }
+  .az-scrolled .az-logo { --az-logo-h: 38px; }
   .az-card-quick { opacity: 1; width: 26px; height: 26px; font-size: 17px; bottom: 6px; }
   .az-feature-caption strong { font-size: 20px; }
-  .az-logo { font-size: 50px; letter-spacing: -1px; }
+  .az-logo { --az-logo-h: 56px; }
   .az-header-start { gap: 18px; }
   .az-search-trigger { min-width: 0; border: 0; }
   .az-header-end { gap: 16px; }
@@ -539,3 +554,42 @@ html.az-lock { overflow: hidden; }
 @media (min-width: 960px) and (max-width: 1299px) {
   .az-sr-grid { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* ---------- Brand layer: Doran for display titles, sage accent ---------- */
+.az-hero-caption h2, .az-wide-banner h3, .az-editorial span, .az-feature-caption strong,
+.az-menu-sections a, .az-about-text .az-title, .az-thanks h1, .az-newsletter h3,
+.az-section-head h2, body .az-title {
+  font-family: var(--az-title-font);
+}
+.az-hero-caption h2 { font-weight: 400; }
+.az-menu-sections a { font-weight: 400; }
+
+.az-btn { transition: background-color .25s, color .25s, border-color .25s; }
+.az-btn:hover { opacity: 1; background: var(--az-accent); border-color: var(--az-accent); color: #000 !important; }
+.az-btn--ghost:hover { background: var(--az-accent-soft); border-color: #000; }
+.az-hero-caption .az-btn:hover { background: var(--az-accent); border-color: var(--az-accent); }
+
+.az-card-tag { background: var(--az-accent); color: #000; }
+.az-card-fav.is-active path { fill: var(--az-accent); stroke: #000; }
+.az-card-quick:hover { background: var(--az-accent); }
+.az-card-sizes li:hover { border-color: #000; background: var(--az-accent-soft); }
+
+.az-subnav a.is-active, .az-tabs a.is-active, .az-tabs .uk-active a { border-bottom: 2px solid var(--az-accent); }
+.az-menu-sections .uk-active a::before { background: var(--az-accent); width: 7px; height: 7px; }
+.az-menu-list a:hover, .az-menu-list a.is-active { color: #000; box-shadow: inset 0 -6px 0 var(--az-accent-soft); }
+.az-sale, .az-menu-list a.az-sale { color: var(--az-accent-ink); }
+
+.az-search-chips > *:hover, .az-search-tags a:hover, .az-chips button:hover, .az-chips button.is-active { border-color: #000; background: var(--az-accent-soft); }
+.az-search mark { box-shadow: inset 0 -5px 0 var(--az-accent); }
+.az-option:has(input:checked) { background: var(--az-accent-soft); }
+.az-check input, .az-option input { accent-color: var(--az-accent-ink); }
+.az-status { border-color: var(--az-accent-ink); color: var(--az-accent-ink); }
+.az-bag { border-color: #000; }
+.az-cart-link .az-bag { background: var(--az-accent); }
+
+.az-footer { background: var(--az-soft); margin-top: 90px; }
+.az-newsletter { background: var(--az-accent-soft); padding: 40px; max-width: 640px; }
+.az-summary { background: var(--az-accent-soft); }
+.az-help-grid a:hover { background: var(--az-accent-soft); }
+.az-thanks .uk-icon { color: var(--az-accent-ink); }
+.uk-notification-message { background: #000; color: #fff; font-family: var(--az-font); font-size: 14px; border-bottom: 3px solid var(--az-accent); }

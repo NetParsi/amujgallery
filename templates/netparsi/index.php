@@ -48,10 +48,8 @@ $wa
         ->usePreset('netparsiPreset')
 ;
 
-$wa->registerAndUseStyle('amujFonts', 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap');
-
 $this->setMetaData('viewport', 'width=device-width, initial-scale=1, maximum-scale=1');
-$this->setMetaData('theme-color', '#ffffff');
+$this->setMetaData('theme-color', '#b2cc9d');
 
 // Static demo pages: index.php?page=name renders static/pages/name.php
 define('AMUJ_BASE', Uri::root());

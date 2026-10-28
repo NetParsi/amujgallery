@@ -37,6 +37,21 @@ if (!function_exists('amuj_url')) {
         return ['مانتو', 'کت', 'پالتو', 'بارانی', 'پیراهن', 'ست', 'شلوار', 'دامن', 'شومیز', 'اکسسوری'];
     }
 
+    /** Inline brand logo (images/amuj-logo.svg) so it can follow currentColor */
+    function amuj_logo()
+    {
+        static $svg = null;
+
+        if ($svg === null) {
+            $file = AMUJ_ROOT . '/images/amuj-logo.svg';
+            $svg  = is_file($file) ? file_get_contents($file) : '';
+            $svg  = preg_replace(['/<\?xml.*?\?>/s', '/<!--.*?-->/s', '/<defs>.*?<\/defs>/s', '/\s(id|class)="[^"]*"/'], '', $svg);
+            $svg  = str_replace('<svg ', '<svg role="img" aria-label="گالری آموژ" fill="currentColor" fill-rule="evenodd" ', trim($svg));
+        }
+
+        return $svg ?: 'AMUJ';
+    }
+
     function amuj_url($page = 'home', array $query = [])
     {
         return AMUJ_BASE . 'index.php?' . http_build_query(['page' => $page] + $query);

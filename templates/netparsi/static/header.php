@@ -34,7 +34,7 @@ $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36
         <button class="az-burger" type="button" uk-toggle="target: #az-menu" aria-label="منو">
             <span></span><span></span>
         </button>
-        <a class="az-logo" href="<?php echo amuj_url('home'); ?>">AMUJ</a>
+        <a class="az-logo" href="<?php echo amuj_url('home'); ?>" aria-label="گالری آموژ"><?php echo amuj_logo(); ?></a>
     </div>
     <nav class="az-header-end">
         <a class="az-search-trigger" href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><span class="az-txt">جستجو</span><?php echo $icoSearch; ?></a>
@@ -48,7 +48,7 @@ $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36
     <div class="uk-modal-dialog uk-modal-body az-menu-dialog">
         <div class="az-menu-top">
             <button class="az-menu-close uk-modal-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
-            <a class="az-logo" href="<?php echo amuj_url('home'); ?>">AMUJ</a>
+            <a class="az-logo" href="<?php echo amuj_url('home'); ?>" aria-label="گالری آموژ"><?php echo amuj_logo(); ?></a>
             <div class="az-menu-icons">
                 <a href="<?php echo amuj_url('account'); ?>" aria-label="حساب کاربری"><?php echo $icoUser; ?></a>
                 <a href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><?php echo $icoSearch; ?></a>
