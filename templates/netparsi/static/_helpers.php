@@ -462,8 +462,11 @@ if (!function_exists('amuj_url')) {
 
     function amuj_card($id, array $p)
     {
-        $url    = amuj_url('product', ['id' => $id]);
+        // HikaShop listings pass 'url' and 'sizes'; static demo cards use the sample sizes
+        $url    = $p['url'] ?? amuj_url('product', ['id' => $id]);
         $colors = $p['colors'] ?? [];
+        $sizes  = $p['sizes'] ?? ['XS', 'S', 'M', 'L', 'XL'];
+        $out    = $p['sizes_out'] ?? (isset($p['url']) ? [] : array_filter($sizes, function ($i) use ($id) { return ($id + $i) % 7 === 0; }, ARRAY_FILTER_USE_KEY));
         ?>
         <article class="az-card" data-name="<?php echo $p['name']; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
             <div class="az-card-media">
@@ -471,7 +474,7 @@ if (!function_exists('amuj_url')) {
                     <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
                     <img class="az-card-alt" src="<?php echo amuj_img($p['img2'], 700); ?>" alt="" loading="lazy">
                 </a>
-                <?php if ($p['tag']) : ?><span class="az-card-tag"><?php echo $p['tag']; ?></span><?php endif; ?>
+                <?php if (!empty($p['tag'])) : ?><span class="az-card-tag"><?php echo $p['tag']; ?></span><?php endif; ?>
                 <button class="az-card-fav" type="button" aria-label="افزودن به علاقه‌مندی‌ها">
                     <svg width="14" height="18" viewBox="0 0 14 18"><path d="M1 1h12v16l-6-4.5L1 17z" stroke="#000" stroke-width="1.1"/></svg>
                 </button>
@@ -479,8 +482,8 @@ if (!function_exists('amuj_url')) {
                 <div class="az-card-sizes">
                     <span>انتخاب سایز</span>
                     <ul>
-                        <?php foreach (['XS', 'S', 'M', 'L', 'XL'] as $i => $size) : ?>
-                            <li<?php echo ($id + $i) % 7 === 0 ? ' class="is-out"' : ''; ?>><?php echo $size; ?></li>
+                        <?php foreach ($sizes as $size) : ?>
+                            <li<?php echo in_array($size, $out, true) ? ' class="is-out"' : ''; ?>><?php echo $size; ?></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>

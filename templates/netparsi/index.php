@@ -60,8 +60,9 @@ $this->setMetaData('viewport', 'width=device-width, initial-scale=1, maximum-sca
 $this->setMetaData('theme-color', '#b2cc9d');
 
 // Static demo pages: index.php?page=name renders static/pages/name.php
-define('AMUJ_BASE', Uri::root());
-define('AMUJ_ROOT', JPATH_ROOT);
+// (component overrides in html/ may have loaded the helpers already)
+defined('AMUJ_BASE') || define('AMUJ_BASE', Uri::root());
+defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
 require_once __DIR__ . '/static/_helpers.php';
 
 // Demo live-search endpoint (replaced by mod_netparsisearch's com_ajax endpoint later)
