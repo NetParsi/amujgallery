@@ -58,7 +58,7 @@ $hasModules = function ($position) {
     return isset($this) && method_exists($this, 'countModules') && $this->countModules($position);
 };
 $announcements = [
-    'ارسال رایگان برای خریدهای بالای ۳ میلیون تومان',
+    'ارسال رایگان برای خریدهای بالای ' . amuj_fa(amuj_free_shipping() / 1000000) . ' میلیون تومان',
     'کالکشن پاییز و زمستان ۱۴۰۵ رسید',
     '۱۴ روز مهلت تعویض و مرجوعی',
 ];

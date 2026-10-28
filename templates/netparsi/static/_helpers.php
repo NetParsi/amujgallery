@@ -125,6 +125,28 @@ if (!function_exists('amuj_url')) {
         return $svg ?: 'AMUJ';
     }
 
+    /** Orders at or above this amount (toman) ship free. HikaShop: shipping method rule. */
+    function amuj_free_shipping()
+    {
+        return 20000000;
+    }
+
+    /**
+     * Shipping cost by province (sample). Dynamic: HikaShop shipping methods with zone restrictions.
+     * Returns [province => [method, cost]].
+     */
+    function amuj_shipping_rates()
+    {
+        return [
+            'تهران'       => ['پیک فوری (همان روز)', 95000],
+            'البرز'       => ['پست پیشتاز (۱ تا ۲ روز)', 85000],
+            'اصفهان'      => ['پست پیشتاز (۲ تا ۳ روز)', 110000],
+            'فارس'        => ['پست پیشتاز (۲ تا ۴ روز)', 120000],
+            'خراسان رضوی' => ['پست پیشتاز (۲ تا ۴ روز)', 125000],
+            'سایر استان‌ها' => ['پست پیشتاز (۳ تا ۵ روز)', 140000],
+        ];
+    }
+
     function amuj_url($page = 'home', array $query = [])
     {
         return AMUJ_BASE . 'index.php?' . http_build_query(['page' => $page] + $query);
