@@ -37,6 +37,62 @@ if (!function_exists('amuj_url')) {
         return ['مانتو', 'کت', 'پالتو', 'بارانی', 'پیراهن', 'ست', 'شلوار', 'دامن', 'شومیز', 'اکسسوری'];
     }
 
+    /**
+     * Signed-in customer, or null for guests.
+     * Name comes from the Joomla session when someone is logged in; club data is sample
+     * data until the custom customer-club extension is installed.
+     * For demos: ?demo_user=1 signs in a sample user (remembered in a cookie), ?demo_user=0 signs out.
+     */
+    function amuj_current_user()
+    {
+        static $user = false;
+
+        if ($user !== false) {
+            return $user;
+        }
+
+        $name = null;
+
+        if (class_exists('\Joomla\CMS\Factory')) {
+            $joomlaUser = \Joomla\CMS\Factory::getApplication()->getIdentity();
+            if ($joomlaUser && !$joomlaUser->guest) {
+                $name = $joomlaUser->name;
+            }
+        }
+
+        if ($name === null) {
+            if (isset($_GET['demo_user'])) {
+                $on = $_GET['demo_user'] === '1';
+                if (!headers_sent()) {
+                    setcookie('amuj_demo_user', $on ? '1' : '', $on ? time() + 86400 * 30 : time() - 3600, '/');
+                }
+            } else {
+                $on = !empty($_COOKIE['amuj_demo_user']);
+            }
+            $name = $on ? 'سارا محمدی' : null;
+        }
+
+        if ($name === null) {
+            return $user = null;
+        }
+
+        $parts = preg_split('/\s+/u', trim($name));
+
+        return $user = [
+            'name'       => $name,
+            'first'      => $parts[0],
+            'phone'      => '۰۹۱۲ ***  ۴۵۶۷',
+            'level'      => 'نقره‌ای',
+            'next_level' => 'طلایی',
+            'progress'   => 68,
+            'remaining'  => 850000,
+            'wallet'     => 1250000,
+            'credit'     => 300000,
+            'points'     => 2340,
+            'unread'     => 2,
+        ];
+    }
+
     /** Inline brand logo (images/amuj-logo.svg) so it can follow currentColor */
     function amuj_logo()
     {

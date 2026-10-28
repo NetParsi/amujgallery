@@ -59,6 +59,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Opening the customer panel from inside the menu: close the menu first
+  document.querySelectorAll('#az-menu [uk-toggle*="#az-user"]').forEach(function (el) {
+    el.addEventListener('click', function () {
+      if (window.UIkit) UIkit.modal('#az-menu').hide();
+    });
+  });
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {

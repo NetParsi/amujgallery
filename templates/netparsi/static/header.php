@@ -44,6 +44,8 @@ $menuPromos = [
 $icoSearch = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
 $icoUser   = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
 $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg>';
+$icoUserKeep = str_replace('class="az-ico"', 'class="az-ico az-ico--keep"', $icoUser);
+$amujUser    = amuj_current_user();
 
 /*
  * Header slots are Joomla module positions (see templateDetails.xml). While a position
@@ -89,7 +91,11 @@ $announcements = [
         <?php if ($hasModules('header-user')) : ?>
             <jdoc:include type="modules" name="header-user" style="none" />
         <?php else : ?>
-            <a class="az-user-link" href="<?php echo amuj_url('login'); ?>" aria-label="ورود به حساب"><?php echo str_replace('class="az-ico"', 'class="az-ico az-ico--keep"', $icoUser); ?><span class="az-txt">ورود</span></a>
+            <?php if ($amujUser) : ?>
+                <button class="az-user-link is-signed" type="button" uk-toggle="target: #az-user" aria-label="حساب کاربری <?php echo $amujUser['first']; ?>"><?php echo $icoUserKeep; ?><span class="az-txt"><?php echo $amujUser['first']; ?></span></button>
+            <?php else : ?>
+                <a class="az-user-link" href="<?php echo amuj_url('login'); ?>" aria-label="ورود به حساب"><?php echo $icoUserKeep; ?><span class="az-txt">ورود</span></a>
+            <?php endif; ?>
         <?php endif; ?>
         <a class="az-desk" href="<?php echo amuj_url('help'); ?>">راهنما</a>
         <?php if ($hasModules('header-cart')) : ?>
@@ -106,7 +112,11 @@ $announcements = [
             <button class="az-menu-close uk-modal-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
             <a class="az-logo" href="<?php echo amuj_url('home'); ?>" aria-label="گالری آموژ"><?php echo amuj_logo(); ?></a>
             <div class="az-menu-icons">
-                <a href="<?php echo amuj_url('account'); ?>" aria-label="حساب کاربری"><?php echo $icoUser; ?></a>
+                <?php if ($amujUser) : ?>
+                    <a href="#az-user" class="is-signed" uk-toggle="target: #az-user" aria-label="حساب کاربری"><?php echo $icoUser; ?></a>
+                <?php else : ?>
+                    <a href="<?php echo amuj_url('login'); ?>" aria-label="ورود"><?php echo $icoUser; ?></a>
+                <?php endif; ?>
                 <a href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><?php echo $icoSearch; ?></a>
                 <a href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید"><span class="az-bag"><?php echo $cartCount; ?></span></a>
             </div>
@@ -212,3 +222,68 @@ $announcements = [
         <div class="az-search-results" aria-live="polite"></div>
     </div>
 </div>
+
+<?php if ($amujUser) :
+    /*
+     * Customer panel. Club level / wallet / credit are sample values until the
+     * custom customer-club extension is installed; it can render into the same markup.
+     */
+    $userLinks = [
+        ['سفارش‌های من', amuj_url('account'), ''],
+        ['آدرس‌ها', amuj_url('account'), ''],
+        ['اعتبارهای من', amuj_url('account'), amuj_price($amujUser['credit'])],
+        ['پیام‌های من', amuj_url('account'), $amujUser['unread'] ? amuj_fa($amujUser['unread']) . ' پیام جدید' : ''],
+        ['علاقه‌مندی‌ها', amuj_url('account'), ''],
+        ['اطلاعات حساب', amuj_url('account'), ''],
+    ];
+    ?>
+<div id="az-user" uk-offcanvas="overlay: true; flip: true">
+    <div class="uk-offcanvas-bar az-user-panel">
+        <div class="az-user-top">
+            <div>
+                <div class="az-user-hello">سلام <?php echo $amujUser['first']; ?></div>
+                <div class="az-user-phone" dir="ltr"><?php echo $amujUser['phone']; ?></div>
+            </div>
+            <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
+        </div>
+
+        <div class="az-club">
+            <div class="az-club-head">
+                <span class="az-club-label">باشگاه مشتریان آموژ</span>
+                <span class="az-club-level"><?php echo $amujUser['level']; ?></span>
+            </div>
+            <div class="az-club-bar" role="progressbar" aria-valuenow="<?php echo $amujUser['progress']; ?>" aria-valuemin="0" aria-valuemax="100">
+                <span style="--p: <?php echo $amujUser['progress']; ?>%"></span>
+            </div>
+            <div class="az-club-meta">
+                <span><?php echo amuj_price($amujUser['remaining']); ?> خرید تا سطح <strong><?php echo $amujUser['next_level']; ?></strong></span>
+                <span><?php echo amuj_fa(number_format($amujUser['points'])); ?> امتیاز</span>
+            </div>
+        </div>
+
+        <div class="az-wallet">
+            <div>
+                <span class="az-wallet-label">موجودی کیف پول</span>
+                <strong class="az-wallet-amount"><?php echo amuj_price($amujUser['wallet']); ?></strong>
+            </div>
+            <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('account'); ?>">افزایش موجودی</a>
+        </div>
+
+        <ul class="az-user-links">
+            <?php foreach ($userLinks as $i => [$label, $url, $badge]) : ?>
+                <li style="--i: <?php echo $i; ?>">
+                    <a href="<?php echo $url; ?>">
+                        <span><?php echo $label; ?></span>
+                        <?php if ($badge) : ?><em><?php echo $badge; ?></em><?php endif; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+
+        <div class="az-user-foot">
+            <a class="az-btn az-btn--block" href="<?php echo amuj_url('account'); ?>">مشاهده حساب کاربری</a>
+            <a class="az-user-logout" href="<?php echo amuj_url('home', ['demo_user' => 0]); ?>">خروج از حساب</a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>

@@ -64,6 +64,8 @@ if ($input->getInt('amujsearch')) {
     $app->close();
 }
 
+amuj_current_user(); // resolves the (demo) customer early so its cookie can be set
+
 $amujPages  = amuj_pages();
 $staticPage = $input->getCmd('page', '');
 
