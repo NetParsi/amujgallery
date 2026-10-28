@@ -85,6 +85,7 @@ if (!isset($amujPages[$staticPage])) {
 }
 
 $amujOverlay = $staticPage ? $amujPages[$staticPage][1] : false;
+$amujBare    = $staticPage && !empty($amujPages[$staticPage][2]);
 
 if ($staticPage) {
     $this->setTitle($amujPages[$staticPage][0]);
@@ -107,8 +108,8 @@ if ($staticPage) {
     . ($this->direction == 'rtl' ? ' rtl' : '')
     . ($staticPage ? ' az-page-' . $staticPage : '');
 ?>">
-<?php include __DIR__ . '/static/header.php'; ?>
-<main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?>">
+<?php if (!$amujBare) include __DIR__ . '/static/header.php'; ?>
+<main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?><?php echo $amujBare ? ' az-main--bare' : ''; ?>">
     <jdoc:include type="message" />
     <?php if ($staticPage) : ?>
         <?php include __DIR__ . '/static/pages/' . $staticPage . '.php'; ?>
@@ -116,7 +117,7 @@ if ($staticPage) {
         <div class="az-component"><jdoc:include type="component" /></div>
     <?php endif; ?>
 </main>
-<?php include __DIR__ . '/static/footer.php'; ?>
+<?php if (!$amujBare) include __DIR__ . '/static/footer.php'; ?>
 <jdoc:include type="modules" name="debug" style="none" />
 </body>
 </html>

@@ -12,7 +12,7 @@ defined('_JEXEC') or die;
 
 if (!function_exists('amuj_url')) {
 
-    /** Page key => [title, header overlays the content (transparent header)] */
+    /** Page key => [title, header overlays the content (transparent header), bare page without header/footer] */
     function amuj_pages()
     {
         return [
@@ -23,8 +23,8 @@ if (!function_exists('amuj_url')) {
             'cart'     => ['سبد خرید', false],
             'checkout' => ['تکمیل سفارش', false],
             'thankyou' => ['نتیجه پرداخت', false],
-            'login'    => ['ورود', false],
-            'register' => ['ایجاد حساب کاربری', false],
+            'login'    => ['ورود / ثبت‌نام', false, true],
+            'register' => ['ورود / ثبت‌نام', false, true],
             'account'  => ['حساب کاربری من', false],
             'help'     => ['راهنما و پشتیبانی', false],
             'about'    => ['درباره ما', false],

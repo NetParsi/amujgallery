@@ -157,6 +157,123 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Sign in / sign up: mobile -> SMS code -> (new customer) name + email.
+  // Demo only: code 11111 = existing customer; the auth component replaces these handlers.
+  var auth = document.querySelector('[data-az-auth]');
+  if (auth) {
+    var latin = function (s) {
+      return String(s).replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); })
+        .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); });
+    };
+    var persian = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+    var steps = auth.querySelectorAll('.az-auth-step');
+    var dots = auth.querySelectorAll('.az-auth-steps li');
+    var mobile = '';
+    var timerId = null;
+
+    var show = function (n) {
+      steps.forEach(function (s) { s.classList.toggle('is-active', s.dataset.step === String(n)); });
+      dots.forEach(function (d, i) { d.classList.toggle('is-active', i < n); });
+      var focus = auth.querySelector('.az-auth-step.is-active input');
+      if (focus) setTimeout(function () { focus.focus(); }, 250);
+    };
+    var busy = function (btn, then) {
+      btn.classList.add('is-loading'); btn.disabled = true;
+      setTimeout(function () { btn.classList.remove('is-loading'); btn.disabled = false; then(); }, 700);
+    };
+    var done = function (title) {
+      auth.querySelector('[data-az-done-title]').textContent = title;
+      show(4);
+      setTimeout(function () { window.location.href = auth.dataset.success; }, 1800);
+    };
+
+    // Step 1
+    var f1 = auth.querySelector('[data-step="1"]');
+    var phoneInput = f1.querySelector('input');
+    phoneInput.addEventListener('input', function () {
+      var v = latin(phoneInput.value).replace(/\D/g, '').slice(0, 11);
+      phoneInput.value = persian(v.replace(/^(\d{4})(\d{0,3})(\d{0,4}).*/, function (m, a, b, c) { return [a, b, c].filter(Boolean).join(' '); }));
+      f1.querySelector('[data-error]').textContent = '';
+      f1.querySelector('button[type="submit"]').disabled = v.length !== 11;
+    });
+    f1.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = latin(phoneInput.value).replace(/\D/g, '');
+      if (!/^09\d{9}$/.test(v)) { f1.querySelector('[data-error]').textContent = 'شماره موبایل معتبر نیست. نمونه: ۰۹۱۲۳۴۵۶۷۸۹'; return; }
+      mobile = v;
+      busy(f1.querySelector('button[type="submit"]'), function () {
+        auth.querySelector('[data-az-phone]').textContent = phoneInput.value;
+        show(2); startTimer();
+      });
+    });
+
+    // Step 2
+    var f2 = auth.querySelector('[data-step="2"]');
+    var boxes = f2.querySelectorAll('.az-otp input');
+    var code = function () { return Array.prototype.map.call(boxes, function (b) { return latin(b.value); }).join(''); };
+    var syncOtp = function () {
+      f2.querySelector('button[type="submit"]').disabled = code().length !== boxes.length;
+      f2.querySelector('[data-error]').textContent = '';
+      boxes.forEach(function (b) { b.classList.toggle('is-filled', !!b.value); });
+    };
+    boxes.forEach(function (box, i) {
+      box.addEventListener('input', function () {
+        var digits = latin(box.value).replace(/\D/g, '');
+        if (digits.length > 1) { // pasted or autofilled code
+          digits.slice(0, boxes.length - i).split('').forEach(function (d, k) { boxes[i + k].value = persian(d); });
+          boxes[Math.min(i + digits.length, boxes.length) - 1].focus();
+        } else {
+          box.value = persian(digits);
+          if (digits && boxes[i + 1]) boxes[i + 1].focus();
+        }
+        syncOtp();
+        if (code().length === boxes.length) f2.requestSubmit();
+      });
+      box.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !box.value && boxes[i - 1]) { boxes[i - 1].focus(); boxes[i - 1].value = ''; syncOtp(); }
+      });
+    });
+    f2.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (code().length !== boxes.length) return;
+      busy(f2.querySelector('button[type="submit"]'), function () {
+        clearInterval(timerId);
+        if (code() === '11111') { done('خوش آمدید سارا'); } else { show(3); }
+      });
+    });
+    auth.querySelector('[data-az-back]').addEventListener('click', function () {
+      clearInterval(timerId); boxes.forEach(function (b) { b.value = ''; }); syncOtp(); show(1);
+    });
+
+    var startTimer = function () {
+      var left = 120;
+      var timer = auth.querySelector('[data-az-timer]');
+      var resend = auth.querySelector('[data-az-resend]');
+      timer.hidden = false; resend.hidden = true;
+      clearInterval(timerId);
+      var tick = function () {
+        timer.querySelector('b').textContent = persian(Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0'));
+        if (left-- <= 0) { clearInterval(timerId); timer.hidden = true; resend.hidden = false; }
+      };
+      tick(); timerId = setInterval(tick, 1000);
+    };
+    auth.querySelector('[data-az-resend]').addEventListener('click', function () {
+      startTimer(); notify('کد تأیید دوباره ارسال شد');
+    });
+
+    // Step 3
+    var f3 = auth.querySelector('[data-step="3"]');
+    f3.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var name = f3.name.value.trim(), email = f3.email.value.trim();
+      var okName = name.length >= 3, okEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      f3.querySelector('[data-error-name]').textContent = okName ? '' : 'نام و نام خانوادگی را وارد کنید.';
+      f3.querySelector('[data-error-email]').textContent = okEmail ? '' : 'ایمیل معتبر وارد کنید.';
+      if (!okName || !okEmail) return;
+      busy(f3.querySelector('button[type="submit"]'), function () { done('خوش آمدید ' + name.split(/\s+/)[0]); });
+    });
+  }
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {
