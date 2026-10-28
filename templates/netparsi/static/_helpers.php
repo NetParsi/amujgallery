@@ -159,6 +159,13 @@ if (!function_exists('amuj_url')) {
             . " WHERE p.product_parent_id IN ($in) AND p.product_type = 'variant'"
             . ' ORDER BY c.characteristic_ordering')->loadObjectList();
 
+        $defaults = [];
+        foreach ($db->setQuery('SELECT v.variant_product_id, v.variant_characteristic_id FROM ' . hikashop_table('variant') . ' v'
+            . ' JOIN ' . hikashop_table('characteristic') . ' c ON c.characteristic_id = v.variant_characteristic_id AND c.characteristic_parent_id > 0'
+            . " WHERE v.variant_product_id IN ($in)")->loadObjectList() as $d) {
+            $defaults[$d->variant_product_id][] = (int) $d->variant_characteristic_id;
+        }
+
         $variants = [];
         $variantIds = [];
         foreach ($variantRows as $v) {
@@ -196,7 +203,15 @@ if (!function_exists('amuj_url')) {
                     $colorImages[$c[0]] = $variantFiles[$vid];
                 }
             }
+            // The product's default colour (HikaShop variant tab) comes first
+            $default = $defaults[$id] ?? [];
             uasort($colors, function ($a, $b) { return $a[1] <=> $b[1]; });
+            foreach (array_keys($colors) as $cid) {
+                if (in_array($cid, $default)) {
+                    $colors = [$cid => $colors[$cid]] + $colors;
+                    break;
+                }
+            }
             uasort($sizes, function ($a, $b) { return $a[1] <=> $b[1]; });
             $colors = array_map(function ($c) { return $c[0]; }, $colors);
             $sizes  = array_map(function ($s) { return $s[0]; }, $sizes);
