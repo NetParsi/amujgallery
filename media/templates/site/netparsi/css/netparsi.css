@@ -1736,3 +1736,10 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .uk-lightbox-thumbnav img { width: 44px; height: auto; }
   .uk-lightbox-thumbnav > .uk-active img { outline: 1px solid #000; outline-offset: 2px; }
 }
+
+/* ---------- HikaShop category listing (html/com_hikashop/product/listing.php) ---------- */
+.az-component:has(> .az-cat) { padding: 0; }
+h1.az-cat-title { font: inherit; font-size: 14px; line-height: inherit; color: var(--az-gray); margin: 0 0 14px; }
+.az-empty-cat { padding: 60px 0; text-align: center; }
+.az-empty-cat .az-btn { margin-top: 18px; }
+.az-load-more a.az-btn { display: inline-flex; }
