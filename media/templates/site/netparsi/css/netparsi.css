@@ -1496,3 +1496,4 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-policy-body { padding: 0 var(--az-gutter); }
   .az-policy-body h1 { font-size: 26px; }
 }
+.az-about-hero img { object-position: center 12%; }
