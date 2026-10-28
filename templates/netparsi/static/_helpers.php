@@ -31,7 +31,7 @@ if (!function_exists('amuj_url')) {
             'addresses'=> ['آدرس‌های من', false],
             'credits'  => ['کیف پول', false],
             'messages' => ['پیام‌های من', false],
-            'help'     => ['راهنما و پشتیبانی', false],
+            'help'     => ['سؤالات متداول', false],
             'about'    => ['درباره ما', false],
             'contact'  => ['تماس با ما', false],
             'policy'   => ['قوانین و راهنما', false],
@@ -105,6 +105,24 @@ if (!function_exists('amuj_url')) {
     function amuj_account_pages()
     {
         return ['account', 'orders', 'order', 'addresses', 'credits', 'messages'];
+    }
+
+    /** Side menu shared by the text pages and the FAQ */
+    function amuj_policy_menu($active)
+    {
+        $links = [
+            'terms'    => ['شرایط و قوانین خرید', amuj_url('policy', ['doc' => 'terms'])],
+            'shipping' => ['ارسال و تحویل', amuj_url('policy', ['doc' => 'shipping'])],
+            'returns'  => ['تعویض و مرجوعی', amuj_url('policy', ['doc' => 'returns'])],
+            'privacy'  => ['حریم خصوصی', amuj_url('policy', ['doc' => 'privacy'])],
+            'faq'      => ['سؤالات متداول', amuj_url('help')],
+            'contact'  => ['تماس با ما', amuj_url('contact')],
+        ];
+        echo '<nav class="az-account-nav az-policy-nav" aria-label="قوانین و راهنما">';
+        foreach ($links as $key => [$label, $url]) {
+            echo '<a href="' . $url . '"' . ($key === $active ? ' class="is-active" aria-current="page"' : '') . '>' . $label . '</a>';
+        }
+        echo '</nav>';
     }
 
     /** Customer panel menu: page key => label */

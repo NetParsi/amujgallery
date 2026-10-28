@@ -1,45 +1,55 @@
 <?php
 defined('_JEXEC') or die;
 
+/* FAQ: same layout and width as the text pages. Dynamic: a Joomla article or FAQ extension. */
+$free   = amuj_fa(amuj_free_shipping() / 1000000);
+$topics = [
+    ['سفارش‌های من', 'پیگیری وضعیت و جزئیات سفارش', amuj_url('orders')],
+    ['ارسال و تحویل', 'روش‌ها، زمان و هزینه ارسال', amuj_url('policy', ['doc' => 'shipping'])],
+    ['تعویض و مرجوعی', 'شرایط و مراحل بازگرداندن کالا', amuj_url('policy', ['doc' => 'returns'])],
+    ['خرید و پرداخت', 'روش‌های پرداخت و کد تخفیف', amuj_url('policy', ['doc' => 'terms'])],
+];
 $faq = [
-    'سفارش من چند روزه به دستم می‌رسد؟'      => 'سفارش‌های تهران با پیک در همان روز و سایر شهرها با پست پیشتاز طی ۳ تا ۵ روز کاری تحویل داده می‌شوند.',
-    'چطور سفارشم را پیگیری کنم؟'             => 'پس از ارسال، کد رهگیری پیامک می‌شود. همچنین از بخش «حساب کاربری > سفارش‌های من» وضعیت را ببینید.',
-    'شرایط تعویض و مرجوعی چیست؟'             => 'تا ۱۴ روز پس از تحویل، در صورت سالم بودن محصول و داشتن برچسب، امکان تعویض یا مرجوعی وجود دارد.',
-    'چطور سایز مناسب را انتخاب کنم؟'          => 'در صفحه هر محصول روی «راهنمای سایز» بزنید تا جدول اندازه‌ها را ببینید.',
-    'روش‌های پرداخت کدام‌اند؟'                => 'پرداخت از طریق درگاه اینترنتی با کلیه کارت‌های عضو شتاب و کارت به کارت امکان‌پذیر است.',
+    'سفارش من چند روزه به دستم می‌رسد؟'   => 'سفارش‌های تهران با پیک در همان روز و سایر شهرها با پست پیشتاز طی ۲ تا ۵ روز کاری تحویل داده می‌شوند.',
+    'چطور سفارشم را پیگیری کنم؟'          => 'پس از ارسال، کد رهگیری مرسوله پیامک می‌شود. همچنین در بخش «سفارش‌های من» مراحل سفارش و کد رهگیری را می‌بینید.',
+    'هزینه ارسال چقدر است؟'               => 'هزینه ارسال بر اساس استان محاسبه می‌شود و برای خریدهای بالای ' . $free . ' میلیون تومان رایگان است.',
+    'شرایط تعویض و مرجوعی چیست؟'          => 'تا ۱۴ روز پس از تحویل، در صورتی که کالا استفاده‌نشده و با برچسب اصلی باشد، امکان تعویض یا مرجوعی وجود دارد.',
+    'چطور سایز مناسب را انتخاب کنم؟'       => 'در صفحه هر محصول روی «راهنمای سایز» بزنید. برای مشاوره سایز هم می‌توانید از طریق واتس‌اپ با ما در ارتباط باشید.',
+    'روش‌های پرداخت کدام‌اند؟'             => 'پرداخت از طریق درگاه اینترنتی با کلیه کارت‌های عضو شتاب یا از موجودی کیف پول امکان‌پذیر است.',
+    'کیف پول چیست و چطور شارژ می‌شود؟'     => 'هدیه‌های باشگاه مشتریان، هدیه تولد و مبالغ سفارش‌های لغوشده به کیف پول شما اضافه می‌شود و در پرداخت سفارش‌ها قابل استفاده است.',
+    'باشگاه مشتریان آموژ چه مزایایی دارد؟' => 'با هر خرید به سطح‌های بالاتر نزدیک می‌شوید و در هر سطح از مزایایی مانند هدیه کیف پول، ارسال رایگان و پیش‌خرید کالکشن‌های جدید بهره‌مند می‌شوید.',
 ];
 ?>
-<div class="az-narrow">
-    <h1 class="az-title">چطور می‌توانیم کمکتان کنیم؟</h1>
-    <div class="az-help-grid">
-        <a href="#"><strong>سفارش‌ها</strong><span class="az-muted">پیگیری، ویرایش و لغو سفارش</span></a>
-        <a href="#"><strong>ارسال و تحویل</strong><span class="az-muted">روش‌ها، زمان و هزینه ارسال</span></a>
-        <a href="#"><strong>تعویض و مرجوعی</strong><span class="az-muted">شرایط و مراحل بازگرداندن کالا</span></a>
-        <a href="#"><strong>پرداخت</strong><span class="az-muted">روش‌های پرداخت و فاکتور</span></a>
-    </div>
+<div class="az-policy">
+    <aside class="az-policy-side">
+        <?php amuj_policy_menu('faq'); ?>
+    </aside>
 
-    <h2 class="az-title">سوالات متداول</h2>
-    <ul class="az-faq" uk-accordion>
-        <?php foreach ($faq as $q => $a) : ?>
-            <li><a class="uk-accordion-title" href="#"><?php echo $q; ?></a><div class="uk-accordion-content"><p><?php echo $a; ?></p></div></li>
-        <?php endforeach; ?>
-    </ul>
+    <article class="az-policy-body">
+        <span class="az-num">قوانین و راهنما</span>
+        <h1>سؤالات متداول</h1>
+        <p class="az-muted az-small">پاسخ رایج‌ترین سؤال‌ها درباره خرید از گالری آموژ</p>
 
-    <div id="contact" class="uk-grid-large uk-child-width-1-2@m uk-margin-xlarge-top" uk-grid>
-        <div>
-            <h2 class="az-title">تماس با ما</h2>
-            <p>تلفن و واتس‌اپ: <a class="az-link" href="tel:+989354466989" dir="ltr">۰۹۳۵۴۴۶۶۹۸۹</a></p>
-            <p>اینستاگرام: <a class="az-link" href="https://www.instagram.com/amuj.gallery" target="_blank" rel="noopener" dir="ltr">@amuj.gallery</a></p>
-            <p>نشانی: تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴</p>
+        <div class="az-help-grid">
+            <?php foreach ($topics as [$title, $text, $url]) : ?>
+                <a href="<?php echo $url; ?>">
+                    <strong><?php echo $title; ?></strong>
+                    <span><?php echo $text; ?></span>
+                </a>
+            <?php endforeach; ?>
         </div>
-        <div>
-            <h2 class="az-title">ارسال پیام</h2>
-            <form onsubmit="return false">
-                <div class="az-field"><input class="az-input" placeholder="نام و نام خانوادگی"></div>
-                <div class="az-field"><input class="az-input" placeholder="ایمیل یا تلفن همراه"></div>
-                <div class="az-field"><textarea class="az-textarea" placeholder="پیام شما"></textarea></div>
-                <button class="az-btn" type="submit">ارسال</button>
-            </form>
+
+        <div class="az-faq">
+            <?php foreach ($faq as $q => $a) : ?>
+                <details class="az-faq-item">
+                    <summary><?php echo $q; ?><span class="az-faq-icon" aria-hidden="true"></span></summary>
+                    <p><?php echo $a; ?></p>
+                </details>
+            <?php endforeach; ?>
         </div>
-    </div>
+
+        <div class="az-policy-help">
+            پاسخ سؤالتان را پیدا نکردید؟ <a class="az-link" href="<?php echo amuj_url('contact'); ?>">با ما در تماس باشید</a>
+        </div>
+    </article>
 </div>

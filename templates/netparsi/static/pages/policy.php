@@ -39,13 +39,7 @@ $doc = isset($_GET['doc'], $docs[$_GET['doc']]) ? $_GET['doc'] : 'terms';
 ?>
 <div class="az-policy">
     <aside class="az-policy-side">
-        <nav class="az-account-nav az-policy-nav" aria-label="قوانین و راهنما">
-            <?php foreach ($docs as $key => [$label]) : ?>
-                <a href="<?php echo amuj_url('policy', ['doc' => $key]); ?>"<?php echo $key === $doc ? ' class="is-active" aria-current="page"' : ''; ?>><?php echo $label; ?></a>
-            <?php endforeach; ?>
-            <a href="<?php echo amuj_url('help'); ?>">سؤالات متداول</a>
-            <a href="<?php echo amuj_url('contact'); ?>">تماس با ما</a>
-        </nav>
+        <?php amuj_policy_menu($doc); ?>
     </aside>
 
     <article class="az-policy-body">
