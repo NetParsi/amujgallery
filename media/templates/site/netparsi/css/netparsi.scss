@@ -1126,3 +1126,22 @@ body:not(.az-scrolled) .az-header--overlay .az-header-end a:hover { box-shadow: 
 @media (min-width: 960px) and (max-width: 1199px) {
   .az-cart-layout { grid-template-columns: minmax(0, 1fr) 320px; gap: 36px; }
 }
+
+/* ---------- Checkout: centered, credit + discount blocks ---------- */
+.az-checkout { margin: 0 auto; }
+.az-co-block { background: #fff; padding: 16px 18px; margin-top: 12px; }
+.az-co-block-title { display: block; font-weight: 500; font-size: 14px; margin-bottom: 6px; }
+.az-co-credit { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.az-co-credit input { accent-color: var(--az-accent-ink); width: 17px; height: 17px; margin: 4px 0 0; flex: none; }
+.az-co-credit strong { display: block; font-weight: 500; font-size: 14px; }
+.az-co-credit small { font-size: 13px; color: var(--az-gray); }
+.az-co-coupon { display: flex; gap: 10px; align-items: flex-end; }
+.az-co-coupon .az-input { flex: 1; }
+.az-co-coupon .az-btn { min-height: 38px; padding: 0 18px; flex: none; }
+.az-co-msg { margin: 8px 0 0; font-size: 13px; min-height: 0; }
+.az-co-msg:empty { display: none; }
+.az-co-msg.is-ok { color: var(--az-accent-ink); }
+.az-co-msg.is-error { color: #b4232c; }
+[data-az-totals] { margin-top: 18px; }
+.az-co-minus span:last-child { color: var(--az-accent-ink); }
+.az-summary-row[hidden] { display: none; }

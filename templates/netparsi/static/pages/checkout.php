@@ -48,13 +48,40 @@ $subtotal = $products[13]['price'] + $products[2]['price'];
                 </div>
             </div>
         <?php endforeach; ?>
-        <div class="az-field uk-margin-top uk-flex" style="gap:10px;align-items:flex-end">
-            <input class="az-input" placeholder="کد تخفیف">
-            <button class="az-btn az-btn--ghost" type="button" style="min-height:36px;padding:0 16px">اعمال</button>
+        <?php
+        /*
+         * Credit + discount blocks. Sample: credit comes from the customer club, discount
+         * code AMUJ10 = 10% off. Dynamic: HikaShop coupon field + the club extension.
+         */
+        $credit   = ($amujUser = amuj_current_user()) ? $amujUser['credit'] : 300000;
+        $shipping = amuj_shipping_rates()['تهران'][1];
+        ?>
+        <div class="az-co-block">
+            <label class="az-co-credit">
+                <input type="checkbox" data-az-credit="<?php echo $credit; ?>">
+                <span>
+                    <strong>استفاده از اعتبار</strong>
+                    <small>اعتبار قابل استفاده: <?php echo amuj_price($credit); ?></small>
+                </span>
+            </label>
         </div>
-        <div class="az-summary-row"><span>جمع محصولات</span><span><?php echo amuj_price($subtotal); ?></span></div>
-        <div class="az-summary-row"><span>هزینه ارسال</span><span><?php echo amuj_price(85000); ?></span></div>
-        <div class="az-summary-row is-total"><span>مبلغ قابل پرداخت</span><span><?php echo amuj_price($subtotal + 85000); ?></span></div>
+
+        <div class="az-co-block">
+            <strong class="az-co-block-title">کد تخفیف</strong>
+            <form class="az-co-coupon" data-az-coupon onsubmit="return false">
+                <input class="az-input" name="coupon" placeholder="کد تخفیف را وارد کنید" autocomplete="off">
+                <button class="az-btn az-btn--ghost" type="submit">اعمال</button>
+            </form>
+            <p class="az-co-msg" data-az-coupon-msg></p>
+        </div>
+
+        <div data-az-totals data-subtotal="<?php echo $subtotal; ?>" data-shipping="<?php echo $shipping; ?>">
+            <div class="az-summary-row"><span>جمع محصولات</span><span><?php echo amuj_price($subtotal); ?></span></div>
+            <div class="az-summary-row"><span>هزینه ارسال <small class="az-muted">(پیک فوری تهران)</small></span><span><?php echo amuj_price($shipping); ?></span></div>
+            <div class="az-summary-row az-co-minus" data-az-row-discount hidden><span>تخفیف</span><span></span></div>
+            <div class="az-summary-row az-co-minus" data-az-row-credit hidden><span>اعتبار</span><span></span></div>
+            <div class="az-summary-row is-total"><span>مبلغ قابل پرداخت</span><span data-az-pay><?php echo amuj_price($subtotal + $shipping); ?></span></div>
+        </div>
         <a class="az-btn az-btn--block uk-margin-top" href="<?php echo amuj_url('thankyou'); ?>">پرداخت و ثبت سفارش</a>
         <p class="az-small az-muted uk-margin-small-top">با ثبت سفارش، <a class="az-link" href="#">قوانین و مقررات</a> را می‌پذیرید.</p>
     </aside>

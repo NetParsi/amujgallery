@@ -103,6 +103,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Checkout: credit toggle + discount code (sample: AMUJ10 = 10% off) update the payable total
+  var totals = document.querySelector('[data-az-totals]');
+  if (totals) {
+    var toman = function (n) {
+      return Math.round(n).toLocaleString('en-US').replace(/,/g, '٬').replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }) + ' تومان';
+    };
+    var state = { discount: 0, credit: 0 };
+    var creditBox = document.querySelector('[data-az-credit]');
+    var coupon = document.querySelector('[data-az-coupon]');
+    var msg = document.querySelector('[data-az-coupon-msg]');
+
+    var refresh = function () {
+      var sub = Number(totals.dataset.subtotal), ship = Number(totals.dataset.shipping);
+      var dRow = totals.querySelector('[data-az-row-discount]'), cRow = totals.querySelector('[data-az-row-credit]');
+      dRow.hidden = !state.discount; cRow.hidden = !state.credit;
+      dRow.lastElementChild.textContent = '− ' + toman(state.discount);
+      cRow.lastElementChild.textContent = '− ' + toman(state.credit);
+      totals.querySelector('[data-az-pay]').textContent = toman(Math.max(0, sub + ship - state.discount - state.credit));
+    };
+
+    if (creditBox) {
+      creditBox.addEventListener('change', function () {
+        state.credit = creditBox.checked ? Number(creditBox.dataset.azCredit) : 0;
+        refresh();
+      });
+    }
+    if (coupon) {
+      coupon.addEventListener('submit', function () {
+        var code = coupon.coupon.value.trim().toUpperCase();
+        msg.classList.remove('is-ok', 'is-error');
+        if (code === 'AMUJ10') {
+          state.discount = Number(totals.dataset.subtotal) * 0.1;
+          msg.textContent = 'کد تخفیف ۱۰٪ اعمال شد.';
+          msg.classList.add('is-ok');
+        } else {
+          state.discount = 0;
+          msg.textContent = code ? 'این کد تخفیف معتبر نیست.' : 'کد تخفیف را وارد کنید.';
+          msg.classList.add('is-error');
+        }
+        refresh();
+      });
+    }
+  }
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {
