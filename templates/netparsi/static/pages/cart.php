@@ -10,6 +10,28 @@ foreach ($items as $id => $item) {
 $free      = amuj_free_shipping();
 $remaining = max(0, $free - $total);
 $progress  = min(100, round($total / $free * 100));
+
+// Empty cart state (demo: ?empty=1). Dynamic: HikaShop cart with no products.
+if (isset($_GET['empty'])) : ?>
+    <div class="az-cart-empty">
+        <svg class="az-cart-empty-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M14 22h36l-3 34H17z"/><path d="M24 22v-4a8 8 0 0 1 16 0v4"/></svg>
+        <h1>سبد خرید شما خالی است</h1>
+        <p class="az-muted">کالاهایی که به سبد اضافه کنید اینجا نمایش داده می‌شوند.</p>
+        <div class="az-error-actions">
+            <a class="az-btn" href="<?php echo amuj_url('category'); ?>">مشاهده محصولات</a>
+            <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('wishlist'); ?>">علاقه‌مندی‌های من</a>
+        </div>
+    </div>
+    <div class="az-cart-more">
+        <section class="az-section">
+            <div class="az-section-head"><h2>جدیدترین‌ها</h2><a href="<?php echo amuj_url('category'); ?>">مشاهده همه</a></div>
+            <div class="az-grid">
+                <?php foreach (array_slice($products, 0, 4, true) as $id => $p) : amuj_card($id, $p); endforeach; ?>
+            </div>
+        </section>
+    </div>
+    <?php return;
+endif;
 ?>
 <?php // Same frame as checkout: centered, main column + 380px summary box ?>
 <div class="az-checkout az-cart">

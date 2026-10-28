@@ -32,7 +32,8 @@ $active = $menu->getActive();
 
 $pageparams = $menu->getParams( $active->id );
 
-$this->addHeadLink(HTMLHelper::_('image', 'images/favicon.png', '', [], false, 1), 'icon', 'rel', ['sizes' => '48x48']);
+// Favicon: brand logo (SVG) from the template media folder
+$this->addHeadLink(Uri::root() . 'media/templates/site/netparsi/img/favicon.svg', 'icon', 'rel', ['type' => 'image/svg+xml']);
 
 // Detecting Active Variables
 $option   = $input->getCmd('option', '');

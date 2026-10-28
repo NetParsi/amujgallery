@@ -242,6 +242,7 @@ $announcements = [
         ['سفارش‌های من', amuj_url('orders'), ''],
         ['آدرس‌ها', amuj_url('addresses'), ''],
         ['کیف پول', amuj_url('credits'), amuj_price($amujUser['wallet'])],
+        ['علاقه‌مندی‌ها', amuj_url('wishlist'), ''],
         ['پیام‌های من', amuj_url('messages'), $amujUser['unread'] ? amuj_fa($amujUser['unread']) . ' پیام جدید' : ''],
     ];
     ?>
@@ -328,3 +329,26 @@ $announcements = [
     </div>
 </div>
 <?php endif; ?>
+
+<!-- Added-to-cart panel. Dynamic: HikaShop cart module (AJAX add-to-cart response). -->
+<div id="az-added" uk-offcanvas="overlay: true; flip: true">
+    <div class="uk-offcanvas-bar az-user-panel az-added-panel">
+        <div class="az-user-top">
+            <div class="az-user-hello">به سبد خرید اضافه شد</div>
+            <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
+        </div>
+        <div class="az-added-item">
+            <img src="" alt="" data-az-added-img>
+            <div>
+                <strong data-az-added-name></strong>
+                <span class="az-muted" data-az-added-meta></span>
+                <span data-az-added-price></span>
+            </div>
+        </div>
+        <div class="az-summary-row"><span>کالاهای سبد خرید</span><span data-az-added-count></span></div>
+        <div class="az-user-foot">
+            <a class="az-btn az-btn--block" href="<?php echo amuj_url('cart'); ?>">مشاهده سبد و تکمیل خرید</a>
+            <button class="az-btn az-btn--block az-btn--ghost uk-offcanvas-close az-added-continue" type="button">ادامه خرید</button>
+        </div>
+    </div>
+</div>

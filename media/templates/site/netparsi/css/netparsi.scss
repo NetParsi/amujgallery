@@ -1586,3 +1586,61 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
   .az-hero-split { grid-template-columns: 1fr; }
   .az-hero-split img:not(:first-child) { display: none; }
 }
+
+/* ---------- Pre-presentation polish ---------- */
+/* All side panels share the light panel look */
+.uk-offcanvas-bar.az-user-panel { background: #fff; color: #000; width: 420px; padding: 28px 32px; display: flex; flex-direction: column; font-family: var(--az-font); }
+.uk-offcanvas-bar.az-user-panel h4 { color: #000; }
+@media (max-width: 959px) { .uk-offcanvas-bar.az-user-panel { width: 100%; padding: 20px var(--az-gutter); } }
+
+/* Size guide */
+.az-size-panel { width: 480px !important; }
+.az-size-table { width: 100%; border-collapse: collapse; margin: 18px 0 26px; font-size: 14px; text-align: center; }
+.az-size-table th, .az-size-table td { padding: 11px 6px; border-bottom: 1px solid var(--az-line); }
+.az-size-table thead th { font-size: 12px; font-weight: 500; color: var(--az-gray); }
+.az-size-table tbody th { font-weight: 600; background: var(--az-accent-soft); }
+.az-size-table tbody tr:hover td { background: var(--az-soft); }
+.az-size-how { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+.az-size-tips { list-style: none; padding: 0; margin: 0 0 22px; font-size: 13px; line-height: 2; color: #444; }
+.az-size-tips strong { color: #000; font-weight: 600; }
+
+/* Size required before adding to cart */
+.az-size-error { margin: -8px 0 12px; font-size: 13px; color: #b4232c; }
+.az-sizes.is-shake { animation: azShake .45s ease; border-color: #e4a3a6; }
+@keyframes azShake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+/* Added-to-cart panel */
+.az-added-item { display: flex; gap: 16px; padding: 16px 0 20px; border-bottom: 1px solid var(--az-line); margin-bottom: 6px; animation: azRise .45s cubic-bezier(.2,.7,.2,1) .1s both; }
+.az-added-item img { width: 96px; aspect-ratio: 3 / 4; object-fit: cover; background: var(--az-soft); }
+.az-added-item > div { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.az-added-item strong { font-weight: 500; font-size: 15px; }
+.az-added-panel .az-user-foot { margin-top: auto; display: flex; flex-direction: column; gap: 8px; }
+.az-added-continue { position: static; }
+.az-bag.is-bump { animation: azBump .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes azBump { 40% { transform: scale(1.3); } }
+
+/* Photo zoom (light lightbox to match the site) */
+.az-zoom { display: block; cursor: zoom-in; }
+.uk-lightbox { background: #fff; }
+.uk-lightbox .uk-lightbox-toolbar, .uk-lightbox .uk-lightbox-caption { background: rgba(255,255,255,.9); color: #000; font-family: var(--az-font); }
+.uk-lightbox .uk-close, .uk-lightbox .uk-slidenav, .uk-lightbox .uk-lightbox-toolbar-icon { color: #000 !important; }
+.uk-lightbox .uk-lightbox-thumbnav img { object-fit: cover; }
+
+/* Wishlist */
+.az-wish-grid { grid-template-columns: repeat(3, 1fr); gap: 34px 4px; }
+.az-wish-item { position: relative; transition: opacity .3s, transform .3s; }
+.az-wish-item.is-leaving { opacity: 0; transform: scale(.96); }
+.az-wish-remove { margin: 8px 10px 0; background: none; border: 0; padding: 0; cursor: pointer; font: 400 13px var(--az-font); color: var(--az-gray); }
+.az-wish-remove:hover { color: #9a3a3f; }
+.az-wish-item .az-card-fav path { fill: var(--az-accent); }
+.az-wish-empty { padding: 40px 0; text-align: center; }
+@media (max-width: 959px) { .az-wish-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* Empty cart + error page */
+.az-cart-empty, .az-error { max-width: 560px; margin: 30px auto 0; padding: 0 var(--az-gutter); text-align: center; animation: azRise .6s cubic-bezier(.2,.7,.2,1) both; }
+.az-cart-empty-icon { width: 76px; height: 76px; fill: none; stroke: #000; stroke-width: 1.2; margin-bottom: 10px; }
+.az-cart-empty h1, .az-error h1 { font-family: var(--az-title-font); font-size: 26px; font-weight: 400; margin: 6px 0 8px; }
+.az-error-code { font-family: var(--az-title-font); font-size: 120px; line-height: 1; color: var(--az-accent); }
+.az-error-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 26px; }
+.az-error-debug { max-width: 900px; margin: 30px auto; padding: 14px; background: var(--az-soft); font-size: 12px; white-space: pre-wrap; }
+@media (max-width: 959px) { .az-error-code { font-size: 90px; } }

@@ -31,6 +31,8 @@ if (!function_exists('amuj_url')) {
             'addresses'=> ['آدرس‌های من', false],
             'credits'  => ['کیف پول', false],
             'messages' => ['پیام‌های من', false],
+            'wishlist' => ['علاقه‌مندی‌ها', false],
+            'notfound' => ['صفحه پیدا نشد', false],
             'help'     => ['سؤالات متداول', false],
             'about'    => ['درباره ما', false],
             'contact'  => ['تماس با ما', false],
@@ -104,7 +106,7 @@ if (!function_exists('amuj_url')) {
 
     function amuj_account_pages()
     {
-        return ['account', 'orders', 'order', 'addresses', 'credits', 'messages'];
+        return ['account', 'orders', 'order', 'addresses', 'credits', 'messages', 'wishlist'];
     }
 
     /** Side menu shared by the text pages and the FAQ */
@@ -133,6 +135,7 @@ if (!function_exists('amuj_url')) {
             'orders'    => 'سفارش‌های من',
             'addresses' => 'آدرس‌ها',
             'credits'   => 'کیف پول',
+            'wishlist'  => 'علاقه‌مندی‌ها',
             'messages'  => 'پیام‌های من',
         ];
     }
@@ -395,7 +398,7 @@ if (!function_exists('amuj_url')) {
         $url    = amuj_url('product', ['id' => $id]);
         $colors = $p['colors'] ?? [];
         ?>
-        <article class="az-card">
+        <article class="az-card" data-name="<?php echo $p['name']; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
             <div class="az-card-media">
                 <a class="az-card-link" href="<?php echo $url; ?>">
                     <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
