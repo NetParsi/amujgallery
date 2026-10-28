@@ -622,6 +622,30 @@ if (!function_exists('amuj_url')) {
         return AMUJ_BASE . 'index.php?' . http_build_query(['page' => $page] + $query);
     }
 
+    /**
+     * Shop page of a HikaShop category: the "amuj-main" menu item listing it (keeps the header menu
+     * and side navigation), else $fallback (e.g. the link a module built).
+     */
+    function amuj_category_url($catId, $fallback = '')
+    {
+        static $map = null;
+
+        if ($map === null) {
+            $map = [];
+            if (class_exists('\Joomla\CMS\Factory')) {
+                foreach (\Joomla\CMS\Factory::getApplication()->getMenu('site')->getItems('menutype', 'amuj-main') as $item) {
+                    $hk  = (array) $item->getParams()->get('hk_product', []);
+                    $cat = (int) ($hk['selectparentlisting'] ?? 0);
+                    if ($item->type === 'component' && $cat && !isset($map[$cat])) {
+                        $map[$cat] = \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $item->id);
+                    }
+                }
+            }
+        }
+
+        return $map[(int) $catId] ?? $fallback;
+    }
+
     /** Sign-in page that brings the visitor back to the current page afterwards */
     function amuj_login_url()
     {

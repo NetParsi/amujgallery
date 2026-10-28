@@ -1,6 +1,13 @@
 <?php
 defined('_JEXEC') or die;
 
+// Dynamic home: the modules in position "home" (HikaShop category / product modules with the
+// layouts in html/mod_hikacategories and html/mod_hikaproducts). The demo below shows while it is empty.
+if (isset($this) && method_exists($this, 'countModules') && $this->countModules('home')) {
+    echo '<jdoc:include type="modules" name="home" style="none" />';
+    return;
+}
+
 // Portrait shop photos: three per slide side by side (one on mobile)
 $slides = [
     ['imgs' => ['images/products/monogram/black.jpg', 'images/products/monogram/brown.jpg', 'images/products/suede/1.jpg'],

@@ -15,6 +15,7 @@
 	</files>
 	<positions>
 		<position>announcement</position>
+		<position>home</position>
 		<position>header-user</position>
 		<position>header-notifications</position>
 		<position>header-cart</position>
