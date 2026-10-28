@@ -2,8 +2,9 @@
 defined('_JEXEC') or die;
 
 /* Contact us. Dynamic: Joomla contact (com_contact) or a form extension; details below are the real shop details. */
-$address = 'تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴';
-$query   = rawurlencode('برج هوما ولنجک تهران');
+$contact = amuj_contact(); // global variables, group «اطلاعات تماس»
+$address = $contact['address'];
+$query   = rawurlencode($contact['map']);
 ?>
 <div class="az-contact">
     <header class="az-page-head">
@@ -14,17 +15,17 @@ $query   = rawurlencode('برج هوما ولنجک تهران');
 
     <div class="az-contact-grid">
         <div class="az-contact-cards">
-            <a class="az-contact-card" href="tel:+989354466989">
+            <a class="az-contact-card" href="tel:<?php echo $contact['tel']; ?>">
                 <span>تلفن تماس</span>
-                <strong dir="ltr">۰۹۳۵۴۴۶۶۹۸۹</strong>
+                <strong dir="ltr"><?php echo $contact['phone']; ?></strong>
             </a>
-            <a class="az-contact-card" href="https://wa.me/989354466989" target="_blank" rel="noopener">
+            <a class="az-contact-card" href="<?php echo $contact['whatsapp']; ?>" target="_blank" rel="noopener">
                 <span>واتس‌اپ</span>
                 <strong>گفت‌وگو در واتس‌اپ</strong>
             </a>
-            <a class="az-contact-card" href="https://www.instagram.com/amuj.gallery" target="_blank" rel="noopener">
+            <a class="az-contact-card" href="<?php echo $contact['instagram']; ?>" target="_blank" rel="noopener">
                 <span>اینستاگرام</span>
-                <strong dir="ltr">@amuj.gallery</strong>
+                <strong dir="ltr"><?php echo $contact['instagram_handle']; ?></strong>
             </a>
             <div class="az-contact-card az-contact-card--wide">
                 <span>نشانی فروشگاه</span>

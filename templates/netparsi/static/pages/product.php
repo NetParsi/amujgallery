@@ -116,7 +116,7 @@ $guide = [
             <li><strong>دور کمر:</strong> باریک‌ترین قسمت کمر، کمی بالاتر از ناف.</li>
             <li><strong>دور باسن:</strong> برجسته‌ترین قسمت باسن، با پاهای جفت.</li>
         </ul>
-        <div class="az-policy-help">برای مشاوره سایز در واتس‌اپ پیام دهید: <a class="az-link" href="https://wa.me/989354466989" target="_blank" rel="noopener" dir="ltr">۰۹۳۵۴۴۶۶۹۸۹</a></div>
+        <div class="az-policy-help">برای مشاوره سایز در واتس‌اپ پیام دهید: <a class="az-link" href="<?php echo amuj_contact()['whatsapp']; ?>" target="_blank" rel="noopener" dir="ltr"><?php echo amuj_contact()['phone']; ?></a></div>
     </div>
 </div>
 

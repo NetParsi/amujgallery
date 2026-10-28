@@ -15,7 +15,7 @@
         <fields name="params">
             <fieldset name="basic">
                 <field name="recipient" type="email" label="ایمیل دریافت پیام‌ها"
-                       description="پیام‌های فرم تماس به این ایمیل فرستاده می‌شوند. اگر خالی باشد، ایمیل اصلی سایت (تنظیمات سراسری) استفاده می‌شود."
+                       description="پیام‌های فرم تماس به این ایمیل فرستاده می‌شوند. اگر خالی باشد، متغیر سراسری contact_email و بعد ایمیل اصلی سایت استفاده می‌شود."
                        validate="email" filter="string"/>
             </fieldset>
         </fields>

@@ -57,7 +57,7 @@ $values = amuj_split_headings($item->text, 'h3');
     <div class="az-about-split-text">
         <span class="az-num">فروشگاه حضوری</span>
         <h2>از نزدیک ببینید و امتحان کنید</h2>
-        <p>تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴</p>
+        <p><?php echo amuj_contact()['address']; ?></p>
         <p class="az-muted">برای هماهنگی بازدید یا مشاوره سایز، از طریق تلفن یا واتس‌اپ با ما در تماس باشید.</p>
         <div class="az-about-actions">
             <a class="az-btn" href="<?php echo amuj_url('contact'); ?>">تماس و مسیریابی</a>

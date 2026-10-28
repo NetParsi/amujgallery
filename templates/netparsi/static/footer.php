@@ -30,13 +30,7 @@ $columns = [
         return amuj_url('category', ['cat' => $c]);
     }, amuj_categories()))],
 ];
-$contact = [
-    'phone'     => '۰۹۳۵۴۴۶۶۹۸۹',
-    'tel'       => '+989354466989',
-    'whatsapp'  => 'https://wa.me/989354466989',
-    'instagram' => 'https://www.instagram.com/amuj.gallery',
-    'address'   => 'تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴',
-];
+$contact = amuj_contact(); // global variables, group «اطلاعات تماس»
 $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' => $contact['whatsapp']];
 ?>
 <footer class="az-footer">
@@ -84,7 +78,7 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                         <?php else : ?>
                             <ul class="az-footer-contact">
                                 <li><span>تلفن و واتس‌اپ</span><a href="tel:<?php echo $contact['tel']; ?>" dir="ltr"><?php echo $contact['phone']; ?></a></li>
-                                <li><span>اینستاگرام</span><a href="<?php echo $contact['instagram']; ?>" target="_blank" rel="noopener" dir="ltr">@amuj.gallery</a></li>
+                                <li><span>اینستاگرام</span><a href="<?php echo $contact['instagram']; ?>" target="_blank" rel="noopener" dir="ltr"><?php echo $contact['instagram_handle']; ?></a></li>
                                 <li><span>نشانی</span><?php echo $contact['address']; ?></li>
                             </ul>
                         <?php endif; ?>

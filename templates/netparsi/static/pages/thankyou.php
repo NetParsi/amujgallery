@@ -35,7 +35,7 @@ $user     = amuj_current_user();
             <a class="az-btn" href="<?php echo amuj_url('checkout'); ?>">تلاش مجدد پرداخت</a>
             <a class="az-btn az-btn--ghost" href="<?php echo amuj_url('cart'); ?>">بازگشت به سبد خرید</a>
         </div>
-        <p class="az-small az-muted">نیاز به کمک دارید؟ با پشتیبانی تماس بگیرید: <a class="az-link" href="tel:+989354466989" dir="ltr">۰۹۳۵۴۴۶۶۹۸۹</a></p>
+        <p class="az-small az-muted">نیاز به کمک دارید؟ با پشتیبانی تماس بگیرید: <a class="az-link" href="tel:<?php echo amuj_contact()['tel']; ?>" dir="ltr"><?php echo amuj_contact()['phone']; ?></a></p>
     <?php else : ?>
         <h1>سفارش شما با موفقیت ثبت شد</h1>
         <p class="az-muted">جزئیات سفارش و کد رهگیری مرسوله به تلفن همراه شما پیامک می‌شود.</p>

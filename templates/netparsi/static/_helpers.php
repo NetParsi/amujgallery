@@ -509,7 +509,66 @@ if (!function_exists('amuj_url')) {
     /** Orders at or above this amount (toman) ship free. HikaShop: shipping method rule. */
     function amuj_free_shipping()
     {
-        return 20000000;
+        return (int) amuj_var('shop_free_shipping', 20000000);
+    }
+
+    /**
+     * Site-wide value from the "Global variables" component (com_globalvars, admin: Components > متغیرهای سراسری).
+     * Missing, unpublished or empty -> $default.
+     */
+    function amuj_var($key, $default = null)
+    {
+        static $ready = null;
+
+        if ($ready === null) {
+            $file  = defined('JPATH_ADMINISTRATOR') ? JPATH_ADMINISTRATOR . '/components/com_globalvars/helpers/globalvars.php' : '';
+            $ready = $file && is_file($file);
+            if ($ready) {
+                require_once $file;
+            }
+        }
+        if (!$ready) {
+            return $default;
+        }
+
+        $value = \GlobalVarsHelper::get($key);
+
+        return ($value === null || $value === '' || $value === []) ? $default : $value;
+    }
+
+    /** Shop contact details (global variables group "اطلاعات تماس"), ready for links */
+    function amuj_contact()
+    {
+        static $contact = null;
+
+        if ($contact !== null) {
+            return $contact;
+        }
+
+        $mobile = strtr(trim(strtok((string) amuj_var('contact_mobile', '09354466989'), "\n")), array_flip(['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']));
+        $mobile = preg_replace('/\D/', '', $mobile);
+        $intl   = '98' . ltrim($mobile, '0');
+
+        // social_networks rows: title / code (link) / icon (instagram, whatsapp, telegram, ...)
+        $social = [];
+        foreach ((array) amuj_var('social_networks', []) as $row) {
+            if (!empty($row['code'])) {
+                $social[strtolower(trim($row['icon'] ?? '')) ?: ($row['title'] ?? '')] = ['title' => $row['title'] ?? '', 'url' => trim($row['code'])];
+            }
+        }
+        $instagram = $social['instagram']['url'] ?? 'https://www.instagram.com/amuj.gallery';
+
+        return $contact = [
+            'phone'     => amuj_fa($mobile),
+            'tel'       => '+' . $intl,
+            'whatsapp'  => $social['whatsapp']['url'] ?? 'https://wa.me/' . $intl,
+            'instagram' => $instagram,
+            'instagram_handle' => '@' . trim(parse_url($instagram, PHP_URL_PATH) ?: '', '/'),
+            'address'   => trim((string) amuj_var('contact_address', 'تهران، ولنجک، خیابان چهاردهم، پلاک ۱۹، برج هوما، طبقه ۹، واحد ۹۰۴')),
+            'map'       => trim((string) amuj_var('contact_map_query', 'برج هوما ولنجک تهران')),
+            'email'     => trim((string) amuj_var('contact_email', '')),
+            'social'    => $social,
+        ];
     }
 
     /**

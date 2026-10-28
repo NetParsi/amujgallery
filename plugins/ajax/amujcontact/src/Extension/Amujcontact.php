@@ -67,7 +67,14 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
             $this->respond(false, 'پیام قبلی شما رسید؛ برای پیام بعدی یک دقیقه صبر کنید.');
         }
 
-        $recipient = trim((string) $this->params->get('recipient', '')) ?: $app->get('mailfrom');
+        // Plugin option, else the global variable contact_email (com_globalvars), else the site email
+        $recipient = trim((string) $this->params->get('recipient', ''));
+        $globals   = JPATH_ADMINISTRATOR . '/components/com_globalvars/helpers/globalvars.php';
+        if ($recipient === '' && is_file($globals)) {
+            require_once $globals;
+            $recipient = trim((string) \GlobalVarsHelper::get('contact_email', ''));
+        }
+        $recipient = $recipient ?: $app->get('mailfrom');
         $body = implode("\n", [
             'پیام جدید از فرم تماس سایت ' . $app->get('sitename'),
             '',
