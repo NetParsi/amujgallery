@@ -9,7 +9,12 @@ $slides = [
 ];
 $products = amuj_products();
 ?>
-<section class="az-hero" uk-slideshow="animation: fade; autoplay: true; autoplay-interval: 6000; pause-on-hover: false">
+<?php
+// Slide duration (ms). The progress line under the active tab fills over this time,
+// then the next slide shows (see netparsi.js).
+$slideDuration = 5000;
+?>
+<section class="az-hero" uk-slideshow="animation: fade; autoplay: false; finite: false" data-az-duration="<?php echo $slideDuration; ?>" style="--az-dur: <?php echo $slideDuration; ?>ms">
     <ul class="uk-slideshow-items">
         <?php foreach ($slides as $slide) : ?>
             <li class="az-hero-shade">
@@ -22,9 +27,18 @@ $products = amuj_products();
             </li>
         <?php endforeach; ?>
     </ul>
+    <button class="az-hero-nav az-hero-nav--prev" type="button" uk-slideshow-item="previous" aria-label="اسلاید قبلی">
+        <svg viewBox="0 0 24 48" aria-hidden="true"><path d="M6 2l14 22L6 46"/></svg>
+    </button>
+    <button class="az-hero-nav az-hero-nav--next" type="button" uk-slideshow-item="next" aria-label="اسلاید بعدی">
+        <svg viewBox="0 0 24 48" aria-hidden="true"><path d="M18 2L4 24l14 22"/></svg>
+    </button>
     <ul class="az-hero-tabs">
         <?php foreach ($slides as $i => $slide) : ?>
-            <li uk-slideshow-item="<?php echo $i; ?>"><a href="#"><?php echo $slide['tab']; ?></a></li>
+            <li uk-slideshow-item="<?php echo $i; ?>">
+                <a href="#"><?php echo $slide['tab']; ?></a>
+                <span class="az-hero-progress" aria-hidden="true"><i></i></span>
+            </li>
         <?php endforeach; ?>
     </ul>
 </section>

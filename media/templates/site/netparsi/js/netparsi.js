@@ -20,6 +20,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { passive: true });
   onScroll();
 
+  // Home hero: the progress line under the active tab fills, then the next slide shows
+  var hero = document.querySelector('.az-hero[data-az-duration]');
+  if (hero && window.UIkit) {
+    hero.addEventListener('animationend', function (e) {
+      if (e.animationName === 'azFill') UIkit.slideshow(hero).show('next');
+    });
+  }
+
   // Announcement bar: rotate messages, close and remember
   var rotate = document.querySelector('[data-az-rotate]');
   if (rotate && rotate.children.length > 1) {

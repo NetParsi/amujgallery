@@ -891,3 +891,40 @@ body:not(.az-scrolled) .az-header--overlay .az-bell svg { stroke: #fff; }
   .az-footer-top { grid-template-columns: 1fr; gap: 40px; }
   .az-footer .az-newsletter { max-width: 560px; }
 }
+
+/* ---------- Home hero: arrows + progress line under the active tab ---------- */
+.az-hero-nav {
+  position: absolute; top: 50%; z-index: 6; transform: translateY(-50%);
+  background: none; border: 0; padding: 14px 10px; cursor: pointer; line-height: 0;
+  opacity: .75; transition: opacity .25s, transform .25s;
+}
+.az-hero-nav svg { width: 18px; height: 36px; fill: none; stroke: #fff; stroke-width: 1.2; filter: drop-shadow(0 1px 6px rgba(0,0,0,.3)); }
+.az-hero-nav:hover { opacity: 1; }
+.az-hero-nav--prev { right: calc(var(--az-gutter) - 10px); }
+.az-hero-nav--next { left: calc(var(--az-gutter) - 10px); }
+.az-hero-nav--prev:hover { transform: translate(3px, -50%); }
+.az-hero-nav--next:hover { transform: translate(-3px, -50%); }
+
+.az-hero-tabs { align-items: flex-start; }
+.az-hero-tabs li { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 70px; }
+.az-hero-tabs a, .az-hero-tabs .uk-active a { border-bottom: 0; padding-bottom: 0; }
+.az-hero-progress { display: block; width: 100%; height: 2px; background: rgba(255,255,255,.45); overflow: hidden; }
+.az-hero-progress i { display: block; height: 100%; width: 100%; background: var(--az-accent); transform: scaleX(0); transform-origin: right; }
+.az-hero-tabs .uk-active .az-hero-progress { background: #fff; }
+.az-hero-tabs .uk-active .az-hero-progress i { animation: azFill var(--az-dur, 5000ms) linear forwards; }
+@keyframes azFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (max-width: 959px) {
+  .az-hero-nav { padding: 10px 4px; }
+  .az-hero-nav svg { width: 13px; height: 26px; }
+  .az-hero-tabs { gap: 22px; bottom: 28px; }
+  .az-hero-tabs li { min-width: 54px; }
+}
+
+/* ---------- Product cards: white label text, larger title and price ---------- */
+.az-card-tag { color: #fff; font-weight: 500; font-size: 12px; padding: 1px 9px; }
+.az-card-name { font-size: 16px; padding-top: 10px; }
+.az-card-price { font-size: 16px; }
+@media (max-width: 959px) {
+  .az-card-name, .az-card-price { font-size: 15px; }
+}
