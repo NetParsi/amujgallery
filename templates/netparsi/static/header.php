@@ -158,11 +158,13 @@ $announcements = [
                             <?php endforeach; ?>
                         </div>
                         <?php $n = 0; foreach ($groups as $group => $items) : $n++; ?>
-                            <div class="az-menu-group">
-                                <div class="az-menu-group-title">
+                            <?php // Mobile: each group is an accordion; the biggest group (categories) starts open ?>
+                            <div class="az-menu-group<?php echo count($items) > 6 ? ' is-open' : ''; ?>">
+                                <button class="az-menu-group-title" type="button" aria-expanded="<?php echo count($items) > 6 ? 'true' : 'false'; ?>">
                                     <span class="az-num">|<?php echo amuj_fa(str_pad($n, 2, '0', STR_PAD_LEFT)); ?>|</span>
-                                    <?php echo $group; ?>
-                                </div>
+                                    <span class="az-menu-group-name"><?php echo $group; ?></span>
+                                    <span class="az-footer-plus" aria-hidden="true"></span>
+                                </button>
                                 <ul class="az-menu-list<?php echo count($items) > 6 ? ' az-menu-list--cols' : ''; ?>">
                                     <?php foreach ($items as $item) :
                                         $classes = trim(($item === 'حراج' ? 'az-sale ' : '') . ((isset($_GET['cat']) && $_GET['cat'] === $item) ? 'is-active' : '')); ?>

@@ -410,6 +410,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Mobile menu: numbered groups open and close like an accordion
+  document.querySelectorAll('.az-menu-group-title').forEach(function (head) {
+    head.addEventListener('click', function () {
+      if (window.matchMedia('(min-width: 960px)').matches) return;
+      var group = head.closest('.az-menu-group');
+      group.classList.toggle('is-open');
+      head.setAttribute('aria-expanded', group.classList.contains('is-open'));
+    });
+  });
+
   // Footer columns collapse into an accordion on mobile
   document.querySelectorAll('.az-footer-head').forEach(function (head) {
     head.addEventListener('click', function () {

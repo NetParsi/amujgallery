@@ -1653,3 +1653,29 @@ a.az-contact-card:hover { background: var(--az-accent-soft); box-shadow: none; }
 .az-state .az-thanks-actions { margin-bottom: 0; }
 .az-state--error .az-status-ring { fill: var(--az-soft); stroke: #cfcfcb; }
 .az-state--error .az-status-mark { stroke: #000; }
+
+/* ---------- Menu groups: plain labels on desktop, accordions on mobile ---------- */
+.az-menu-group-title {
+  display: block; width: 100%; background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: inherit; text-align: right; cursor: default;
+}
+.az-menu-group-title .az-footer-plus { display: none; }
+
+@media (max-width: 959px) {
+  .az-menu-panels > li { border-bottom: 1px solid var(--az-line); }
+  .az-menu-group { display: block; margin: 0; border-top: 1px solid var(--az-line); }
+  .az-menu-group-title {
+    display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0;
+    font-size: 17px; font-weight: 500; cursor: pointer;
+  }
+  .az-menu-group-title .az-num { font-size: 13px; margin: 0; }
+  .az-menu-group-name { flex: 1; }
+  .az-menu-group-title .az-footer-plus { display: block; position: relative; width: 14px; height: 14px; }
+  .az-menu-group.is-open .az-footer-plus::after { transform: rotate(0); }
+  .az-menu-group:not(.is-open) .az-menu-list { display: none; }
+  .az-menu-group.is-open .az-menu-list { animation: azRise .35s cubic-bezier(.2,.7,.2,1) both; }
+  .az-menu-list { padding: 0 0 14px; column-count: 1; }
+  .az-menu-list--cols { column-count: 2; column-gap: 20px; }
+  .az-menu-list li { margin: 0; break-inside: avoid; }
+  .az-menu-list a { display: flex; align-items: center; min-height: 44px; font-size: 16px; }
+}
