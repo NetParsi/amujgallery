@@ -85,7 +85,16 @@ $suggest = $db->setQuery('SELECT product_id FROM ' . hikashop_table('product') .
     . ($mains ? ' AND product_id NOT IN (' . implode(',', array_keys($mains)) . ')' : '') . ' ORDER BY product_created DESC LIMIT 8')->loadColumn();
 $suggest = amuj_hika_products($suggest);
 
-if (!$items) : ?>
+if (!$items) :
+    // Our empty state says it already: drop HikaShop's "cart is empty" notice, keep any other message
+    $app = Factory::getApplication();
+    $emptyText = \Joomla\CMS\Language\Text::_('CART_EMPTY');
+    foreach ($app->getMessageQueue(true) as $msg) {
+        if ($msg['message'] !== $emptyText) {
+            $app->enqueueMessage($msg['message'], $msg['type']);
+        }
+    }
+    ?>
     <div class="az-thanks az-state">
         <div class="az-status-icon" aria-hidden="true">
             <svg viewBox="0 0 96 96">
