@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="template" client="site">
+	<name>netparsi</name>
+	<version>1.0</version>
+	<creationDate>Tir 1402</creationDate>
+	<author>NetParsi</author>
+	<authorEmail>office@netparsi.com</authorEmail>
+	<copyright>(C) 2017 Open Source Matters, Inc.</copyright>
+	<inheritable>1</inheritable>
+	<files>
+		<filename>index.php</filename>
+		<filename>joomla.asset.json</filename>
+		<filename>offline.php</filename>
+		<filename>templateDetails.xml</filename>
+	</files>
+	<media destination="templates/site/netparsi" folder="media">
+		<folder>js</folder>
+		<folder>css</folder>
+		<folder>img</folder>
+		<folder>fonts</folder>
+	</media>
+	<languages destination="templates/site/netparsi" folder="language">
+		<language tag="fa-IR">fa-IR/tpl_netparsi.ini</language>
+	</languages>
+</extension>

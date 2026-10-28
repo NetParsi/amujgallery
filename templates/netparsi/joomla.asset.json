@@ -1,0 +1,46 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "netparsi",
+  "version": "4.0.0",
+  "description": "This file contains details of the assets used by Cassiopeia, the default Joomla 4 site template.",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "uikitStyle",
+      "type": "style",
+      "uri": "uikit-rtl.min.css"
+    },
+    {
+      "name": "uikitScript",
+      "type": "script",
+      "uri": "uikit.min.js"
+    },
+    {
+      "name": "uikitPreset",
+      "type": "preset",
+      "dependencies": [
+        "uikitStyle#style",
+        "uikitScript#script"
+      ]
+    },
+
+    {
+      "name": "netparsiStyle",
+      "type": "style",
+      "uri": "netparsi.css"
+    },
+    {
+      "name": "netparsiScript",
+      "type": "script",
+      "uri": "netparsi.js"
+    },
+    {
+      "name": "netparsiPreset",
+      "type": "preset",
+      "dependencies": [
+        "netparsiStyle#style",
+        "netparsiScript#script"
+      ]
+    }
+  ]
+}
