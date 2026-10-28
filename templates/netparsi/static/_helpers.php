@@ -330,6 +330,40 @@ if (!function_exists('amuj_url')) {
         echo '</nav>';
     }
 
+    /** Solar Hijri month and year of a date, e.g. "آبان ۱۴۰۵" */
+    function amuj_jalali_month($date)
+    {
+        $ts = is_numeric($date) ? (int) $date : strtotime((string) $date);
+        [$gy, $gm, $gd] = array_map('intval', explode('-', date('Y-m-d', $ts)));
+        $days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+        $gy2  = $gm > 2 ? $gy + 1 : $gy;
+        $n    = 355666 + 365 * $gy + intdiv($gy2 + 3, 4) - intdiv($gy2 + 99, 100) + intdiv($gy2 + 399, 400) + $gd + $days[$gm - 1];
+        $jy   = -1595 + 33 * intdiv($n, 12053);
+        $n   %= 12053;
+        $jy  += 4 * intdiv($n, 1461);
+        $n   %= 1461;
+        if ($n > 365) {
+            $jy += intdiv($n - 1, 365);
+            $n = ($n - 1) % 365;
+        }
+        $jm = $n < 186 ? 1 + intdiv($n, 31) : 7 + intdiv($n - 186, 30);
+        $months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+
+        return $months[$jm - 1] . ' ' . amuj_fa($jy);
+    }
+
+    /** Article text "<hN>heading</hN> ...body..." -> [[heading, body html], ...] (text before the first heading is skipped) */
+    function amuj_split_headings($html, $tag = 'h2')
+    {
+        $parts = preg_split('#<' . $tag . '[^>]*>(.*?)</' . $tag . '>#is', (string) $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $out = [];
+        for ($i = 1; $i < count($parts); $i += 2) {
+            $out[] = [trim(strip_tags($parts[$i])), trim($parts[$i + 1] ?? '')];
+        }
+
+        return $out;
+    }
+
     /** Customer panel menu: page key => label */
     function amuj_account_menu()
     {
@@ -514,6 +548,12 @@ if (!function_exists('amuj_url')) {
                     $dynamic += ['login' => (int) $item->id, 'register' => (int) $item->id];
                 }
             }
+        }
+
+        // Text pages: policy&doc=terms -> the "terms" article page
+        if ($page === 'policy' && isset($query['doc'], $dynamic[$query['doc']])) {
+            $page = $query['doc'];
+            unset($query['doc']);
         }
 
         if (isset($dynamic[$page])) {

@@ -1752,3 +1752,6 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 /* Sign-in pages: back-home link centred under the card; the auth component's wrapper adds no padding (no scroll) */
 .az-auth-page .az-auth-home { align-self: center; }
 .az-component:has(> .az-auth-page) { padding: 0; }
+
+/* Text pages from Joomla articles (html/com_content/article): same edges as the static pages */
+.az-component:has(> .az-policy), .az-component:has(> .az-about-hero) { padding: 0; }
