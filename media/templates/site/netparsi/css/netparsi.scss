@@ -1748,3 +1748,7 @@ h1.az-cat-title { font: inherit; font-size: 14px; line-height: inherit; color: v
 .az-component:has(> .az-cart), .az-component:has(> .az-state) { padding: 0; }
 button.az-remove { background: none; border: 0; padding: 0; font-family: inherit; }
 .az-cart-row.is-busy { opacity: .45; pointer-events: none; transition: opacity .2s; }
+
+/* Sign-in pages: back-home link centred under the card; the auth component's wrapper adds no padding (no scroll) */
+.az-auth-page .az-auth-home { align-self: center; }
+.az-component:has(> .az-auth-page) { padding: 0; }
