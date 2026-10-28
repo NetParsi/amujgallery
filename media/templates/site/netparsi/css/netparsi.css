@@ -712,3 +712,7 @@ body:not(.az-scrolled) .az-header--overlay .az-bag::before { border-color: #fff;
   .az-menu-list--cols li { break-inside: avoid; }
   .az-menu-group { margin-bottom: 30px; }
 }
+/* Burger: 1px lines, just longer */
+.az-burger { width: 42px; gap: 10px; }
+.az-burger span { height: 1px; }
+@media (max-width: 959px) { .az-burger { width: 34px; gap: 9px; } }
