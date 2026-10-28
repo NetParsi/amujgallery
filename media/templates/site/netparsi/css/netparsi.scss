@@ -1238,3 +1238,11 @@ body:not(.az-scrolled) .az-header--overlay .az-header-end a:hover { box-shadow: 
   .az-auth-card { padding: 10px 4px; }
   .az-auth-logo { --az-logo-h: 70px; }
 }
+/* Auth page is exactly one screen tall: padding counts inside the height */
+.az-main--bare { min-height: 0; }
+.az-auth-page { box-sizing: border-box; min-height: 100vh; min-height: 100dvh; padding-top: 24px; padding-bottom: 24px; }
+.az-auth-logo { margin-bottom: 24px; }
+.az-auth-home { margin-top: 18px; }
+@media (max-width: 959px) {
+  .az-auth-page { padding-top: 36px; }
+}
