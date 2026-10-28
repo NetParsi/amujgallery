@@ -28,7 +28,39 @@ $cartCount = amuj_fa(2);
 $icoSearch = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
 $icoUser   = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
 $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg>';
+
+/*
+ * Header slots are Joomla module positions (see templateDetails.xml). While a position
+ * is empty the static demo markup is shown, so each slot can go dynamic on its own:
+ * announcement = Custom module, header-user / header-cart = HikaShop user & cart modules.
+ */
+$hasModules = function ($position) {
+    return isset($this) && method_exists($this, 'countModules') && $this->countModules($position);
+};
+$announcements = [
+    'ارسال رایگان برای خریدهای بالای ۳ میلیون تومان',
+    'کالکشن پاییز و زمستان ۱۴۰۵ رسید',
+    '۱۴ روز مهلت تعویض و مرجوعی',
+];
 ?>
+<a class="az-skip" href="#az-main">رفتن به محتوای اصلی</a>
+
+<div class="az-topbar" id="az-topbar">
+    <?php if ($hasModules('announcement')) : ?>
+        <jdoc:include type="modules" name="announcement" style="none" />
+    <?php else : ?>
+        <div class="az-topbar-track" data-az-rotate>
+            <?php foreach ($announcements as $i => $text) : ?>
+                <span<?php echo $i === 0 ? ' class="is-active"' : ''; ?>><?php echo $text; ?></span>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+    <button class="az-topbar-close" type="button" aria-label="بستن نوار اطلاع‌رسانی">
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1l10 10M11 1L1 11"/></svg>
+    </button>
+</div>
+<script>try { if (localStorage.getItem('azBarClosed')) document.documentElement.classList.add('az-no-bar'); } catch (e) {}</script>
+
 <header class="az-header<?php echo !empty($amujOverlay) ? ' az-header--overlay' : ''; ?>">
     <div class="az-header-start">
         <button class="az-burger" type="button" uk-toggle="target: #az-menu" aria-label="منو">
@@ -36,11 +68,19 @@ $icoClose  = '<svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36
         </button>
         <a class="az-logo" href="<?php echo amuj_url('home'); ?>" aria-label="گالری آموژ"><?php echo amuj_logo(); ?></a>
     </div>
-    <nav class="az-header-end">
+    <nav class="az-header-end" aria-label="دسترسی سریع">
         <a class="az-search-trigger" href="<?php echo amuj_url('search'); ?>" data-az-search aria-label="جستجو"><span class="az-txt">جستجو</span><?php echo $icoSearch; ?></a>
-        <a class="az-desk" href="<?php echo amuj_url('login'); ?>">ورود</a>
+        <?php if ($hasModules('header-user')) : ?>
+            <jdoc:include type="modules" name="header-user" style="none" />
+        <?php else : ?>
+            <a class="az-desk" href="<?php echo amuj_url('login'); ?>">ورود</a>
+        <?php endif; ?>
         <a class="az-desk" href="<?php echo amuj_url('help'); ?>">راهنما</a>
-        <a class="az-cart-link" href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید"><span class="az-txt">سبد (<?php echo $cartCount; ?>)</span><span class="az-bag"><?php echo $cartCount; ?></span></a>
+        <?php if ($hasModules('header-cart')) : ?>
+            <jdoc:include type="modules" name="header-cart" style="none" />
+        <?php else : ?>
+            <a class="az-cart-link" href="<?php echo amuj_url('cart'); ?>" aria-label="سبد خرید"><span class="az-txt">سبد (<?php echo $cartCount; ?>)</span><span class="az-bag"><?php echo $cartCount; ?></span></a>
+        <?php endif; ?>
     </nav>
 </header>
 

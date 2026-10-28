@@ -13,6 +13,13 @@
 		<filename>offline.php</filename>
 		<filename>templateDetails.xml</filename>
 	</files>
+	<positions>
+		<position>announcement</position>
+		<position>header-user</position>
+		<position>header-notifications</position>
+		<position>header-cart</position>
+		<position>debug</position>
+	</positions>
 	<media destination="templates/site/netparsi" folder="media">
 		<folder>js</folder>
 		<folder>css</folder>

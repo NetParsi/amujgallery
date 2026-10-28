@@ -20,6 +20,24 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { passive: true });
   onScroll();
 
+  // Announcement bar: rotate messages, close and remember
+  var rotate = document.querySelector('[data-az-rotate]');
+  if (rotate && rotate.children.length > 1) {
+    var slide = 0;
+    setInterval(function () {
+      rotate.children[slide].classList.remove('is-active');
+      slide = (slide + 1) % rotate.children.length;
+      rotate.children[slide].classList.add('is-active');
+    }, 4000);
+  }
+  var barClose = document.querySelector('.az-topbar-close');
+  if (barClose) {
+    barClose.addEventListener('click', function () {
+      document.documentElement.classList.add('az-no-bar');
+      try { localStorage.setItem('azBarClosed', '1'); } catch (e) {}
+    });
+  }
+
   // Category grid density (2 / 4 / 6 columns), remembered per browser
   var grid = document.getElementById('az-grid');
   var switches = document.querySelectorAll('.az-grid-switch button');

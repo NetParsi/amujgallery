@@ -99,7 +99,7 @@ if ($staticPage) {
     . ($staticPage ? ' az-page-' . $staticPage : '');
 ?>">
 <?php include __DIR__ . '/static/header.php'; ?>
-<main class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?>">
+<main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?>">
     <jdoc:include type="message" />
     <?php if ($staticPage) : ?>
         <?php include __DIR__ . '/static/pages/' . $staticPage . '.php'; ?>
