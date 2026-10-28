@@ -3,43 +3,62 @@ defined('_JEXEC') or die;
 
 /**
  * Three-level menu: section > numbered group > links.
- * When going dynamic this maps 1:1 to a Joomla menu (mod_menu override):
- * level 1 = sections, level 2 = groups, level 3 = HikaShop category menu items.
+ * Read from the Joomla menu "amuj-main" (level 1 = sections, level 2 = group headings,
+ * level 3 = HikaShop listing items; the "Link Image" of an item is its menu picture).
+ * While that menu does not exist (static preview) the sample tree below is used.
+ *
+ * Normalized shape: [['title', 'img', 'groups' => [['title', 'items' => [['title', 'url', 'img', 'active', 'sale']]]], 'promos' => [...]]]
  *
  * @var bool $amujOverlay
  */
-$menuTree = [
-    'فروشگاه' => [
-        'جدیدترین‌ها'  => ['جدیدترین‌ها', 'پرفروش‌ها'],
-        'ترندها'       => ['پاییز و زمستان ۱۴۰۵', 'مهمانی و مجلسی'],
-        'دسته‌بندی‌ها' => array_merge(amuj_categories(), ['حراج']),
-    ],
-    'کالکشن‌ها' => [
-        'فصلی'   => ['پاییز و زمستان ۱۴۰۵', 'بهار و تابستان ۱۴۰۵'],
-        'استایل' => ['کالکشن رسمی', 'کالکشن روزمره', 'AMUJ STUDIO'],
-    ],
-    'حراج' => [
-        'تخفیف‌ها' => ['تا ۳۰٪', 'تا ۵۰٪', 'آخرین سایزها'],
-    ],
-];
+$menuSections = amuj_menu_tree('amuj-main');
+
+if (!$menuSections) {
+    $staticTree = [
+        'فروشگاه' => [
+            'جدیدترین‌ها'  => ['جدیدترین‌ها', 'پرفروش‌ها'],
+            'ترندها'       => ['پاییز و زمستان ۱۴۰۵', 'مهمانی و مجلسی'],
+            'دسته‌بندی‌ها' => array_merge(amuj_categories(), ['حراج']),
+        ],
+        'کالکشن‌ها' => [
+            'فصلی'   => ['پاییز و زمستان ۱۴۰۵', 'بهار و تابستان ۱۴۰۵'],
+            'استایل' => ['کالکشن رسمی', 'کالکشن روزمره', 'AMUJ STUDIO'],
+        ],
+        'حراج' => [
+            'تخفیف‌ها' => ['تا ۳۰٪', 'تا ۵۰٪', 'آخرین سایزها'],
+        ],
+    ];
+    $sectionImages = ['فروشگاه' => 1, 'کالکشن‌ها' => 20, 'حراج' => 5];
+    $itemImages    = ['مانتو' => 4, 'کت' => 1, 'پالتو' => 8, 'بارانی' => 3, 'پیراهن' => 2, 'ست' => 5, 'شلوار' => 7,
+        'دامن' => 6, 'شومیز' => 9, 'اکسسوری' => 10, 'جدیدترین‌ها' => 11, 'پرفروش‌ها' => 13, 'حراج' => 5];
+    $promos = [
+        'فروشگاه'   => [['جدیدترین‌ها', 11], ['پالتو', 8]],
+        'کالکشن‌ها' => [['پاییز و زمستان ۱۴۰۵', 20], ['AMUJ STUDIO', 19]],
+        'حراج'      => [['تا ۵۰٪', 5], ['آخرین سایزها', 6]],
+    ];
+    foreach ($staticTree as $section => $groups) {
+        $s = ['title' => $section, 'img' => $sectionImages[$section], 'groups' => [], 'promos' => []];
+        foreach ($groups as $group => $labels) {
+            $items = [];
+            foreach ($labels as $label) {
+                $items[] = [
+                    'title'  => $label,
+                    'url'    => amuj_url('category', ['cat' => $label]),
+                    'img'    => $itemImages[$label] ?? (abs(crc32($label)) % 22) + 1,
+                    'active' => ($_GET['cat'] ?? '') === $label,
+                    'sale'   => $label === 'حراج',
+                ];
+            }
+            $s['groups'][] = ['title' => $group, 'items' => $items];
+        }
+        foreach ($promos[$section] as [$label, $img]) {
+            $s['promos'][] = ['title' => $label, 'url' => amuj_url('category', ['cat' => $label]), 'img' => $img];
+        }
+        $menuSections[] = $s;
+    }
+}
 $menuLinks = ['درباره آموژ' => amuj_url('about'), 'راهنما' => amuj_url('help'), 'حساب کاربری' => amuj_url('account')];
 $cartCount = amuj_fa(2);
-
-/*
- * Menu images: shown beside the menu on desktop (follows hover) and as cards on mobile.
- * Dynamic: the "Link Image" field of each Joomla menu item.
- */
-$sectionImages = ['فروشگاه' => 1, 'کالکشن‌ها' => 20, 'حراج' => 5];
-$itemImages    = ['مانتو' => 4, 'کت' => 1, 'پالتو' => 8, 'بارانی' => 3, 'پیراهن' => 2, 'ست' => 5, 'شلوار' => 7,
-    'دامن' => 6, 'شومیز' => 9, 'اکسسوری' => 10, 'جدیدترین‌ها' => 11, 'پرفروش‌ها' => 13, 'حراج' => 5];
-$menuImg = function ($label) use ($itemImages) {
-    return $itemImages[$label] ?? (abs(crc32($label)) % 22) + 1;
-};
-$menuPromos = [
-    'فروشگاه'   => [['جدیدترین‌ها', 11], ['پالتو', 8]],
-    'کالکشن‌ها' => [['پاییز و زمستان ۱۴۰۵', 20], ['AMUJ STUDIO', 19]],
-    'حراج'      => [['تا ۵۰٪', 5], ['آخرین سایزها', 6]],
-];
 
 $icoSearch = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
 $icoUser   = '<svg class="az-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>';
@@ -135,8 +154,8 @@ $announcements = [
         <div class="az-menu-body">
             <div>
                 <ul class="az-menu-sections" uk-switcher="connect: #az-menu-panels; toggle: > li > a">
-                    <?php foreach (array_keys($menuTree) as $section) : ?>
-                        <li><a href="#" data-az-img="<?php echo $sectionImages[$section]; ?>"><?php echo $section; ?></a></li>
+                    <?php foreach ($menuSections as $section) : ?>
+                        <li><a href="#" data-az-img="<?php echo htmlspecialchars($section['img']); ?>"><?php echo htmlspecialchars($section['title']); ?></a></li>
                     <?php endforeach; ?>
                 </ul>
                 <ul class="az-menu-extra">
@@ -147,28 +166,28 @@ $announcements = [
             </div>
 
             <ul id="az-menu-panels" class="uk-switcher az-menu-panels">
-                <?php foreach ($menuTree as $section => $groups) : ?>
+                <?php foreach ($menuSections as $section) : ?>
                     <li>
                         <div class="az-menu-promos">
-                            <?php foreach ($menuPromos[$section] as [$label, $img]) : ?>
-                                <a class="az-menu-promo" href="<?php echo amuj_url('category', ['cat' => $label]); ?>">
-                                    <img src="<?php echo amuj_img($img, 500); ?>" alt="" loading="lazy">
-                                    <span><?php echo $label; ?></span>
+                            <?php foreach ($section['promos'] as $promo) : ?>
+                                <a class="az-menu-promo" href="<?php echo $promo['url']; ?>">
+                                    <img src="<?php echo amuj_img($promo['img'], 500); ?>" alt="" loading="lazy">
+                                    <span><?php echo htmlspecialchars($promo['title']); ?></span>
                                 </a>
                             <?php endforeach; ?>
                         </div>
-                        <?php $n = 0; foreach ($groups as $group => $items) : $n++; ?>
+                        <?php foreach ($section['groups'] as $n => $group) : $many = count($group['items']) > 6; ?>
                             <?php // Mobile: each group is an accordion; the biggest group (categories) starts open ?>
-                            <div class="az-menu-group<?php echo count($items) > 6 ? ' is-open' : ''; ?>">
-                                <button class="az-menu-group-title" type="button" aria-expanded="<?php echo count($items) > 6 ? 'true' : 'false'; ?>">
-                                    <span class="az-num">|<?php echo amuj_fa(str_pad($n, 2, '0', STR_PAD_LEFT)); ?>|</span>
-                                    <span class="az-menu-group-name"><?php echo $group; ?></span>
+                            <div class="az-menu-group<?php echo $many ? ' is-open' : ''; ?>">
+                                <button class="az-menu-group-title" type="button" aria-expanded="<?php echo $many ? 'true' : 'false'; ?>">
+                                    <span class="az-num">|<?php echo amuj_fa(str_pad($n + 1, 2, '0', STR_PAD_LEFT)); ?>|</span>
+                                    <span class="az-menu-group-name"><?php echo htmlspecialchars($group['title']); ?></span>
                                     <span class="az-footer-plus" aria-hidden="true"></span>
                                 </button>
-                                <ul class="az-menu-list<?php echo count($items) > 6 ? ' az-menu-list--cols' : ''; ?>">
-                                    <?php foreach ($items as $item) :
-                                        $classes = trim(($item === 'حراج' ? 'az-sale ' : '') . ((isset($_GET['cat']) && $_GET['cat'] === $item) ? 'is-active' : '')); ?>
-                                        <li><a href="<?php echo amuj_url('category', ['cat' => $item]); ?>" data-az-img="<?php echo $menuImg($item); ?>"<?php echo $classes ? ' class="' . $classes . '"' : ''; ?>><?php echo $item; ?></a></li>
+                                <ul class="az-menu-list<?php echo $many ? ' az-menu-list--cols' : ''; ?>">
+                                    <?php foreach ($group['items'] as $item) :
+                                        $classes = trim(($item['sale'] ? 'az-sale ' : '') . ($item['active'] ? 'is-active' : '')); ?>
+                                        <li><a href="<?php echo $item['url']; ?>" data-az-img="<?php echo htmlspecialchars($item['img']); ?>"<?php echo $classes ? ' class="' . $classes . '"' : ''; ?>><?php echo htmlspecialchars($item['title']); ?></a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             </div>
@@ -179,18 +198,21 @@ $announcements = [
 
             <?php
             // Desktop image panel: one layer per image, the hovered item's layer fades in
-            $panelImages = array_unique(array_merge(array_values($sectionImages), array_values($itemImages)));
-            foreach ($menuTree as $groups) {
-                foreach ($groups as $items) {
-                    foreach ($items as $item) {
-                        $panelImages[] = $menuImg($item);
+            $panelImages = [];
+            foreach ($menuSections as $section) {
+                $panelImages[] = $section['img'];
+                foreach ($section['groups'] as $group) {
+                    foreach ($group['items'] as $item) {
+                        $panelImages[] = $item['img'];
                     }
                 }
             }
+            $panelImages = array_values(array_unique(array_filter($panelImages)));
+            $firstImage  = $menuSections[0]['img'] ?? null;
             ?>
             <div class="az-menu-visual" aria-hidden="true">
-                <?php foreach (array_unique($panelImages) as $img) : ?>
-                    <img src="<?php echo amuj_img($img, 900); ?>" data-az-layer="<?php echo $img; ?>" alt="" loading="lazy"<?php echo $img === $sectionImages['فروشگاه'] ? ' class="is-active"' : ''; ?>>
+                <?php foreach ($panelImages as $img) : ?>
+                    <img src="<?php echo amuj_img($img, 900); ?>" data-az-layer="<?php echo htmlspecialchars($img); ?>" alt="" loading="lazy"<?php echo $img === $firstImage ? ' class="is-active"' : ''; ?>>
                 <?php endforeach; ?>
             </div>
 

@@ -40,6 +40,73 @@ if (!function_exists('amuj_url')) {
         ];
     }
 
+    /**
+     * Header menu from a Joomla menu: level 1 = sections, level 2 = groups, level 3 = links.
+     * Returns [] outside Joomla or when the menu is missing, so the static tree is used instead.
+     * Menu pictures come from each item's "Link Image"; the first two pictured links of a
+     * section become its mobile promo cards.
+     */
+    function amuj_menu_tree($menutype)
+    {
+        if (!class_exists('\Joomla\CMS\Factory')) {
+            return [];
+        }
+
+        $menu   = \Joomla\CMS\Factory::getApplication()->getMenu('site');
+        $items  = $menu->getItems('menutype', $menutype);
+        $active = $menu->getActive();
+        $activeId = $active ? (int) $active->id : 0;
+
+        if (!$items) {
+            return [];
+        }
+
+        $image = function ($item) {
+            $img = $item->getParams()->get('menu_image', '');
+            // Joomla stores media field values as "path#joomlaImage://..."
+            return $img ? strtok($img, '#') : '';
+        };
+
+        $sections = [];
+        $groupRef = [];
+
+        foreach ($items as $item) {
+            if ($item->level == 1) {
+                $sections[$item->id] = ['title' => $item->title, 'img' => $image($item), 'groups' => [], 'promos' => []];
+            } elseif ($item->level == 2 && isset($sections[$item->parent_id])) {
+                $sections[$item->parent_id]['groups'][$item->id] = ['title' => $item->title, 'items' => []];
+                $groupRef[$item->id] = $item->parent_id;
+            } elseif ($item->level == 3 && isset($groupRef[$item->parent_id])) {
+                $target = $item->type === 'alias' ? (int) $item->getParams()->get('aliasoptions') : (int) $item->id;
+                $url    = in_array($item->type, ['url', 'heading', 'separator'], true)
+                    ? ($item->type === 'url' ? $item->link : '#')
+                    : \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $target);
+                $img = $image($item);
+
+                $sections[$groupRef[$item->parent_id]]['groups'][$item->parent_id]['items'][] = [
+                    'title'  => $item->title,
+                    'url'    => $url,
+                    'img'    => $img ?: $sections[$groupRef[$item->parent_id]]['img'],
+                    'active' => $target === $activeId,
+                    'sale'   => in_array($item->alias, ['sale'], true),
+                ];
+
+                $section = &$sections[$groupRef[$item->parent_id]];
+                if ($img && count($section['promos']) < 2 && $img !== $section['img']) {
+                    $section['promos'][] = ['title' => $item->title, 'url' => $url, 'img' => $img];
+                }
+                unset($section);
+            }
+        }
+
+        foreach ($sections as &$section) {
+            $section['groups'] = array_values(array_filter($section['groups'], function ($g) { return $g['items']; }));
+        }
+        unset($section);
+
+        return array_values(array_filter($sections, function ($s) { return $s['groups']; }));
+    }
+
     /** Store categories (women's clothing only) */
     function amuj_categories()
     {
