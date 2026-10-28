@@ -1052,3 +1052,7 @@ body:not(.az-scrolled) .az-header--overlay .az-bell svg { stroke: #fff; }
 .az-sizes li:hover { background: var(--az-accent-soft); }
 .az-sizes li.is-active { background: var(--az-accent); }
 .az-sizes li.is-out:hover { background: transparent; }
+@media (min-width: 960px) {
+  .az-product-desc, .az-product-buy { padding-top: 3vh; }
+  .az-product-desc { padding-top: 30vh; }
+}
