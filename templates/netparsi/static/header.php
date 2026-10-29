@@ -180,7 +180,7 @@ $announcements = [
                             <?php // Mobile: each group is an accordion; the biggest group (categories) starts open ?>
                             <div class="az-menu-group<?php echo $many ? ' is-open' : ''; ?>">
                                 <button class="az-menu-group-title" type="button" aria-expanded="<?php echo $many ? 'true' : 'false'; ?>">
-                                    <span class="az-num">|<?php echo amuj_fa(str_pad($n + 1, 2, '0', STR_PAD_LEFT)); ?>|</span>
+                                    <span class="az-num"><?php echo amuj_fa(str_pad($n + 1, 2, '0', STR_PAD_LEFT)); ?></span>
                                     <span class="az-menu-group-name"><?php echo htmlspecialchars($group['title']); ?></span>
                                     <span class="az-footer-plus" aria-hidden="true"></span>
                                 </button>

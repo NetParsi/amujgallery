@@ -614,6 +614,11 @@ if (!function_exists('amuj_url')) {
             }
         }
 
+        // Home: the site root (the default menu item), never index.php?page=home
+        if ($page === 'home' && class_exists('\Joomla\CMS\Factory')) {
+            return \Joomla\CMS\Uri\Uri::root() . ($query ? '?' . http_build_query($query) : '');
+        }
+
         // Shop pages: category&cat=کت -> the header-menu item with that title; plain "category" -> newest products
         if ($page === 'category' && class_exists('\Joomla\CMS\Factory')) {
             static $shop = null;

@@ -2042,3 +2042,13 @@ a.az-address-add { color: inherit; }
 }
 @media print { .az-cta { display: none; } }
 @media (max-width: 479px) { .az-cta-drop { left: 0; bottom: calc(100% + 10px); width: calc(100vw - 24px); } }
+/* menu: group numbers without bars, in the brand green; desktop active section with the green dot on its right */
+.az-menu-group .az-num { color: var(--az-accent-ink); font-weight: 500; }
+@media (min-width: 960px) {
+  .az-menu-sections a { padding-right: 0; transition: padding .25s, opacity .2s; }
+  .az-menu-sections .uk-active a { padding-right: 20px; }
+  .az-menu-sections .uk-active a::before { top: 50%; right: 0; margin-top: -3.5px; }
+}
+/* order steps: the number / tick exactly in the middle of its circle (whatever the font's line metrics) */
+.az-track li::before { display: flex; align-items: center; justify-content: center; line-height: 1; box-sizing: border-box; }
+.az-track--mini li::before { line-height: 1; }
