@@ -47,6 +47,9 @@ amuj_account_open('addresses');
 ?>
 <h1 class="az-account-title">آدرس‌های من</h1>
 
+<?php if (!$addresses) : ?>
+    <?php amuj_empty_state('address', 'هنوز آدرسی ثبت نکرده‌اید', 'آدرس‌هایی که اینجا یا هنگام خرید ثبت کنید، برای سفارش‌های بعدی آماده می‌مانند.', 'افزودن آدرس جدید', hikashop_completeLink('address&task=edit&cid=0&makenew=1' . $item)); ?>
+<?php else : ?>
 <div class="az-address-grid">
     <?php foreach ($addresses as $a) :
         $place = implode('، ', array_unique(array_filter([$states[$a->address_state] ?? '', $a->address_city, $a->address_street])));
@@ -76,4 +79,5 @@ amuj_account_open('addresses');
         افزودن آدرس جدید
     </a>
 </div>
+<?php endif; ?>
 <?php amuj_account_close(); ?>

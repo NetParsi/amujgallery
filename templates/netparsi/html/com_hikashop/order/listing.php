@@ -18,14 +18,14 @@ Factory::getDocument()->setTitle('سفارش‌های من');
 $user    = amuj_current_user();
 $orders  = amuj_customer_orders($user['id']);
 $thumbs  = amuj_order_thumbs(array_column($orders, 'order_id'));
-$filters = ['all' => 'همه', 'active' => 'جاری', 'done' => 'تحویل شده', 'cancelled' => 'لغو شده'];
+$filters = ['all' => 'همه', 'active' => 'جاری', 'done' => 'ارسال شده', 'cancelled' => 'لغو شده'];
 
 amuj_account_open('orders');
 ?>
 <h1 class="az-account-title">سفارش‌های من</h1>
 
 <?php if (!$orders) : ?>
-    <p class="az-muted">هنوز سفارشی ثبت نکرده‌اید. <a class="az-link" href="<?php echo amuj_url('category'); ?>">مشاهده جدیدترین‌ها</a></p>
+    <?php amuj_empty_state('orders', 'هنوز سفارشی ثبت نکرده‌اید', 'سفارش‌های شما و وضعیت ارسال آن‌ها اینجا نمایش داده می‌شود.', 'مشاهده جدیدترین‌ها', amuj_url('category')); ?>
 <?php else : ?>
     <ul class="az-tabs az-order-filter" data-az-filter>
         <?php foreach ($filters as $key => $label) : ?>
@@ -36,7 +36,7 @@ amuj_account_open('orders');
     <div class="az-order-list">
         <?php foreach ($orders as $order) :
             [$label, $mod] = amuj_order_state($order->order_status);
-            $group = $mod === 'cancelled' ? 'cancelled' : ($mod === 'done' ? 'done' : 'active');
+            $group = $mod === 'cancelled' ? 'cancelled' : (in_array($mod, ['done', 'shipped'], true) ? 'done' : 'active');
             $imgs  = $thumbs[$order->order_id] ?? [];
             ?>
             <a class="az-order-row" href="<?php echo amuj_order_url($order->order_id); ?>" data-group="<?php echo $group; ?>">

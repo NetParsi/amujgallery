@@ -24,7 +24,7 @@ Factory::getDocument()->setTitle('سفارش ' . $order->order_number);
 
 $db = Factory::getDbo();
 [$label, $mod, $step] = amuj_order_state($order->order_status);
-$steps = amuj_order_steps();
+$steps = amuj_panel_steps();
 
 // Lines with photo / colour / size
 $lines = [];

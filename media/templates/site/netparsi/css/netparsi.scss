@@ -1872,3 +1872,10 @@ a.az-address-add { color: inherit; }
 .az-address-edit-actions { display: flex; gap: 8px; margin-top: 8px; }
 .az-order-pay { margin: 0 0 30px; animation: none; }
 .az-order-pay .az-btn { margin-top: 6px; }
+/* empty list in the customer panel */
+.az-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; padding: 46px 20px; border: 1px dashed var(--az-line); }
+.az-empty-icon { display: grid; place-items: center; width: 76px; height: 76px; border-radius: 50%; background: var(--az-accent-soft); color: var(--az-accent-ink); margin-bottom: 6px; }
+.az-empty-icon svg { width: 40px; height: 40px; }
+.az-empty-title { font-family: var(--az-title-font); font-weight: 400; font-size: 18px; }
+.az-empty-text { margin: 0 0 6px; max-width: 380px; font-size: 14px; line-height: 1.9; color: var(--az-gray); }
+.az-empty .az-btn { margin-top: 6px; }

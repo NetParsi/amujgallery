@@ -78,7 +78,7 @@ amuj_account_open('credits');
             <?php endforeach; ?>
         </div>
     <?php else : ?>
-        <p class="az-muted">هنوز تراکنشی ندارید. با هر خرید، بخشی از مبلغ به‌عنوان بازگشت خرید به کیف پول شما اضافه می‌شود.</p>
+        <?php amuj_empty_state('wallet', 'هنوز تراکنشی ندارید', 'با هر خرید، بخشی از مبلغ به‌عنوان بازگشت خرید به کیف پول شما اضافه می‌شود.'); ?>
     <?php endif; ?>
 </section>
 <?php amuj_account_close(); ?>

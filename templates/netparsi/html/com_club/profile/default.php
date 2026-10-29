@@ -22,7 +22,7 @@ $orders = amuj_customer_orders($user['id'], 1);
 $last   = $orders[0] ?? null;
 $thumbs = $last ? amuj_order_thumbs([$last->order_id]) : [];
 $notes  = array_slice(amuj_notifications(), 0, 2);
-$steps  = amuj_order_steps();
+$steps  = amuj_panel_steps();
 
 amuj_account_open('account');
 ?>
@@ -139,7 +139,7 @@ amuj_account_open('account');
             </div>
         </a>
     <?php else : ?>
-        <p class="az-muted">هنوز سفارشی ثبت نکرده‌اید. <a class="az-link" href="<?php echo amuj_url('category'); ?>">مشاهده جدیدترین‌ها</a></p>
+        <?php amuj_empty_state('orders', 'هنوز سفارشی ثبت نکرده‌اید', 'اولین خریدتان را از کالکشن جدید شروع کنید.', 'مشاهده جدیدترین‌ها', amuj_url('category')); ?>
     <?php endif; ?>
 </section>
 
@@ -158,7 +158,7 @@ amuj_account_open('account');
             <?php endforeach; ?>
         </ul>
     <?php else : ?>
-        <p class="az-muted">پیامی ندارید.</p>
+        <?php amuj_empty_state('message', 'پیامی ندارید', 'پیام‌های باشگاه مشتریان و فروشگاه اینجا نمایش داده می‌شود.'); ?>
     <?php endif; ?>
 </section>
 <?php amuj_account_close(); ?>

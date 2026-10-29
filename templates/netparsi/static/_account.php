@@ -270,4 +270,29 @@ if (!function_exists('amuj_real_user')) {
         return ' data-url="' . htmlspecialchars(AMUJ_BASE . 'index.php?option=com_ajax&group=ajax&plugin=amujcontact&format=raw') . '"'
             . ' data-token="' . \Joomla\CMS\Session\Session::getFormToken() . '"';
     }
+
+    /** Order steps shown to customers (HikaShop has no "delivered" status, so the last step is the hand-over to the carrier) */
+    function amuj_panel_steps()
+    {
+        return array_slice(amuj_order_steps(), 0, 4);
+    }
+
+    /** Empty state of a panel list: line icon (orders, address, wallet, message, heart), title, text, optional button */
+    function amuj_empty_state($icon, $title, $text = '', $button = '', $url = '')
+    {
+        $paths = [
+            'orders'  => '<path d="M14 18h20l-2 20H16z"/><path d="M19 18v-3a5 5 0 0 1 10 0v3"/>',
+            'address' => '<path d="M24 40s-11-10.5-11-19a11 11 0 0 1 22 0c0 8.5-11 19-11 19z"/><circle cx="24" cy="21" r="4"/>',
+            'wallet'  => '<rect x="10" y="15" width="28" height="20" rx="2"/><path d="M10 20h28M30 27h3"/>',
+            'message' => '<path d="M11 14h26v17H21l-6 5v-5h-4z"/><path d="M17 21h14M17 26h9"/>',
+            'heart'   => '<path d="M24 37s-12-7.4-12-16a6.5 6.5 0 0 1 12-3.5A6.5 6.5 0 0 1 36 21c0 8.6-12 16-12 16z"/>',
+        ];
+        echo '<div class="az-empty">'
+            . '<span class="az-empty-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">'
+            . ($paths[$icon] ?? $paths['orders']) . '</svg></span>'
+            . '<strong class="az-empty-title">' . $title . '</strong>'
+            . ($text !== '' ? '<p class="az-empty-text">' . $text . '</p>' : '')
+            . ($button !== '' ? '<a class="az-btn az-btn--ghost" href="' . htmlspecialchars($url) . '">' . $button . '</a>' : '')
+            . '</div>';
+    }
 }
