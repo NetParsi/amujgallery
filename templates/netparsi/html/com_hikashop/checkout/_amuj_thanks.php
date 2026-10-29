@@ -67,7 +67,13 @@ $user = Factory::getApplication()->getIdentity();
 if (!$user->guest && !$isFailed) {
     $level = $db->setQuery('SELECT l.level_name, l.cashback_rate FROM #__club_levels l JOIN #__users u ON u.club_level_id = l.id WHERE u.id = ' . (int) $user->id)->loadObject();
     if ($level && (float) $level->cashback_rate > 0 && $total > 0) {
-        $cashback = [$level->level_name, round($total * $level->cashback_rate / 100)];
+        $amount = round($total * $level->cashback_rate / 100);
+        // Same rounding as the club plugin when it deposits the cashback (option "round_zero")
+        $helper = '\Joomla\Component\Club\Administrator\Helper\ClubHelper';
+        if (class_exists($helper)) {
+            $amount = $helper::roundAmount($amount, (int) $helper::getParams()->get('round_zero', 3));
+        }
+        $cashback = [$level->level_name, $amount];
     }
 }
 ?>
