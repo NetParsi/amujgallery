@@ -1843,3 +1843,7 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-co-address-actions a { color: var(--az-gray); }
 .az-co-address-actions a:hover { color: #000; background: var(--az-accent-soft); }
 .az-co-address-new { margin-top: 6px; min-height: 42px; }
+.az-co-msg .hikashop_error, .az-co-live .hikashop_messages.hikashop_error { color: #b4232c; }
+.az-co-msg .hikashop_success, .az-co-live .hikashop_messages.hikashop_success { color: var(--az-accent-ink); }
+.az-co-live .hikashop_messages { margin: 0 0 12px; padding: 0; background: none; border: 0; font-size: 13px; }
+.az-co-live .hikashop_messages ul { margin: 0; padding: 0; list-style: none; }

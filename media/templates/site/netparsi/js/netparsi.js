@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (coLive) {
     var coDigits = function () {
       coLive.querySelectorAll('.hikashop_checkout_shipping_cost, .hikashop_checkout_payment_cost').forEach(function (el) {
-        var t = persian(el.textContent);
+        var t = persian(el.textContent).replace(/,/g, '٬');
         if (t !== el.textContent) el.textContent = t;
       });
     };
