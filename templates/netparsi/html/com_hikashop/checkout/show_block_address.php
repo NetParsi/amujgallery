@@ -50,7 +50,7 @@ if ($keys) {
 
     <div class="az-co-addresses">
         <?php foreach ($list as $id => $a) :
-            $place = implode('، ', array_filter([$zones[$a->address_state] ?? '', $a->address_city, $a->address_street]));
+            $place = implode('، ', array_unique(array_filter([$zones[$a->address_state] ?? '', $a->address_city, $a->address_street])));
             ?>
             <label class="az-option az-co-address-item">
                 <span class="az-co-address-text">

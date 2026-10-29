@@ -1816,7 +1816,7 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-co-live .hikashop_shipping_group_name { font-size: 14px; color: var(--az-gray); margin: 0 0 10px; }
 /* summary */
 .az-co-summary .az-co-block { padding: 0; background: none; margin: 0; }
-.az-co-summary .az-co-shopclub, .az-co-summary .az-co-coupon { background: #fff; padding: 16px 18px; margin-top: 12px; }
+.az-co-summary .az-co-plgshopclub, .az-co-summary .az-co-coupon { background: #fff; padding: 16px 18px; margin-top: 12px; }
 .az-co-summary .az-co-coupon .az-co-coupon { background: none; padding: 0; margin: 0; }
 .az-co-items .az-link { display: inline-block; margin-bottom: 6px; }
 .az-co-totals { margin-top: 16px; }
