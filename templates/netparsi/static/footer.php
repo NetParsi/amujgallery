@@ -15,7 +15,7 @@ $columns = [
         'شرایط خرید و پرداخت' => amuj_url('policy', ['doc' => 'terms']),
         'ارسال و تحویل'     => amuj_url('policy', ['doc' => 'shipping']),
         'تعویض و مرجوعی'    => amuj_url('policy', ['doc' => 'returns']),
-        'پیگیری سفارش'      => amuj_url('account'),
+        'پیگیری سفارش'      => amuj_url('orders'),
         'راهنمای سایز'      => amuj_url('help'),
     ]],
     'footer-2' => ['گالری آموژ', [

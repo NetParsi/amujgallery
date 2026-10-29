@@ -29,7 +29,7 @@ amuj_account_open('addresses');
 <a class="az-back" href="<?php echo amuj_url('addresses'); ?>">→ بازگشت به آدرس‌ها</a>
 <h1 class="az-account-title"><?php echo $isNew ? 'آدرس جدید' : 'ویرایش آدرس'; ?></h1>
 
-<form action="<?php echo hikashop_completeLink('address&task=save'); ?>" method="post" name="hikashop_address_form" id="hikashop_address_form"
+<form action="<?php echo hikashop_completeLink('address&task=save' . ($Itemid ? '&Itemid=' . (int) $Itemid : '')); ?>" method="post" name="hikashop_address_form" id="hikashop_address_form"
     enctype="multipart/form-data" class="az-co-live az-address-edit"
     onsubmit="return hikashopCheckChangeForm('address', 'hikashop_address_form');">
     <?php
