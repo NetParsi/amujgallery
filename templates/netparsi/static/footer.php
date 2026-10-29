@@ -136,7 +136,7 @@ if (!$ctaHide) :
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.5s-7-6.6-7-12a7 7 0 0 1 14 0c0 5.4-7 12-7 12z"/><circle cx="12" cy="9.5" r="2.6"/></svg>
             <span>آدرس</span>
         </button>
-        <div class="az-cta-drop" uk-drop="mode: click; pos: top-left; offset: 12; animation: uk-animation-slide-bottom-small">
+        <div class="az-cta-drop" uk-drop="mode: click; pos: top-right; offset: 12; animation: uk-animation-slide-bottom-small">
             <strong>فروشگاه حضوری گالری آموژ</strong>
             <p><?php echo htmlspecialchars($contact['address']); ?></p>
             <div class="az-cta-maps">
