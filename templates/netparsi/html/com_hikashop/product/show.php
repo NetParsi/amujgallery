@@ -80,7 +80,20 @@ $recent = $recent ? amuj_hika_products($recent) : [];
 // Search engines and link previews: description, share image, Product + breadcrumb structured data
 $app      = Factory::getApplication();
 $menuItem = $app->getMenu()->getActive();
-$pageUrl  = amuj_seo_abs(Route::_($p['url']));
+// One address per product for search engines: under the shop menu item of the product's own category
+$canonItem = 0;
+$prodCats  = $db->setQuery('SELECT category_id FROM ' . hikashop_table('product_category') . ' WHERE product_id = ' . $mainId . ' ORDER BY ordering')->loadColumn();
+foreach ($app->getMenu()->getItems('menutype', 'amuj-main') as $item) {
+    $hkp = (array) $item->getParams()->get('hk_product', []);
+    if ($item->type === 'component' && in_array((int) ($hkp['selectparentlisting'] ?? 0), array_map('intval', $prodCats), true)) {
+        $canonItem = (int) $item->id;
+        break;
+    }
+}
+$alias   = (string) $db->setQuery('SELECT product_alias FROM ' . hikashop_table('product') . ' WHERE product_id = ' . $mainId)->loadResult();
+$pageUrl = amuj_seo_abs($canonItem
+    ? Route::_('index.php?option=com_hikashop&ctrl=product&task=show&cid=' . $mainId . '&name=' . $alias . '&Itemid=' . $canonItem)
+    : Route::_($p['url']));
 $inStock  = (bool) array_filter($p['variants'], function ($v) { return !empty($v[1]); }) || !$p['variants'];
 $images   = array_values(array_unique(array_map(function ($img) { return amuj_seo_abs(amuj_img($img)); }, $gallery ?: [$p['img']])));
 $seoDesc  = amuj_seo_text($p['desc']) ?: amuj_seo_text($p['name'] . (count($colorNames) ? ' در رنگ‌های ' . implode('، ', $colorNames) : '')
