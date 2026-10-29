@@ -65,19 +65,19 @@ $months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرد
         <p class="az-muted az-small">تاریخ تولد فقط یک بار ثبت می‌شود و برای ارسال هدیه تولد استفاده خواهد شد.</p>
         <form class="az-birthday-form" data-az-birthday-form>
             <div class="az-field"><label>روز</label>
-                <select class="az-select" name="day" required>
+                <select class="az-select" name="day" data-part="day" required>
                     <option value="">روز</option>
                     <?php for ($d = 1; $d <= 31; $d++) : ?><option value="<?php echo $d; ?>"><?php echo amuj_fa($d); ?></option><?php endfor; ?>
                 </select>
             </div>
             <div class="az-field"><label>ماه</label>
-                <select class="az-select" name="month" required>
+                <select class="az-select" name="month" data-part="month" required>
                     <option value="">ماه</option>
                     <?php foreach ($months as $m) : ?><option><?php echo $m; ?></option><?php endforeach; ?>
                 </select>
             </div>
             <div class="az-field"><label>سال</label>
-                <select class="az-select" name="year" required>
+                <select class="az-select" name="year" data-part="year" required>
                     <option value="">سال</option>
                     <?php for ($y = 1390; $y >= 1320; $y--) : ?><option value="<?php echo $y; ?>"><?php echo amuj_fa($y); ?></option><?php endfor; ?>
                 </select>

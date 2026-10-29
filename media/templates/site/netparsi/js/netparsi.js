@@ -74,9 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Notifications: mark all as read (sample only; the club extension will persist it)
+  // Notifications: mark all as read (a real customer: saved through the amujcontact plugin, data-url)
   document.querySelectorAll('[data-az-readall]').forEach(function (readAll) {
     readAll.addEventListener('click', function () {
+      if (readAll.dataset.url) {
+        var body = new FormData();
+        body.append('form', 'readall');
+        body.append(readAll.dataset.token, '1');
+        fetch(readAll.dataset.url, { method: 'POST', body: body, credentials: 'same-origin' }).catch(function () {});
+      }
       document.querySelectorAll('.az-note.is-unread').forEach(function (n) { n.classList.remove('is-unread'); n.dataset.group = 'read'; });
       document.querySelectorAll('.az-bell-badge, .az-account-nav em').forEach(function (b) { b.remove(); });
       var label = document.querySelector('[data-az-unread-label]');
@@ -112,23 +118,35 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Dashboard: save birthday from the popup (sample; the club extension stores it)
+  // Dashboard: save birthday from the popup (a real customer: posted to the club extension, form action)
   var bdayForm = document.querySelector('[data-az-birthday-form]');
   if (bdayForm) {
     bdayForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      var d = bdayForm.day, m = bdayForm.month, y = bdayForm.year;
+      var d = bdayForm.querySelector('[data-part=day]'), m = bdayForm.querySelector('[data-part=month]'), y = bdayForm.querySelector('[data-part=year]');
+      var error = bdayForm.querySelector('[data-error]');
       if (!d.value || !m.value || !y.value) {
-        bdayForm.querySelector('[data-error]').textContent = 'روز، ماه و سال تولد را انتخاب کنید.';
+        error.textContent = 'روز، ماه و سال تولد را انتخاب کنید.';
         return;
       }
-      var cell = document.querySelector('[data-az-birthday]');
-      cell.textContent = d.options[d.selectedIndex].text + ' ' + m.value + ' ' + y.options[y.selectedIndex].text;
-      cell.classList.add('is-new');
-      var hint = document.querySelector('[data-az-birthday-hint]');
-      if (hint) hint.remove();
-      if (window.UIkit) UIkit.modal('#az-birthday').hide();
-      notify('تاریخ تولد شما ثبت شد');
+      var done = function () {
+        var cell = document.querySelector('[data-az-birthday]');
+        cell.textContent = d.options[d.selectedIndex].text + ' ' + m.options[m.selectedIndex].text + ' ' + y.options[y.selectedIndex].text;
+        cell.classList.add('is-new');
+        var hint = document.querySelector('[data-az-birthday-hint]');
+        if (hint) hint.remove();
+        if (window.UIkit) UIkit.modal('#az-birthday').hide();
+        notify('تاریخ تولد شما ثبت شد');
+      };
+      if (!bdayForm.getAttribute('action')) return done();
+      error.textContent = '';
+      fetch(bdayForm.getAttribute('action'), { method: 'POST', body: new FormData(bdayForm), credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res && res.result == 1) return done();
+          error.textContent = (res && res.message) || 'تاریخ تولد ذخیره نشد؛ دوباره امتحان کنید.';
+        })
+        .catch(function () { error.textContent = 'تاریخ تولد ذخیره نشد؛ دوباره امتحان کنید.'; });
     });
   }
 

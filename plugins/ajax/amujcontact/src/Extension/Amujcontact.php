@@ -48,6 +48,10 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
             $this->newsletter();
         }
 
+        if ($input->getCmd('form') === 'readall') {
+            $this->readAll();
+        }
+
         // Bots fill the hidden "website" field: answer as if sent, send nothing
         if ($input->getString('website', '') !== '') {
             $this->respond(true, 'پیام شما ارسال شد');
@@ -148,6 +152,25 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
         }
 
         $this->respond(true, 'عضویت شما ثبت شد');
+    }
+
+    /** Customer panel: mark every customer-club message of the signed-in customer as read */
+    private function readAll(): void
+    {
+        $user = $this->getApplication()->getIdentity();
+        if (!$user || $user->guest) {
+            $this->respond(false, 'ابتدا وارد حساب کاربری شوید.');
+        }
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db->setQuery('UPDATE ' . $db->quoteName('#__club_messages') . ' SET seen = 1, seen_on = ' . $db->quote(date('Y-m-d H:i:s'))
+                . ' WHERE seen = 0 AND user_id = ' . (int) $user->id)->execute();
+        } catch (\Throwable $e) {
+            $this->respond(false, 'انجام نشد.');
+        }
+
+        $this->respond(true, 'همه پیام‌ها خوانده شد');
     }
 
     private function respond(bool $ok, string $message): void

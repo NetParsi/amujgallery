@@ -339,7 +339,7 @@ $announcements = [
         </div>
 
         <?php if ($unreadCount) : ?>
-            <button class="az-notify-readall" type="button" data-az-readall>علامت‌گذاری همه به‌عنوان خوانده‌شده</button>
+            <button class="az-notify-readall" type="button" data-az-readall<?php echo amuj_readall_attrs(); ?>>علامت‌گذاری همه به‌عنوان خوانده‌شده</button>
         <?php endif; ?>
 
         <ul class="az-notify-list">

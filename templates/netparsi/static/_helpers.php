@@ -268,7 +268,7 @@ if (!function_exists('amuj_url')) {
         if (class_exists('\Joomla\CMS\Factory')) {
             $joomlaUser = \Joomla\CMS\Factory::getApplication()->getIdentity();
             if ($joomlaUser && !$joomlaUser->guest) {
-                $name = $joomlaUser->name;
+                return $user = amuj_real_user((int) $joomlaUser->id);
             }
         }
 
@@ -386,9 +386,9 @@ if (!function_exists('amuj_url')) {
         <div class="az-account">
             <aside class="az-account-side">
                 <div class="az-account-hello">
-                    <strong><?php echo $user['name']; ?></strong>
-                    <span>سطح <?php echo $user['level']; ?></span>
-                    <span class="az-account-phone" dir="ltr"><?php echo $user['mobile']; ?></span>
+                    <strong><?php echo htmlspecialchars($user['name']); ?></strong>
+                    <?php if ($user['level']) : ?><span>سطح <?php echo $user['level']; ?></span><?php endif; ?>
+                    <?php if ($user['mobile']) : ?><span class="az-account-phone" dir="ltr"><?php echo $user['mobile']; ?></span><?php endif; ?>
                 </div>
                 <nav class="az-account-nav" aria-label="حساب کاربری">
                     <?php foreach (amuj_account_menu() as $key => $label) : ?>
@@ -397,7 +397,7 @@ if (!function_exists('amuj_url')) {
                             <?php if ($key === 'messages' && $unread) : ?><em><?php echo amuj_fa($unread); ?></em><?php endif; ?>
                         </a>
                     <?php endforeach; ?>
-                    <a class="az-account-logout" href="<?php echo amuj_url('home', ['demo_user' => 0]); ?>">خروج</a>
+                    <a class="az-account-logout" href="<?php echo amuj_logout_url(); ?>">خروج</a>
                 </nav>
             </aside>
             <div class="az-account-main">
@@ -479,6 +479,11 @@ if (!function_exists('amuj_url')) {
      */
     function amuj_notifications()
     {
+        $user = amuj_current_user();
+        if (!empty($user['real'])) {
+            return amuj_real_notifications($user['id']);
+        }
+
         return [
             ['type' => 'credit', 'label' => 'کیف پول', 'title' => '۳۰۰٬۰۰۰ تومان به کیف پول شما اضافه شد',
              'text' => 'هدیه ارتقای سطح شما به «نقره‌ای». این مبلغ در پرداخت سفارش‌ها قابل استفاده است.', 'time' => '۲ ساعت پیش', 'unread' => true],
@@ -1010,3 +1015,5 @@ if (!function_exists('amuj_url')) {
         return ['q' => $q, 'total' => count($products) + count($categories), 'groups' => $groups];
     }
 }
+
+require_once __DIR__ . '/_account.php';
