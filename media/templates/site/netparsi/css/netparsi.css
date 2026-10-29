@@ -1832,3 +1832,14 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
   .az-co-live .hkform-group { margin-bottom: 20px; }
   .az-co-summary { position: static; }
 }
+/* checkout: saved addresses (one address serves billing and delivery) */
+.az-co-live .hikashop_checkout_address_same { display: none !important; }
+.az-co-address-item { align-items: flex-start; gap: 16px; }
+.az-co-address-text { display: flex; align-items: flex-start; }
+.az-co-address-text input { margin-top: 5px; }
+.az-co-address-text > span { display: flex; flex-direction: column; gap: 2px; line-height: 1.7; }
+.az-co-address-text strong { font-weight: 500; }
+.az-co-address-actions { display: flex; gap: 14px; font-size: 13px; flex: none; }
+.az-co-address-actions a { color: var(--az-gray); }
+.az-co-address-actions a:hover { color: #000; background: var(--az-accent-soft); }
+.az-co-address-new { margin-top: 6px; min-height: 42px; }
