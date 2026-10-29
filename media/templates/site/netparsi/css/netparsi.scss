@@ -1858,3 +1858,5 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-co-redirect { padding-top: 40px; }
 .az-co-redirect-form input[type=submit], .az-co-redirect-form button { margin-top: 16px; }
 @media (max-width: 639px) { .az-thanks-meta { grid-template-columns: 1fr 1fr; } }
+/* a section whose block has nothing to choose (e.g. payment when the wallet covers the order) is hidden, also after AJAX refreshes */
+.az-co-section:not(:has(input:not([type=hidden]), select, textarea, button)) { display: none; }
