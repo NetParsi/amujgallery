@@ -29,6 +29,10 @@ $total  = (int) $this->pageInfo->elements->total;
 $start  = (int) $this->pageInfo->limit->start;
 $limit  = (int) $this->pageInfo->limit->value;
 $title  = $active ? $active->title : ($this->element->category_name ?? '');
+// HikaShop titles the page "product category": use the menu item / category name (unless the menu item sets a browser title)
+if ($title !== '' && !($active && $active->getParams()->get('page_title'))) {
+    Factory::getDocument()->setTitle($title . ' | ' . $app->get('sitename'));
+}
 
 // Sibling menu links (same group of the header menu)
 $subnav = [];
