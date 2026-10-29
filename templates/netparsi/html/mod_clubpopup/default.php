@@ -71,10 +71,10 @@ $id       = 'az-birthday-popup';
 document.addEventListener('DOMContentLoaded', function () {
     var el = document.getElementById('<?php echo $id; ?>');
     if (!el || !window.UIkit) return;
-    setTimeout(function () { UIkit.modal(el).show(); }, 1200);
-    // Closed (or saved): not again for the module's "hide for" days
-    UIkit.util.on(el, 'hidden', function () {
+    setTimeout(function () {
+        UIkit.modal(el).show();
+        // Shown once: not again for the module's "hide for" days (saving the birthday removes it for good)
         document.cookie = '<?php echo $cookie; ?>=1; max-age=<?php echo $hideDays * 86400; ?>; path=/; SameSite=Lax';
-    });
+    }, 1200);
 });
 </script>
