@@ -2071,3 +2071,5 @@ a.az-trust-badge:hover { border-color: #000; color: #000; }
 .az-co-summary .az-co-plgshopclub:has(.az-co-credit:not(.is-disabled)):hover { box-shadow: inset 0 0 0 1px #000; background: var(--az-accent-soft); }
 .az-co-credit.is-disabled { cursor: default; }
 .az-co-address-new:hover { background: var(--az-accent-soft); }
+.az-co-summary .az-co-plgshopclub { padding: 0; }
+.az-co-summary .az-co-plgshopclub .az-co-credit { padding: 16px 18px; }
