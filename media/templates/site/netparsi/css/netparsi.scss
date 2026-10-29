@@ -2011,3 +2011,33 @@ a.az-address-add { color: inherit; }
 .az-slidenav--next svg { transform: scaleX(-1); }
 .az-slidenav.uk-invisible { visibility: visible !important; opacity: 0; pointer-events: none; }
 @media (max-width: 959px) { .az-slidenav { display: none; } }
+/* ---------- Fixed call-to-action buttons: WhatsApp + address ---------- */
+.az-cta { position: fixed; z-index: 960; left: 20px; bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.az-cta-btn {
+  display: inline-flex; align-items: center; gap: 0; height: 50px; min-width: 50px; padding: 0 13px; border: 0; border-radius: 25px;
+  background: #000; color: #fff; font: 400 14px var(--az-font); cursor: pointer; box-shadow: 0 6px 20px rgba(0, 0, 0, .14);
+  transition: gap .25s, padding .25s, background-color .2s;
+}
+.az-cta-btn:hover, .az-cta-btn:focus-visible { color: #fff; }
+.az-cta-btn svg { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+.az-cta-btn span { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .25s; }
+.az-cta-whatsapp { background: var(--az-accent); color: #000; }
+.az-cta-whatsapp:hover, .az-cta-whatsapp:focus-visible { color: #000; }
+@media (hover: hover) {
+  .az-cta-btn:hover { gap: 8px; padding: 0 18px 0 14px; }
+  .az-cta-btn:hover span { max-width: 80px; }
+}
+.az-cta-drop.uk-drop { width: 280px; padding: 18px 20px; background: #fff; color: #000; box-shadow: 0 12px 34px rgba(0, 0, 0, .12); font-size: 14px; line-height: 1.9; }
+.az-cta-drop strong { display: block; font-weight: 500; margin-bottom: 4px; }
+.az-cta-drop p { margin: 0 0 12px; color: var(--az-gray); font-size: 13px; }
+.az-cta-maps { display: flex; gap: 8px; margin-bottom: 10px; }
+.az-cta-maps a { flex: 1; text-align: center; padding: 8px 6px; border: 1px solid var(--az-line); font-size: 13px; color: #000; }
+.az-cta-maps a:hover { border-color: #000; background: var(--az-accent-soft); }
+.az-cta-call { font-size: 13px; color: #000; }
+@media (max-width: 959px) {
+  .az-cta { left: 12px; bottom: 12px; gap: 8px; }
+  .az-cta-btn { height: 46px; min-width: 46px; padding: 0 11px; }
+  /* above the pinned total bar of the cart page */
+  body:has(.az-cart-bar) .az-cta { bottom: 86px; }
+}
+@media print { .az-cta { display: none; } }

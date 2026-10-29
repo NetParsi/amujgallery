@@ -118,3 +118,32 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
         </div>
     </div>
 </footer>
+
+<?php
+// Fixed call-to-action buttons: WhatsApp chat and the shop's address (routing with Neshan / Google Maps).
+// Not on the checkout and payment pages, where the customer should stay in the purchase.
+$ctaHide = \Joomla\CMS\Factory::getApplication()->getInput()->getCmd('option') === 'com_hikashop'
+    && \Joomla\CMS\Factory::getApplication()->getInput()->getCmd('ctrl', \Joomla\CMS\Factory::getApplication()->getInput()->getCmd('view')) === 'checkout';
+if (!$ctaHide) :
+    $mapQuery = rawurlencode($contact['map']);
+    ?>
+    <div class="az-cta" aria-label="ارتباط سریع">
+        <a class="az-cta-btn az-cta-whatsapp" href="<?php echo htmlspecialchars($contact['whatsapp']); ?>" target="_blank" rel="noopener" aria-label="گفتگو در واتساپ">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6a9.4 9.4 0 0 0-8.1 14.1L2.6 21.4l4.8-1.3A9.4 9.4 0 1 0 12 2.6z"/><path d="M8.6 7.9c.2-.4.5-.4.8-.4h.6c.2 0 .4.1.5.4l.8 1.9c.1.2 0 .5-.1.6l-.6.7c-.1.2-.1.4 0 .6.6 1.1 1.5 2 2.6 2.6.2.1.4.1.6 0l.7-.6c.2-.2.4-.2.6-.1l1.9.8c.3.1.4.3.4.5v.6c0 .3 0 .6-.4.8-.6.4-1.4.6-2.1.4-2.8-.8-5-3-5.8-5.8-.2-.7 0-1.5.5-2z" fill="currentColor" stroke="none"/></svg>
+            <span>واتساپ</span>
+        </a>
+        <button class="az-cta-btn az-cta-address" type="button" aria-label="آدرس فروشگاه">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.5s-7-6.6-7-12a7 7 0 0 1 14 0c0 5.4-7 12-7 12z"/><circle cx="12" cy="9.5" r="2.6"/></svg>
+            <span>آدرس</span>
+        </button>
+        <div class="az-cta-drop" uk-drop="mode: click; pos: top-left; offset: 12; animation: uk-animation-slide-bottom-small">
+            <strong>فروشگاه حضوری گالری آموژ</strong>
+            <p><?php echo htmlspecialchars($contact['address']); ?></p>
+            <div class="az-cta-maps">
+                <a href="https://neshan.org/maps/search/<?php echo $mapQuery; ?>" target="_blank" rel="noopener">مسیریابی با نشان</a>
+                <a href="https://www.google.com/maps/search/?api=1&amp;query=<?php echo $mapQuery; ?>" target="_blank" rel="noopener">Google Maps</a>
+            </div>
+            <a class="az-cta-call" href="tel:<?php echo $contact['tel']; ?>" dir="ltr"><?php echo $contact['phone']; ?></a>
+        </div>
+    </div>
+<?php endif; ?>
