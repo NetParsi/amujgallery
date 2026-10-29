@@ -609,6 +609,24 @@ if (!function_exists('amuj_url')) {
             }
         }
 
+        // Shop pages: category&cat=کت -> the header-menu item with that title; plain "category" -> newest products
+        if ($page === 'category' && class_exists('\Joomla\CMS\Factory')) {
+            static $shop = null;
+            if ($shop === null) {
+                $shop = [];
+                foreach (\Joomla\CMS\Factory::getApplication()->getMenu('site')->getItems('menutype', 'amuj-main') as $item) {
+                    if ($item->type === 'component' && !isset($shop[$item->title])) {
+                        $shop[$item->title] = (int) $item->id;
+                        $shop[$item->alias] = $shop[$item->alias] ?? (int) $item->id;
+                    }
+                }
+            }
+            $key = isset($query['cat']) ? $query['cat'] : 'new-in';
+            if (isset($shop[$key])) {
+                return \Joomla\CMS\Router\Route::_('index.php?Itemid=' . $shop[$key]);
+            }
+        }
+
         // Text pages: policy&doc=terms -> the "terms" article page
         if ($page === 'policy' && isset($query['doc'], $dynamic[$query['doc']])) {
             $page = $query['doc'];
