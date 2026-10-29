@@ -76,6 +76,47 @@ $cookie->set('amuj_seen', implode(',', array_slice(array_unique(array_merge([$ma
     ['expires' => time() + 60 * 86400, 'path' => Uri::root(true) ?: '/', 'samesite' => 'Lax']);
 $recent = array_slice(array_values(array_diff($seen, [$mainId])), 0, 8);
 $recent = $recent ? amuj_hika_products($recent) : [];
+
+// Search engines and link previews: description, share image, Product + breadcrumb structured data
+$app      = Factory::getApplication();
+$menuItem = $app->getMenu()->getActive();
+$pageUrl  = amuj_seo_abs(Route::_($p['url']));
+$inStock  = (bool) array_filter($p['variants'], function ($v) { return !empty($v[1]); }) || !$p['variants'];
+$images   = array_values(array_unique(array_map(function ($img) { return amuj_seo_abs(amuj_img($img)); }, $gallery ?: [$p['img']])));
+$seoDesc  = amuj_seo_text($p['desc']) ?: amuj_seo_text($p['name'] . (count($colorNames) ? ' در رنگ‌های ' . implode('، ', $colorNames) : '')
+    . ($hasSizes ? '، سایز ' . implode(' تا ', [reset($p['sizes']), end($p['sizes'])]) : '') . '. خرید آنلاین از گالری آموژ.');
+$crumbs   = [['@type' => 'ListItem', 'position' => 1, 'name' => $app->get('sitename'), 'item' => rtrim(Uri::root(), '/') . '/']];
+if ($menuItem && !$menuItem->home) {
+    $crumbs[] = ['@type' => 'ListItem', 'position' => 2, 'name' => $menuItem->title, 'item' => amuj_seo_abs(Route::_('index.php?Itemid=' . $menuItem->id))];
+}
+$crumbs[] = ['@type' => 'ListItem', 'position' => count($crumbs) + 1, 'name' => $p['name'], 'item' => $pageUrl];
+amuj_seo([
+    'description' => $seoDesc,
+    'image'       => $images[0] ?? '',
+    'type'        => 'product',
+    'canonical'   => $pageUrl,
+    'og'          => ['product:price:amount' => (string) round($p['price'] * 10), 'product:price:currency' => 'IRR'],
+    'schema'      => [
+        '@type'       => 'Product',
+        'name'        => $p['name'],
+        'image'       => $images,
+        'description' => $seoDesc,
+        'sku'         => $p['code'],
+        'brand'       => ['@type' => 'Brand', 'name' => $app->get('sitename')],
+        'color'       => implode('، ', $colorNames),
+        'offers'      => [
+            '@type'         => 'Offer',
+            'url'           => $pageUrl,
+            // schema.org needs an ISO currency: the shop prices in toman, 1 toman = 10 rial
+            'priceCurrency' => 'IRR',
+            'price'         => (string) round($p['price'] * 10),
+            'availability'  => $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            'itemCondition' => 'https://schema.org/NewCondition',
+            'seller'        => ['@id' => rtrim(Uri::root(), '/') . '/#store'],
+        ],
+    ],
+]);
+amuj_seo(['schema' => ['@type' => 'BreadcrumbList', 'itemListElement' => $crumbs]]);
 ?>
 <div class="az-product">
     <aside class="az-product-desc">

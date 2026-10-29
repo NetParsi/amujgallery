@@ -93,6 +93,9 @@ $amujBare    = ($staticPage && !empty($amujPages[$staticPage][2])) || $option ==
 if ($staticPage) {
     $this->setTitle($amujPages[$staticPage][0]);
 }
+
+// Meta description, canonical, link previews and structured data (pages add their own data with amuj_seo())
+amuj_seo_render($this);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $this->language; ?>" dir="<?php echo $this->direction; ?>">

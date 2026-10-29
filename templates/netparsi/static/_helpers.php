@@ -1018,3 +1018,4 @@ if (!function_exists('amuj_url')) {
 }
 
 require_once __DIR__ . '/_account.php';
+require_once __DIR__ . '/_seo.php';

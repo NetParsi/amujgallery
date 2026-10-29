@@ -186,6 +186,18 @@ if ($fSort) {
     $chosen[] = [$optSorts[$fSort], $urlWith(['sort' => ''] + $query)];
 }
 $count = count($chosen);
+
+// Search engines: description from the category text (or a generated one); filtered / sorted lists are
+// not indexed and point to the plain list
+$catDesc = $catId ? (string) $db->setQuery('SELECT category_description FROM ' . hikashop_table('category') . ' WHERE category_id = ' . $catId)->loadResult() : '';
+$firstImg = $cards ? reset($cards)['img'] : '';
+amuj_seo([
+    'description' => amuj_seo_text($catDesc) ?: amuj_seo_text('خرید ' . $title . ' زنانه از گالری آموژ؛ ' . amuj_fa($total) . ' مدل با ارسال به سراسر ایران و ۱۴ روز مهلت تعویض.'),
+    'image'       => $firstImg ? amuj_img($firstImg) : '',
+    'canonical'   => $filtered ? amuj_seo_abs($baseUrl) : null,
+    'robots'      => $filtered ? 'noindex, follow' : null,
+    'schema'      => ['@type' => 'CollectionPage', 'name' => $title, 'url' => amuj_seo_abs($baseUrl), 'isPartOf' => ['@id' => rtrim(Uri::root(), '/') . '/#website']],
+]);
 ?>
 <div class="az-cat">
     <aside class="az-cat-side">
