@@ -44,10 +44,16 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                     <div class="az-newsletter">
                         <h3>عضویت در خبرنامه</h3>
                         <p>از کالکشن‌های جدید، تخفیف‌ها و رویدادهای آموژ زودتر از همه باخبر شوید.</p>
-                        <form class="az-newsletter-form" onsubmit="return false">
-                            <input class="az-input" type="email" placeholder="ایمیل یا شماره موبایل" aria-label="ایمیل یا شماره موبایل">
+                        <!-- Saved by the "فرم تماس آموژ" plugin (ajax/amujcontact) in the table amuj_newsletter -->
+                        <form class="az-newsletter-form" data-az-newsletter method="post" novalidate
+                              action="<?php echo AMUJ_BASE; ?>index.php?option=com_ajax&amp;group=ajax&amp;plugin=amujcontact&amp;format=raw">
+                            <input class="az-input" type="text" name="contact" inputmode="email" dir="ltr" maxlength="191" placeholder="ایمیل یا شماره موبایل" aria-label="ایمیل یا شماره موبایل">
                             <button class="az-btn" type="submit">عضویت</button>
+                            <input type="hidden" name="form" value="newsletter">
+                            <input type="hidden" name="<?php echo class_exists('\Joomla\CMS\Session\Session') ? \Joomla\CMS\Session\Session::getFormToken() : 'token'; ?>" value="1">
+                            <span hidden aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></span>
                         </form>
+                        <p class="az-newsletter-msg" data-az-newsletter-msg role="status"></p>
                     </div>
                 <?php endif; ?>
             </div>

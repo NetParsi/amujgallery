@@ -3,14 +3,18 @@
     <name>فرم تماس آموژ</name>
     <author>NetParsi</author>
     <creationDate>2026-10</creationDate>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <license>GNU General Public License version 2 or later</license>
-    <description>فرم «تماس با ما» گالری آموژ (نام، موبایل، موضوع، پیام) را دریافت و به ایمیل تعیین‌شده ارسال می‌کند. آدرس ارسال: index.php?option=com_ajax&amp;group=ajax&amp;plugin=amujcontact&amp;format=raw</description>
+    <description>فرم «تماس با ما» گالری آموژ (نام، موبایل، موضوع، پیام) را به ایمیل تعیین‌شده می‌فرستد و عضویت خبرنامه فوتر را در جدول amuj_newsletter ذخیره می‌کند. آدرس ارسال: index.php?option=com_ajax&amp;group=ajax&amp;plugin=amujcontact&amp;format=raw</description>
     <namespace path="src">Joomla\Plugin\Ajax\Amujcontact</namespace>
     <files>
         <folder plugin="amujcontact">services</folder>
         <folder>src</folder>
+        <folder>sql</folder>
     </files>
+    <install>
+        <sql><file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file></sql>
+    </install>
     <config>
         <fields name="params">
             <fieldset name="basic">

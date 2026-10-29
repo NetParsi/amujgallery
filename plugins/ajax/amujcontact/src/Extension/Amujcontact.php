@@ -20,7 +20,7 @@ use Joomla\Event\SubscriberInterface;
 /**
  * Contact form of the Amuj template (name, mobile, topic, message) -> email to the address in the plugin options.
  * POST to index.php?option=com_ajax&group=ajax&plugin=amujcontact&format=raw with the form token;
- * answers {"ok": bool, "message": string}.
+ * answers {"ok": bool, "message": string}. With form=newsletter it stores a footer newsletter sign-up instead.
  */
 final class Amujcontact extends CMSPlugin implements SubscriberInterface
 {
@@ -42,6 +42,10 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
 
         if (!Session::checkToken()) {
             $this->respond(false, 'زمان صفحه تمام شده است؛ صفحه را تازه کنید و دوباره بفرستید.');
+        }
+
+        if ($input->getCmd('form') === 'newsletter') {
+            $this->newsletter();
         }
 
         // Bots fill the hidden "website" field: answer as if sent, send nothing
@@ -104,6 +108,46 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
 
         $session->set('amujcontact.last', time());
         $this->respond(true, 'پیام شما ارسال شد');
+    }
+
+    /** Footer newsletter: one email or mobile number per row in #__amuj_newsletter (repeats are fine) */
+    private function newsletter(): void
+    {
+        $app   = $this->getApplication();
+        $input = $app->getInput()->post;
+
+        if ($input->getString('website', '') !== '') {
+            $this->respond(true, 'عضویت شما ثبت شد');
+        }
+
+        $value  = trim(strtr($input->getString('contact', ''), [
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+        ]));
+        $mobile = preg_replace('/[\s-]/', '', $value);
+
+        if (preg_match('/^09\d{9}$/', $mobile)) {
+            [$contact, $type] = [$mobile, 'mobile'];
+        } elseif (filter_var($value, FILTER_VALIDATE_EMAIL) && mb_strlen($value) <= 191) {
+            [$contact, $type] = [mb_strtolower($value), 'email'];
+        } else {
+            $this->respond(false, 'یک ایمیل یا شماره موبایل معتبر وارد کنید.');
+        }
+
+        $session = $app->getSession();
+        if (time() - (int) $session->get('amujcontact.news', 0) < 10) {
+            $this->respond(false, 'چند لحظه بعد دوباره امتحان کنید.');
+        }
+        $session->set('amujcontact.news', time());
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $db->setQuery('INSERT IGNORE INTO ' . $db->quoteName('#__amuj_newsletter') . ' (contact, type, created) VALUES ('
+                . $db->quote($contact) . ', ' . $db->quote($type) . ', ' . $db->quote(Factory::getDate()->toSql()) . ')')->execute();
+        } catch (\Throwable $e) {
+            $this->respond(false, 'ثبت عضویت انجام نشد. لطفاً کمی بعد دوباره امتحان کنید.');
+        }
+
+        $this->respond(true, 'عضویت شما ثبت شد');
     }
 
     private function respond(bool $ok, string $message): void

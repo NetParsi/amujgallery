@@ -164,6 +164,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Footer newsletter: email or mobile, saved by the amujcontact plugin
+  var newsForm = document.querySelector('[data-az-newsletter]');
+  if (newsForm) {
+    var newsMsg = document.querySelector('[data-az-newsletter-msg]');
+    newsForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = newsForm.querySelector('[name="contact"]');
+      var value = input.value.trim();
+      var digits = value.replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); }).replace(/[\s-]/g, '');
+      var say = function (text, ok) { newsMsg.textContent = text; newsMsg.classList.toggle('is-error', !ok); };
+      if (!/^09\d{9}$/.test(digits) && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) { say('یک ایمیل یا شماره موبایل معتبر وارد کنید.', false); input.focus(); return; }
+      var btn = newsForm.querySelector('button[type="submit"]');
+      btn.classList.add('is-loading'); btn.disabled = true;
+      fetch(newsForm.action, { method: 'POST', body: new FormData(newsForm), credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) { say(res.message, res.ok); if (res.ok) input.value = ''; })
+        .catch(function () { say('ثبت عضویت انجام نشد. لطفاً دوباره امتحان کنید.', false); })
+        .then(function () { btn.classList.remove('is-loading'); btn.disabled = false; });
+    });
+  }
+
   // Swipe rows (category / account menus): bring the active item into view
   document.querySelectorAll('.az-cat-nav .is-active, .az-account-nav .is-active').forEach(function (a) {
     var row = a.parentElement;

@@ -1755,3 +1755,7 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 
 /* Text pages from Joomla articles (html/com_content/article): same edges as the static pages */
 .az-component:has(> .az-policy), .az-component:has(> .az-about-hero), .az-component:has(> .az-contact) { padding: 0; }
+
+/* Footer newsletter result line */
+.az-newsletter-msg { margin: 10px 0 0 !important; min-height: 1.6em; font-size: 13px; color: var(--az-accent-ink) !important; }
+.az-newsletter-msg.is-error { color: #b3261e !important; }
