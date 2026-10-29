@@ -1863,3 +1863,12 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-thanks-meta small { display: block; font-size: 12px; }
 @media (max-width: 639px) { .az-co-live .az-steps { gap: 14px; font-size: 13px; white-space: nowrap; margin-bottom: 28px; } }
 .az-co-redirect-spin { color: var(--az-accent-ink); margin: 18px 0 10px; }
+
+/* ---------- Customer panel (dynamic pages) ---------- */
+.az-address-actions a { font: 400 13px var(--az-font); color: var(--az-gray); }
+.az-address-actions a:hover { color: #000; box-shadow: inset 0 -5px 0 var(--az-accent-soft); }
+a.az-address-add { color: inherit; }
+.az-address-edit { max-width: 680px; padding-bottom: 0; }
+.az-address-edit-actions { display: flex; gap: 8px; margin-top: 8px; }
+.az-order-pay { margin: 0 0 30px; }
+.az-order-pay .az-btn { margin-top: 6px; }
