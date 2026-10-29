@@ -25,6 +25,15 @@ $isFailed  = in_array($status, ['cancelled', 'refunded'], true);
 $isWaiting = !$isPaid && !$isFailed; // bank transfer awaiting the store's check, or a payment not confirmed yet
 $total     = (float) ($order->order_full_price ?? 0);
 
+// Part of the order paid from the club wallet (the "club" additional line)
+$wallet = 0;
+foreach ((array) ($order->additional ?? []) as $add) {
+    $params = is_string($add->order_product_params ?? null) ? json_decode($add->order_product_params) : ($add->order_product_params ?? null);
+    if (!empty($params->additional_key) && $params->additional_key === 'club') {
+        $wallet += abs((float) $add->order_product_price);
+    }
+}
+
 // Lines with photo / colour / size from the product data
 $lines = [];
 foreach ((array) ($order->products ?? []) as $op) {
@@ -57,7 +66,7 @@ $cashback = null;
 $user = Factory::getApplication()->getIdentity();
 if (!$user->guest && !$isFailed) {
     $level = $db->setQuery('SELECT l.level_name, l.cashback_rate FROM #__club_levels l JOIN #__users u ON u.club_level_id = l.id WHERE u.id = ' . (int) $user->id)->loadObject();
-    if ($level && (float) $level->cashback_rate > 0) {
+    if ($level && (float) $level->cashback_rate > 0 && $total > 0) {
         $cashback = [$level->level_name, round($total * $level->cashback_rate / 100)];
     }
 }
@@ -100,7 +109,14 @@ if (!$user->guest && !$isFailed) {
             <div class="az-thanks-meta">
                 <div><span>شماره سفارش</span><strong dir="ltr"><?php echo amuj_fa($order->order_number); ?></strong></div>
                 <div><span>وضعیت</span><strong><?php echo $isPaid ? 'پرداخت‌شده' : 'در انتظار پرداخت'; ?></strong></div>
-                <div><span><?php echo $isPaid ? 'مبلغ پرداخت‌شده' : 'مبلغ سفارش'; ?></span><strong><?php echo amuj_price($total); ?></strong></div>
+                <?php if ($wallet > 0 && $total <= 0) : ?>
+                    <div><span>پرداخت از کیف پول</span><strong><?php echo amuj_price($wallet); ?></strong></div>
+                <?php else : ?>
+                    <div>
+                        <span><?php echo $isPaid ? 'مبلغ پرداخت‌شده' : 'مبلغ قابل پرداخت'; ?></span><strong><?php echo amuj_price($total); ?></strong>
+                        <?php if ($wallet > 0) : ?><small class="az-muted">+ <?php echo amuj_price($wallet); ?> از کیف پول</small><?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="az-thanks-items">
