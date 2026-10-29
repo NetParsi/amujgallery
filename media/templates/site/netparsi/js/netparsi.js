@@ -118,9 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // Dashboard: save birthday from the popup (a real customer: posted to the club extension, form action)
-  var bdayForm = document.querySelector('[data-az-birthday-form]');
-  if (bdayForm) {
+  // Birthday form (dashboard modal and the club's birthday popup); a real customer: posted to the club extension (form action)
+  document.querySelectorAll('[data-az-birthday-form]').forEach(function (bdayForm) {
     bdayForm.addEventListener('submit', function (e) {
       e.preventDefault();
       var d = bdayForm.querySelector('[data-part=day]'), m = bdayForm.querySelector('[data-part=month]'), y = bdayForm.querySelector('[data-part=year]');
@@ -131,11 +130,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       var done = function () {
         var cell = document.querySelector('[data-az-birthday]');
-        cell.textContent = d.options[d.selectedIndex].text + ' ' + m.options[m.selectedIndex].text + ' ' + y.options[y.selectedIndex].text;
-        cell.classList.add('is-new');
+        if (cell) {
+          cell.textContent = d.options[d.selectedIndex].text + ' ' + m.options[m.selectedIndex].text + ' ' + y.options[y.selectedIndex].text;
+          cell.classList.add('is-new');
+        }
         var hint = document.querySelector('[data-az-birthday-hint]');
         if (hint) hint.remove();
-        if (window.UIkit) UIkit.modal('#az-birthday').hide();
+        var modal = bdayForm.closest('[uk-modal]');
+        if (modal && window.UIkit) UIkit.modal(modal).hide();
         notify('تاریخ تولد شما ثبت شد');
       };
       if (!bdayForm.getAttribute('action')) return done();
@@ -148,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(function () { error.textContent = 'تاریخ تولد ذخیره نشد؛ دوباره امتحان کنید.'; });
     });
-  }
+  });
 
   // Contact form (sample: validates and shows a thank-you; the form extension sends it)
   var contactForm = document.querySelector('[data-az-contact]');

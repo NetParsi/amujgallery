@@ -1879,3 +1879,5 @@ a.az-address-add { color: inherit; }
 .az-empty-title { font-family: var(--az-title-font); font-weight: 400; font-size: 18px; }
 .az-empty-text { margin: 0 0 6px; max-width: 380px; font-size: 14px; line-height: 1.9; color: var(--az-gray); }
 .az-empty .az-btn { margin-top: 6px; }
+.az-birthday-later { grid-column: 1 / -1; margin-top: 10px; background: none; border: 0; padding: 4px; cursor: pointer; font: 400 13px var(--az-font); color: var(--az-gray); }
+.az-birthday-later:hover { color: #000; }
