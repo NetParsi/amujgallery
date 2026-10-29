@@ -20,6 +20,10 @@ $db   = Factory::getDbo();
 $rows = $db->setQuery('SELECT id, trans_type, currency_amount, currency_balance, state, created_on, expire_on, description, shop_order_id'
     . ' FROM #__club_credits WHERE user_id = ' . (int) $user['id'] . ' ORDER BY created_on DESC, id DESC', 0, 100)->loadObjectList();
 
+// Club descriptions name the order by its id ("فاکتور شماره 4"): show the order number the customer knows, with a link
+$orderIds = array_filter(array_map(function ($r) { return (int) $r->shop_order_id; }, $rows));
+$numbers  = $orderIds ? $db->setQuery('SELECT order_id, order_number FROM #__hikashop_order WHERE order_id IN (' . implode(',', array_unique($orderIds)) . ')')->loadAssocList('order_id', 'order_number') : [];
+
 // Credit that expires within 30 days
 $soon = $db->setQuery('SELECT SUM(currency_balance) AS amount, MIN(expire_on) AS first FROM #__club_credits WHERE user_id = ' . (int) $user['id']
     . ' AND trans_type = 1 AND state = 1 AND currency_balance > 0 AND expire_on <> "" AND expire_on <= ' . $db->quote(date('Y-m-d', strtotime('+30 days'))))->loadObject();
@@ -46,9 +50,16 @@ amuj_account_open('credits');
         <div class="az-tx-list">
             <?php foreach ($rows as $r) :
                 $in = (int) $r->trans_type === 1;
-                $title = trim((string) $r->description) ?: ($in ? 'افزایش اعتبار' : 'کسر اعتبار');
+                $orderNo = $numbers[(int) $r->shop_order_id] ?? '';
+                if ($orderNo) {
+                    $title = ($in ? 'بازگشت خرید سفارش ' : 'پرداخت سفارش ') . $orderNo;
+                } else {
+                    $title = trim((string) $r->description) ?: ($in ? 'افزایش اعتبار' : 'کسر اعتبار');
+                }
                 $meta = [amuj_jdate($r->created_on)];
-                if ($in && (int) $r->state === 1 && $r->expire_on) {
+                if ($in && (int) $r->state === 1 && (float) $r->currency_balance <= 0) {
+                    $meta[] = 'استفاده شده';
+                } elseif ($in && (int) $r->state === 1 && $r->expire_on) {
                     $meta[] = 'اعتبار تا ' . amuj_jdate($r->expire_on);
                 } elseif ($in && (int) $r->state === 0) {
                     $meta[] = 'منقضی شده';
@@ -59,7 +70,7 @@ amuj_account_open('credits');
                 <div class="az-tx">
                     <span class="az-tx-icon az-tx-icon--<?php echo $in ? 'in' : 'out'; ?>" aria-hidden="true"><?php echo $in ? '+' : '−'; ?></span>
                     <div class="az-tx-info">
-                        <strong><?php echo $this->escape(amuj_fa($title)); ?></strong>
+                        <strong><?php if ($orderNo) : ?><a href="<?php echo amuj_order_url((int) $r->shop_order_id); ?>"><?php endif; ?><?php echo $this->escape(amuj_fa($title)); ?><?php echo $orderNo ? '</a>' : ''; ?></strong>
                         <span class="az-muted"><?php echo implode(' · ', $meta); ?></span>
                     </div>
                     <strong class="az-tx-amount <?php echo $in ? 'is-in' : 'is-out'; ?>"><?php echo ($in ? '+ ' : '− ') . amuj_price(abs((float) $r->currency_amount)); ?></strong>
