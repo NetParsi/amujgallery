@@ -13,6 +13,8 @@ defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
 require_once JPATH_THEMES . '/netparsi/static/_helpers.php';
 
 $cart = $this->checkoutHelper->getCart();
+// The workflow shows this block twice: lines on top ("items"), totals under the wallet / coupon boxes ("totals")
+$part = $this->options['az_part'] ?? 'all';
 
 $lines = [];
 foreach ((array) ($cart->products ?? []) as $cp) {
@@ -51,6 +53,7 @@ $coupon = !empty($cart->coupon) ? (float) ($cart->coupon->discount_value ?? 0) :
     <div class="hikashop_checkout_loading_spinner"></div>
     <?php $this->checkoutHelper->displayMessages('cart'); ?>
 
+    <?php if ($part !== 'totals') : ?>
     <div class="az-co-items">
         <?php foreach ($lines as $l) :
             if (!isset($mains[$l['main']])) {
@@ -82,6 +85,8 @@ $coupon = !empty($cart->coupon) ? (float) ($cart->coupon->discount_value ?? 0) :
         <?php endforeach; ?>
         <a class="az-link az-small" href="<?php echo hikashop_completeLink('cart&task=show'); ?>">ویرایش سبد خرید</a>
     </div>
+    <?php endif; ?>
+    <?php if ($part !== 'items') : ?>
 
     <div class="az-co-totals">
         <div class="az-summary-row"><span>جمع محصولات</span><span><?php echo amuj_price($subtotal); ?></span></div>
@@ -103,6 +108,7 @@ $coupon = !empty($cart->coupon) ? (float) ($cart->coupon->discount_value ?? 0) :
         <?php endforeach; ?>
         <div class="az-summary-row is-total"><span>مبلغ قابل پرداخت</span><span><?php echo $payable > 0 ? amuj_price($payable) : 'رایگان'; ?></span></div>
     </div>
+    <?php endif; ?>
 <?php if (empty($this->ajax)) : ?>
 </div>
 <script type="text/javascript">

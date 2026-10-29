@@ -9,9 +9,9 @@ defined('_JEXEC') or die('Restricted access');
 
 $id = (int) $this->step . '_' . (int) $this->module_position;
 $on = $use_credit == '1';
-$fa = function ($n) {
-    return strtr(number_format((float) $n), ['0' => '۰', '1' => '۱', '2' => '۲', '3' => '۳', '4' => '۴', '5' => '۵', '6' => '۶', '7' => '۷', '8' => '۸', '9' => '۹', ',' => '٬']) . ' تومان';
-};
+defined('AMUJ_BASE') || define('AMUJ_BASE', \Joomla\CMS\Uri\Uri::root());
+defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
+require_once JPATH_THEMES . '/netparsi/static/_helpers.php';
 ?>
 <?php if (!$this->ajax) : ?>
 <div id="hikashop_checkout_plg-shop-club_<?php echo $this->step; ?>_<?php echo $this->module_position; ?>" class="hikashop_checkout_club">
@@ -26,9 +26,9 @@ $fa = function ($n) {
                 <strong>پرداخت از کیف پول</strong>
                 <small>
                     <?php if ($on) : ?>
-                        <?php echo $fa($used_credit_amount); ?> از کیف پول کسر می‌شود
+                        <?php echo amuj_price($used_credit_amount); ?> از کیف پول کسر می‌شود
                     <?php elseif ($userTotalCredit > 0) : ?>
-                        موجودی کیف پول: <?php echo $fa($userTotalCredit); ?>
+                        موجودی کیف پول: <?php echo amuj_price($userTotalCredit); ?>
                     <?php else : ?>
                         کیف پول شما فعلاً موجودی ندارد
                     <?php endif; ?>

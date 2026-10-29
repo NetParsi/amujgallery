@@ -819,4 +819,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Checkout (HikaShop): prices that HikaShop renders itself come with Latin digits; blocks are re-rendered by AJAX
+  var coLive = document.querySelector('.az-co-live');
+  if (coLive) {
+    var coDigits = function () {
+      coLive.querySelectorAll('.hikashop_checkout_shipping_cost, .hikashop_checkout_payment_cost').forEach(function (el) {
+        var t = persian(el.textContent);
+        if (t !== el.textContent) el.textContent = t;
+      });
+    };
+    coDigits();
+    new MutationObserver(coDigits).observe(coLive, { childList: true, subtree: true });
+  }
+
 });

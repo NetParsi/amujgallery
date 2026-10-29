@@ -44,13 +44,14 @@ foreach ($contents as $k => $content) {
     $html = $this->displayBlock($task, $k, @$content['params']);
     $html = ob_get_clean() . $html;
     $last = $k;
-    if (trim(strip_tags($html, '<input><select><textarea><img><button>')) === '') {
+    $visible = preg_replace('/<input[^>]+type="hidden"[^>]*>|<script.*?<\/script>/is', '', $html);
+    if (trim(strip_tags($visible, '<input><select><textarea><img><button>')) === '') {
         // Empty block (e.g. login for a signed-in customer): keep its markup for HikaShop's AJAX, no heading
         $main .= $html;
         continue;
     }
     if (in_array($task, $side, true)) {
-        $aside .= '<div class="az-co-block az-co-' . preg_replace('/[^a-z]/', '', $task) . '">' . $html . '</div>';
+        $aside .= '<div class="az-co-block az-co-' . preg_replace('/[^a-z]/', '', $task) . (isset($content['params']['az_part']) ? '-' . $content['params']['az_part'] : '') . '">' . $html . '</div>';
     } else {
         $main .= '<section class="az-co-section az-co-' . preg_replace('/[^a-z]/', '', $task) . '">'
             . (isset($titles[$task]) ? '<h2 class="az-title">' . $titles[$task] . '</h2>' : '') . $html . '</section>';
