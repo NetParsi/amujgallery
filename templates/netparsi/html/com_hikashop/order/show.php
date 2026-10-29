@@ -101,6 +101,16 @@ amuj_account_open('order');
     <div class="az-thanks-note">این سفارش لغو شده است.<?php echo $wallet > 0 ? ' اگر بخشی از آن از کیف پول پرداخت شده بود، با تأیید فروشگاه به کیف پول شما بازمی‌گردد.' : ''; ?></div>
 <?php endif; ?>
 
+<?php if (!empty($order->order_tracking_code)) : ?>
+    <div class="az-tracking">
+        <div>
+            <span>کد رهگیری مرسوله<?php echo $shipName ? ' (' . $this->escape($shipName) . ')' : ''; ?></span>
+            <strong dir="ltr" data-az-copy-text><?php echo amuj_fa($this->escape(trim($order->order_tracking_code))); ?></strong>
+        </div>
+        <button class="az-btn az-btn--ghost" type="button" data-az-copy>کپی کد</button>
+    </div>
+<?php endif; ?>
+
 <?php if ($payInfo) : ?>
     <div class="az-thanks-pay az-order-pay">
         <div class="az-thanks-pay-amount"><span>مبلغ قابل واریز</span><strong><?php echo amuj_price($total); ?></strong></div>

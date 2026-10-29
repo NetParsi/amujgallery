@@ -24,6 +24,9 @@ $out[] = strip_tags($amujMail['intro']);
 $out[] = '';
 $out[] = 'شماره سفارش: ' . amuj_fa($order->order_number);
 $out[] = 'وضعیت: ' . hikashop_orderStatus($order->order_status);
+if (!$isAdmin && !empty($order->order_tracking_code)) {
+    $out[] = 'کد رهگیری مرسوله: ' . trim($order->order_tracking_code);
+}
 $out[] = '';
 foreach ((array) $order->products as $op) {
     if (!empty($op->order_product_option_parent_id) || (int) $op->order_product_quantity <= 0) {

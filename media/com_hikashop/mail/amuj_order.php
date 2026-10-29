@@ -138,6 +138,16 @@ $row = function ($label, $value, $strong = false, $green = false) use ($cell) {
     </p>
 <?php endif; ?>
 
+<?php if (!$isAdmin && !empty($order->order_tracking_code)) : ?>
+    <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#eef3e9;margin-bottom:22px;">
+        <tr><td style="padding:16px 18px;<?php echo $cell; ?>">
+            <span style="<?php echo $muted; ?>">کد رهگیری مرسوله</span><br>
+            <strong style="font-size:17px;letter-spacing:1px;" dir="ltr"><?php echo htmlspecialchars(trim($order->order_tracking_code)); ?></strong>
+            <div style="margin-top:6px;<?php echo $muted; ?>">با این کد می‌توانید وضعیت مرسوله را در سایت شرکت ارسال‌کننده پیگیری کنید.</div>
+        </td></tr>
+    </table>
+<?php endif; ?>
+
 <?php if ($payInfo) : ?>
     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#eef3e9;margin-bottom:22px;">
         <tr><td style="padding:16px 18px;<?php echo $cell; ?>">
