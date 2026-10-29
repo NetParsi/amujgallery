@@ -56,6 +56,10 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
             $this->wish();
         }
 
+        if ($input->getCmd('form') === 'restock') {
+            $this->restock();
+        }
+
         // Bots fill the hidden "website" field: answer as if sent, send nothing
         if ($input->getString('website', '') !== '') {
             $this->respond(true, 'پیام شما ارسال شد');
@@ -243,6 +247,45 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
         $app->sendHeaders();
         echo json_encode(['ok' => true, 'message' => $active ? 'به علاقه‌مندی‌ها اضافه شد' : 'از علاقه‌مندی‌ها حذف شد',
             'active' => $active, 'count' => $count], JSON_UNESCAPED_UNICODE);
+        $app->close();
+    }
+
+    /**
+     * "موجود شد خبرم کن": add / remove a sold-out variant in HikaShop's waitlist for the signed-in customer
+     * (identified by the account email; the plugin "hikashop/amujrestock" sends the notifications).
+     */
+    private function restock(): void
+    {
+        $app   = $this->getApplication();
+        $user  = $app->getIdentity();
+        $input = $app->getInput()->post;
+        if (!$user || $user->guest || !$user->email) {
+            $this->respond(false, 'ابتدا وارد حساب کاربری شوید.');
+        }
+        $variantId = $input->getInt('variant_id', 0);
+        $remove    = $input->getCmd('op') === 'remove';
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $exists = (int) $db->setQuery('SELECT product_id FROM #__hikashop_product WHERE product_id = ' . $variantId
+                . ' AND product_published = 1')->loadResult();
+            if (!$exists) {
+                $this->respond(false, 'انجام نشد.');
+            }
+            $db->setQuery('DELETE FROM #__hikashop_waitlist WHERE product_id = ' . $variantId . ' AND email = ' . $db->quote($user->email))->execute();
+            if (!$remove) {
+                $row = (object) ['product_id' => $variantId, 'date' => time(), 'email' => $user->email, 'name' => $user->name,
+                    'product_item_id' => 0, 'language' => $app->getLanguage()->getTag()];
+                $db->insertObject('#__hikashop_waitlist', $row);
+            }
+        } catch (\Throwable $e) {
+            $this->respond(false, 'انجام نشد.');
+        }
+
+        $app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
+        $app->sendHeaders();
+        echo json_encode(['ok' => true, 'active' => !$remove,
+            'message' => $remove ? 'درخواست لغو شد' : 'ثبت شد؛ وقتی موجود شد خبرتان می‌کنیم'], JSON_UNESCAPED_UNICODE);
         $app->close();
     }
 

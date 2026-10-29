@@ -323,4 +323,16 @@ if (!function_exists('amuj_real_user')) {
 
         return $ids;
     }
+
+    /** Variant ids the signed-in customer asked to be told about when back in stock (HikaShop waitlist, by email) */
+    function amuj_restock_requests()
+    {
+        $user = \Joomla\CMS\Factory::getApplication()->getIdentity();
+        if (!$user || $user->guest || !$user->email) {
+            return [];
+        }
+        $db = \Joomla\CMS\Factory::getDbo();
+
+        return array_map('intval', $db->setQuery('SELECT product_id FROM #__hikashop_waitlist WHERE email = ' . $db->quote($user->email))->loadColumn());
+    }
 }

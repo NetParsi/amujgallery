@@ -557,6 +557,81 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Sold-out size: "موجود شد خبرم کن" (HikaShop waitlist through the amujcontact plugin, form=restock)
+  var notifyBox = productBox && productBox.querySelector('[data-az-notify]');
+  if (notifyBox) {
+    var requested = JSON.parse(productBox.dataset.azRequested || '[]').map(String);
+    var notifyVariant = '';
+    var notifyText = notifyBox.querySelector('[data-az-notify-text]');
+    var notifyBtn = notifyBox.querySelector('[data-az-notify-btn]');
+    var paintNotify = function (label) {
+      var on = requested.indexOf(notifyVariant) >= 0;
+      notifyText.textContent = on ? 'درخواست شما ثبت شده است؛ وقتی ' + label + ' موجود شد خبرتان می‌کنیم.' : label + ' فعلاً ناموجود است.';
+      notifyBtn.textContent = on ? 'لغو درخواست' : 'موجود شد خبرم کن';
+      notifyBtn.classList.toggle('is-done', on);
+    };
+    var notifyLabel = '';
+    productBox.querySelector('[data-az-sizes]').addEventListener('click', function (e) {
+      var li = e.target.closest('li[data-value]');
+      if (!li) return;
+      var v = variantMap[chosenColor() + '|' + li.dataset.value];
+      if (!li.classList.contains('is-out') || !v) { notifyBox.hidden = true; return; }
+      var colorLabel = document.querySelector('[data-az-color-label]');
+      notifyVariant = String(v[0]);
+      notifyLabel = 'سایز ' + li.querySelector('span').textContent + (colorLabel ? ' در رنگ ' + colorLabel.textContent : '');
+      paintNotify(notifyLabel);
+      notifyBox.hidden = false;
+    });
+    productBox.querySelectorAll('[data-az-color]').forEach(function (s) {
+      s.addEventListener('click', function () { notifyBox.hidden = true; });
+    });
+    notifyBtn.addEventListener('click', function () {
+      var body = document.body.dataset;
+      if (body.azLogin) { window.location.href = body.azLogin; return; }
+      var data = new FormData();
+      data.append('form', 'restock');
+      data.append('variant_id', notifyVariant);
+      data.append('op', requested.indexOf(notifyVariant) >= 0 ? 'remove' : 'add');
+      data.append(body.azToken, '1');
+      notifyBtn.disabled = true;
+      fetch(body.azWish, { method: 'POST', body: data, credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          notifyBtn.disabled = false;
+          if (!res || !res.ok) { notify((res && res.message) || 'انجام نشد'); return; }
+          requested = requested.filter(function (id) { return id !== notifyVariant; });
+          if (res.active) requested.push(notifyVariant);
+          paintNotify(notifyLabel);
+          notify(res.message);
+        })
+        .catch(function () { notifyBtn.disabled = false; notify('انجام نشد'); });
+    });
+  }
+
+  // Wishlist page: cancel a "موجود شد خبرم کن" request
+  document.querySelectorAll('[data-az-restock-cancel]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('[data-variant]');
+      var body = document.body.dataset;
+      var data = new FormData();
+      data.append('form', 'restock');
+      data.append('variant_id', item.dataset.variant);
+      data.append('op', 'remove');
+      data.append(body.azToken, '1');
+      btn.disabled = true;
+      fetch(body.azWish, { method: 'POST', body: data, credentials: 'same-origin' })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (!res || !res.ok) { btn.disabled = false; notify((res && res.message) || 'انجام نشد'); return; }
+          var list = item.closest('[data-az-restock-list]');
+          item.remove();
+          if (list && !list.querySelector('[data-variant]')) list.remove();
+          notify(res.message);
+        })
+        .catch(function () { btn.disabled = false; notify('انجام نشد'); });
+    });
+  });
+
   document.querySelectorAll('[data-az-add]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var box = btn.closest('[data-az-product]');

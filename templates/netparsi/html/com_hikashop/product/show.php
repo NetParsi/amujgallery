@@ -105,7 +105,8 @@ $recent = $recent ? amuj_hika_products($recent) : [];
     </div>
 
     <aside class="az-product-buy" data-az-product data-name="<?php echo $this->escape($p['name']); ?>" data-price="<?php echo amuj_price($p['price']); ?>"
-           data-img="<?php echo amuj_img($p['img']); ?>" data-az-variants="<?php echo $variantJson; ?>" data-az-cart="<?php echo $cartUrl; ?>">
+           data-img="<?php echo amuj_img($p['img']); ?>" data-az-variants="<?php echo $variantJson; ?>" data-az-cart="<?php echo $cartUrl; ?>"
+           data-az-requested="<?php echo htmlspecialchars(json_encode(amuj_restock_requests())); ?>">
         <h1><?php echo $this->escape($p['name']); ?></h1>
         <div class="az-price"><?php echo amuj_price($p['price']); ?></div>
 
@@ -131,6 +132,13 @@ $recent = $recent ? amuj_hika_products($recent) : [];
         </ul>
 
         <p class="az-size-error" data-az-size-error hidden>لطفاً سایز را انتخاب کنید.</p>
+        <?php if ($hasSizes) : ?>
+            <div class="az-notify-me" data-az-notify hidden>
+                <p data-az-notify-text></p>
+                <button class="az-btn az-btn--ghost az-btn--block" type="button" data-az-notify-btn>موجود شد خبرم کن</button>
+                <small class="az-muted">وقتی موجود شد، پیامک و پیام در حساب کاربری‌تان دریافت می‌کنید.</small>
+            </div>
+        <?php endif; ?>
         <button class="az-btn az-btn--block" type="button" data-az-add>افزودن به سبد خرید</button>
 
         <div class="az-buy-links">

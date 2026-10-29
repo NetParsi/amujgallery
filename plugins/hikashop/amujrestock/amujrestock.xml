@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="hikashop" method="upgrade">
+    <name>هیکاشاپ - آموژ: موجود شد خبرم کن</name>
+    <author>NetParsi</author>
+    <creationDate>2026-10</creationDate>
+    <copyright>(C) NetParsi</copyright>
+    <license>GNU General Public License version 2 or later</license>
+    <authorUrl>https://netparsi.com</authorUrl>
+    <version>1.0.0</version>
+    <description>وقتی کالایی که مشتری برایش «موجود شد خبرم کن» زده دوباره موجود شود، برایش پیام در پنل (باشگاه مشتریان)، پیامک (پترن پنل پیامکی باشگاه) و ایمیل می‌فرستد.</description>
+    <files>
+        <filename plugin="amujrestock">amujrestock.php</filename>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                <field name="sms_pattern" type="text" default="" label="کد پترن پیامک"
+                    description="کد پترن «موجود شد» در پنل پیامکی (همان پنل باشگاه مشتریان). متغیرهای پترن به ترتیب: نام مشتری، نام کالا با رنگ و سایز. خالی = پیامک ارسال نمی‌شود."/>
+                <field name="send_email" type="radio" default="1" label="ارسال ایمیل" layout="joomla.form.field.radio.switcher"
+                    description="برای مشتریانی که ایمیل واقعی دارند">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

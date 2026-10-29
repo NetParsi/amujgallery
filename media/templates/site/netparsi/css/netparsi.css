@@ -1952,3 +1952,15 @@ a.az-address-add { color: inherit; }
 }
 .az-load-more a.is-loading { opacity: .6; pointer-events: none; }
 #az-grid > .az-card.is-new { animation: azRise .5s cubic-bezier(.2,.7,.2,1) both; }
+/* product page: notify me when a sold-out size is back */
+.az-notify-me { margin: 0 0 14px; padding: 14px 16px; background: var(--az-accent-soft); }
+.az-notify-me p { margin: 0 0 10px; font-size: 14px; }
+.az-notify-me .az-btn { background: #fff; }
+.az-notify-me .az-btn.is-done { background: transparent; color: var(--az-gray) !important; border-color: var(--az-line); }
+.az-notify-me small { display: block; margin-top: 8px; font-size: 12px; line-height: 1.7; }
+/* wishlist page: waiting for stock */
+.az-restock-list { display: flex; flex-direction: column; gap: 8px; }
+.az-restock-item { display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--az-line); font-size: 14px; }
+.az-restock-item img { width: 48px; aspect-ratio: 3 / 4; object-fit: cover; }
+.az-restock-item > div { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.az-restock-item small { color: var(--az-gray); font-size: 12px; }
