@@ -111,7 +111,10 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
 
         <div class="az-footer-bottom">
             <p class="az-copy">© <?php echo amuj_fa(1405); ?> گالری آموژ — تمامی حقوق محفوظ است.</p>
-            <p class="az-copy">طراحی و توسعه توسط <a class="az-credit" href="https://netparsi.com" target="_blank" rel="noopener">نت پارسی</a></p>
+            <p class="az-copy az-credit-line">طراحی و توسعه توسط
+                <a class="az-credit" href="https://netparsi.com" target="_blank" rel="noopener" aria-label="نت پارسی"><?php
+                    $npLogo = AMUJ_ROOT . '/images/netparsi-logo.svg';
+                    echo is_file($npLogo) ? file_get_contents($npLogo) : 'نت پارسی'; ?></a></p>
         </div>
     </div>
 </footer>

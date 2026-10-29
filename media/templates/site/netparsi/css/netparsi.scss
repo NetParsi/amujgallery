@@ -1912,3 +1912,10 @@ a.az-address-add { color: inherit; }
 }
 #system-message-container .joomla-alert--close:hover { color: #000; background: var(--az-accent-soft); }
 @media (max-width: 639px) { #system-message-container { top: calc(var(--az-header-h, 64px) + 8px); } }
+/* footer credit: NetParsi logo in the footer grey, its own colours on hover */
+.az-credit-line { display: flex; align-items: center; gap: 8px; }
+.az-credit { display: inline-flex; align-items: center; color: var(--az-gray); line-height: 0; }
+.az-credit svg { height: 15px; width: auto; display: block; }
+.az-credit svg g, .az-credit svg circle { fill: currentColor; transition: fill .2s; }
+.az-credit:hover svg g { fill: #19488a; }
+.az-credit:hover svg circle { fill: #f5a31e; }
