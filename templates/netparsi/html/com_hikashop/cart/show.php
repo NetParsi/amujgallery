@@ -78,7 +78,7 @@ if (!empty($this->cart->full_total->prices)) {
 $free      = amuj_free_shipping();
 $remaining = max(0, $free - $total);
 $progress  = $free ? min(100, round($total / $free * 100)) : 100;
-$checkout  = hikashop_completeLink('checkout');
+$checkout  = amuj_url('checkout'); // hidden menu item "checkout" (clean URL)
 
 // Suggestions: newest products that are not in the cart
 $suggest = $db->setQuery('SELECT product_id FROM ' . hikashop_table('product') . ' WHERE product_type = "main" AND product_published = 1'
