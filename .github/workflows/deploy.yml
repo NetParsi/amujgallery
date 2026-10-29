@@ -1,0 +1,57 @@
+# Amuj Gallery: publish the site's own code to the host (cPanel, FTP) with one click.
+# GitHub > Actions > "Deploy to host" > Run workflow.
+#
+# The repository holds only this site's own files, laid out like the site root (template, our plugins,
+# HikaShop email templates, language overrides, images). They are uploaded over the live site; Joomla,
+# HikaShop and the other extensions on the host are never touched. Only files changed since the last
+# deploy are sent (the action keeps .ftp-deploy-sync-state.json on the host); a file deleted from the
+# repository is deleted on the host only if this workflow uploaded it before.
+#
+# Secrets (GitHub > Settings > Secrets and variables > Actions), entered by the site owner:
+#   FTP_SERVER      ftp.example.com
+#   FTP_USERNAME    the cPanel FTP account
+#   FTP_PASSWORD    its password
+#   FTP_SERVER_DIR  the Joomla folder on the host, ending with "/", e.g. public_html/
+name: Deploy to host
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only list what would be uploaded (nothing is changed on the host)"
+        type: boolean
+        default: false
+      protocol:
+        description: "FTP protocol (ftps if the host supports it, else ftp)"
+        type: choice
+        options: [ftps, ftp]
+        default: ftps
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Upload changed files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          protocol: ${{ inputs.protocol }}
+          dry-run: ${{ inputs.dry_run }}
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            .gitignore
