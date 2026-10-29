@@ -83,10 +83,26 @@ $menuItem = $app->getMenu()->getActive();
 // One address per product for search engines: under the shop menu item of the product's own category
 $canonItem = 0;
 $prodCats  = $db->setQuery('SELECT category_id FROM ' . hikashop_table('product_category') . ' WHERE product_id = ' . $mainId . ' ORDER BY ordering')->loadColumn();
+$shopItems = [];
 foreach ($app->getMenu()->getItems('menutype', 'amuj-main') as $item) {
     $hkp = (array) $item->getParams()->get('hk_product', []);
-    if ($item->type === 'component' && in_array((int) ($hkp['selectparentlisting'] ?? 0), array_map('intval', $prodCats), true)) {
-        $canonItem = (int) $item->id;
+    $cat = (int) ($hkp['selectparentlisting'] ?? 0);
+    // the shop's category sections ("shop/categories/...") win over collections and trends
+    if ($item->type === 'component' && $cat && (!isset($shopItems[$cat]) || strpos($item->route, '/categories/') !== false)) {
+        $shopItems[$cat] = (int) $item->id;
+    }
+}
+$ranked = $prodCats;
+usort($ranked, function ($a, $b) use ($shopItems, $app) {
+    $score = function ($c) use ($shopItems, $app) {
+        $item = isset($shopItems[(int) $c]) ? $app->getMenu()->getItem($shopItems[(int) $c]) : null;
+        return $item ? (strpos($item->route, '/categories/') !== false ? 2 : 1) : 0;
+    };
+    return $score($b) <=> $score($a);
+});
+foreach ($ranked as $c) {
+    if (isset($shopItems[(int) $c])) {
+        $canonItem = $shopItems[(int) $c];
         break;
     }
 }
