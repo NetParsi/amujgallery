@@ -1950,3 +1950,5 @@ a.az-address-add { color: inherit; }
   .az-cat .az-cat-head .az-cat-title { padding: 0; }
   .az-cat-chosen { padding: 0 var(--az-gutter); }
 }
+.az-load-more a.is-loading { opacity: .6; pointer-events: none; }
+#az-grid > .az-card.is-new { animation: azRise .5s cubic-bezier(.2,.7,.2,1) both; }

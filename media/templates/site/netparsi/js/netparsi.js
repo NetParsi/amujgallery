@@ -784,6 +784,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+  // Category: "نمایش بیشتر" loads the next page in the background and appends its cards (the link still works without JS)
+  document.addEventListener('click', function (e) {
+    var more = e.target.closest('.az-load-more a');
+    var grid = document.getElementById('az-grid');
+    if (!more || !grid || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    e.preventDefault();
+    if (more.classList.contains('is-loading')) return;
+    more.classList.add('is-loading');
+    more.dataset.label = more.dataset.label || more.textContent;
+    more.textContent = 'در حال بارگذاری...';
+    fetch(more.href, { credentials: 'same-origin' })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        var doc = new DOMParser().parseFromString(html, 'text/html');
+        var have = {};
+        grid.querySelectorAll('.az-card[data-id]').forEach(function (c) { have[c.dataset.id] = true; });
+        var added = 0;
+        doc.querySelectorAll('#az-grid > .az-card').forEach(function (card) {
+          if (card.dataset.id && have[card.dataset.id]) return;
+          card.classList.add('is-new');
+          grid.appendChild(document.importNode(card, true));
+          added++;
+        });
+        var next = doc.querySelector('.az-load-more');
+        var wrap = more.closest('.az-load-more');
+        if (next) wrap.replaceWith(document.importNode(next, true)); else wrap.remove();
+        if (!added && next) window.location.href = more.href;
+      })
+      .catch(function () { window.location.href = more.href; });
+  });
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');
