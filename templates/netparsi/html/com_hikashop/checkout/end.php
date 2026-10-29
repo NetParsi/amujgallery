@@ -34,7 +34,7 @@ if ($gateway && trim(strip_tags($html)) !== '') : ?>
         <p class="az-muted">سفارش شما (شماره <?php echo amuj_fa($this->order->order_number); ?>) ثبت شده اما پرداخت آغاز نشد. لطفاً دوباره تلاش کنید یا روش پرداخت دیگری انتخاب کنید.</p>
         <div class="az-thanks-note" dir="auto"><?php echo $this->escape(trim(strip_tags($html))); ?></div>
         <div class="az-thanks-actions">
-            <a class="az-btn" href="<?php echo $this->url; ?>">مشاهده سفارش</a>
+            <a class="az-btn" href="<?php echo amuj_order_url($this->order->order_id); ?>">مشاهده سفارش</a>
             <a class="az-btn az-btn--ghost" href="<?php echo \Joomla\CMS\Uri\Uri::root(); ?>">بازگشت به فروشگاه</a>
         </div>
     </div>

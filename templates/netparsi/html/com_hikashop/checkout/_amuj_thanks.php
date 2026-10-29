@@ -182,7 +182,7 @@ if (!$user->guest && !$isFailed) {
             <a class="az-btn" href="<?php echo hikashop_completeLink('checkout'); ?>">تلاش مجدد</a>
             <a class="az-btn az-btn--ghost" href="<?php echo hikashop_completeLink('cart&task=show'); ?>">بازگشت به سبد خرید</a>
         <?php else : ?>
-            <a class="az-btn" href="<?php echo $url; ?>">مشاهده سفارش</a>
+            <a class="az-btn" href="<?php echo amuj_order_url($order->order_id); ?>">مشاهده سفارش</a>
             <a class="az-btn az-btn--ghost" href="<?php echo Uri::root(); ?>">ادامه خرید</a>
         <?php endif; ?>
     </div>

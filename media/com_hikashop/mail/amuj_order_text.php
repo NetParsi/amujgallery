@@ -69,7 +69,9 @@ if (!empty($amujMail['pay_info']) && $unpaid && $order->order_payment_method ===
 
 $out[] = '';
 $out[] = ($isAdmin ? 'مشاهده سفارش در مدیریت: ' . $amujSite . 'administrator/index.php?option=com_hikashop&ctrl=order&task=edit&cid[]=' . (int) $order->order_id
-    : 'مشاهده سفارش: ' . ($vars['URL'] ?? $amujSite));
+    : 'مشاهده سفارش: ' . (($panelItem = (int) \Joomla\CMS\Factory::getDbo()->setQuery('SELECT id FROM #__menu WHERE menutype = "amuj-pages" AND alias = "orders" AND published = 1')->loadResult())
+        ? $amujSite . 'index.php?option=com_hikashop&ctrl=order&task=show&cid=' . (int) $order->order_id . '&Itemid=' . $panelItem
+        : ($vars['URL'] ?? $amujSite)));
 $out[] = '';
 $out[] = 'گالری آموژ — ' . $amujSite;
 
