@@ -2027,7 +2027,7 @@ a.az-address-add { color: inherit; }
   .az-cta-btn:hover { gap: 8px; padding: 0 18px 0 14px; }
   .az-cta-btn:hover span { max-width: 80px; }
 }
-.az-cta-drop.uk-drop { width: 280px; padding: 18px 20px; background: #fff; color: #000; box-shadow: 0 12px 34px rgba(0, 0, 0, .12); font-size: 14px; line-height: 1.9; }
+.az-cta-drop { position: absolute; left: calc(100% + 12px); bottom: 0; width: 280px; animation: azRise .3s cubic-bezier(.2,.7,.2,1); padding: 18px 20px; background: #fff; color: #000; box-shadow: 0 12px 34px rgba(0, 0, 0, .12); font-size: 14px; line-height: 1.9; }
 .az-cta-drop strong { display: block; font-weight: 500; margin-bottom: 4px; }
 .az-cta-drop p { margin: 0 0 12px; color: var(--az-gray); font-size: 13px; }
 .az-cta-maps { display: flex; gap: 8px; margin-bottom: 10px; }
@@ -2041,3 +2041,4 @@ a.az-address-add { color: inherit; }
   body:has(.az-cart-bar) .az-cta { bottom: 86px; }
 }
 @media print { .az-cta { display: none; } }
+@media (max-width: 479px) { .az-cta-drop { left: 0; bottom: calc(100% + 10px); width: calc(100vw - 24px); } }

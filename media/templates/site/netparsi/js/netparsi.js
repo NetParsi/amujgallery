@@ -890,6 +890,16 @@ document.addEventListener('DOMContentLoaded', function () {
       .catch(function () { window.location.href = more.href; });
   });
 
+  // Fixed address button: opens / closes the address box (outside click or Escape closes it)
+  var ctaToggle = document.querySelector('[data-az-cta-toggle]');
+  if (ctaToggle) {
+    var ctaDrop = document.getElementById('az-cta-drop');
+    var ctaSet = function (open) { ctaDrop.hidden = !open; ctaToggle.setAttribute('aria-expanded', open ? 'true' : 'false'); };
+    ctaToggle.addEventListener('click', function (e) { e.stopPropagation(); ctaSet(ctaDrop.hidden); });
+    document.addEventListener('click', function (e) { if (!ctaDrop.hidden && !ctaDrop.contains(e.target)) ctaSet(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ctaSet(false); });
+  }
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');
