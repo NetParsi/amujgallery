@@ -55,7 +55,7 @@ if ($keys) {
             <label class="az-option az-co-address-item">
                 <span class="az-co-address-text">
                     <input type="radio" name="checkout[address][billing]" value="<?php echo $id; ?>" <?php echo $id === $selected ? 'checked' : ''; ?>
-                        onchange="this.form.querySelector('[data-az-ship-address]').value = this.value; window.checkout.submitAddress(<?php echo $step; ?>, <?php echo $pos; ?>);">
+                        onchange="var s = this.form.querySelector('[data-az-ship-address]'); s.value = this.value; s.disabled = false; window.checkout.submitAddress(<?php echo $step; ?>, <?php echo $pos; ?>);">
                     <span>
                         <strong><?php echo $this->escape(trim($a->address_firstname . ' ' . $a->address_lastname)); ?></strong>
                         <span><?php echo $this->escape(amuj_fa($place)); ?></span>
@@ -73,7 +73,8 @@ if ($keys) {
                 </span>
             </label>
         <?php endforeach; ?>
-        <input type="hidden" name="checkout[address][shipping]" value="<?php echo $selected ?: ''; ?>" data-az-ship-address>
+        <?php // Sent only when the customer picks another address, so the delivery address follows the chosen one ?>
+        <input type="hidden" name="checkout[address][shipping]" value="" data-az-ship-address disabled>
         <button type="button" class="az-btn az-btn--ghost az-co-address-new" onclick="return window.checkout.newAddress(<?php echo $step; ?>, <?php echo $pos; ?>, 'billing');">+ افزودن آدرس جدید</button>
     </div>
 <?php if (empty($this->ajax)) : ?>
