@@ -776,6 +776,14 @@ document.addEventListener('DOMContentLoaded', function () {
     new MutationObserver(autoClose).observe(sysMessages, { childList: true });
   }
 
+  // Filter panel: a chosen radio (price range, sort) can be clicked again to clear it
+  document.querySelectorAll('input[type=radio][data-az-uncheck]').forEach(function (radio) {
+    radio.addEventListener('mousedown', function () { radio.dataset.was = radio.checked ? '1' : ''; });
+    radio.addEventListener('click', function () {
+      if (radio.dataset.was) { radio.checked = false; radio.dataset.was = ''; }
+    });
+  });
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');

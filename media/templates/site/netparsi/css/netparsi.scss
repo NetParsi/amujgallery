@@ -1919,3 +1919,34 @@ a.az-address-add { color: inherit; }
 .az-credit svg g, .az-credit svg circle { fill: currentColor; transition: fill .2s; }
 .az-credit:hover svg g { fill: #19488a; }
 .az-credit:hover svg circle { fill: #f5a31e; }
+
+/* ---------- Category: title + tools (filter, grid density) above the list, filter panel ---------- */
+.az-cat-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }
+.az-cat .az-cat-head .az-cat-title { margin: 0; }
+.az-cat-main .az-cat-tools { flex: none; flex-direction: row; align-items: center; gap: 26px; margin: 0; padding: 0; border: 0; min-height: 0; }
+.az-cat-main .az-grid-switch { margin: 0; }
+.az-cat-filter { color: #000; }
+.az-cat-filter::after { content: none; }
+.az-cat-filter::before { content: ""; width: 14px; height: 10px; margin-left: 7px; background:
+  linear-gradient(#000, #000) 0 0 / 100% 1.5px no-repeat, linear-gradient(#000, #000) 50% 50% / 70% 1.5px no-repeat, linear-gradient(#000, #000) 50% 100% / 40% 1.5px no-repeat; }
+.az-cat-filter.is-active { font-weight: 600; }
+.az-cat-chosen { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: -2px 0 16px; }
+.az-cat-chosen a { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--az-line); font-size: 13px; color: #000; background: var(--az-accent-soft); }
+.az-cat-chosen a span { color: var(--az-gray); font-size: 15px; line-height: 1; }
+.az-cat-chosen a:hover { border-color: #000; }
+.az-cat-chosen .az-cat-chosen-clear { background: none; border: 0; color: var(--az-gray); }
+.az-cat-chosen .az-cat-chosen-clear:hover { color: #000; }
+.az-chips label { display: inline-flex; cursor: pointer; }
+.az-chips label input { position: absolute; opacity: 0; pointer-events: none; }
+.az-chips label span { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border: 1px solid var(--az-line); font-size: 13px; color: #000; transition: border-color .15s, background .15s; }
+.az-chips label:hover span { border-color: #000; }
+.az-chips label input:checked + span { border-color: #000; background: var(--az-accent-soft); }
+.az-chips label input:focus-visible + span { outline: 2px solid var(--az-accent-ink); outline-offset: 2px; }
+.az-chips .az-swatch { display: inline-block; width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .15); }
+.az-filter-actions { display: flex; gap: 8px; margin-top: 40px; }
+.az-filter-actions .az-btn { flex: 1; }
+@media (max-width: 959px) {
+  .az-cat-head { padding: 0 var(--az-gutter); }
+  .az-cat .az-cat-head .az-cat-title { padding: 0; }
+  .az-cat-chosen { padding: 0 var(--az-gutter); }
+}
