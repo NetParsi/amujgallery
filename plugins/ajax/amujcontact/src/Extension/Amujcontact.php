@@ -40,6 +40,11 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
         $app   = $this->getApplication();
         $input = $app->getInput()->post;
 
+        // Public XML sitemap (GET, no form token): index.php?option=com_ajax&group=ajax&plugin=amujcontact&format=raw&form=sitemap
+        if ($app->getInput()->get->getCmd('form') === 'sitemap') {
+            $this->sitemap();
+        }
+
         if (!Session::checkToken()) {
             $this->respond(false, 'زمان صفحه تمام شده است؛ صفحه را تازه کنید و دوباره بفرستید.');
         }
@@ -286,6 +291,57 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
         $app->sendHeaders();
         echo json_encode(['ok' => true, 'active' => !$remove,
             'message' => $remove ? 'درخواست لغو شد' : 'ثبت شد؛ وقتی موجود شد خبرتان می‌کنیم'], JSON_UNESCAPED_UNICODE);
+        $app->close();
+    }
+
+    /**
+     * XML sitemap for search engines: home, the shop menu ("amuj-main"), the public text pages ("amuj-pages" items that
+     * are not noindex) and every published product at its one address (template helper amuj_product_url()).
+     */
+    private function sitemap(): void
+    {
+        $app  = $this->getApplication();
+        $db   = Factory::getContainer()->get('DatabaseDriver');
+        $menu = $app->getMenu('site');
+        $abs  = function ($url) {
+            return preg_match('#^https?://#', $url) ? $url : \Joomla\CMS\Uri\Uri::getInstance()->toString(['scheme', 'host', 'port']) . $url;
+        };
+        $urls = [[rtrim(\Joomla\CMS\Uri\Uri::root(), '/') . '/', null, '1.0']];
+
+        foreach (['amuj-main', 'amuj-pages'] as $type) {
+            foreach ($menu->getItems('menutype', $type) as $item) {
+                if ($item->type !== 'component' || (int) $item->access !== 1 || stripos((string) $item->getParams()->get('robots'), 'noindex') !== false) {
+                    continue;
+                }
+                $urls[] = [$abs(\Joomla\CMS\Router\Route::_('index.php?Itemid=' . $item->id)), null, $type === 'amuj-main' ? '0.8' : '0.4'];
+            }
+        }
+
+        $templateHelpers = JPATH_THEMES . '/netparsi/static/_helpers.php';
+        $hikashop = JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php';
+        if (is_file($templateHelpers) && is_file($hikashop)) {
+            include_once $hikashop;
+            defined('AMUJ_BASE') || define('AMUJ_BASE', \Joomla\CMS\Uri\Uri::root());
+            defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
+            require_once $templateHelpers;
+            $rows = $db->setQuery('SELECT product_id, product_modified FROM #__hikashop_product'
+                . ' WHERE product_type = "main" AND product_published = 1 ORDER BY product_id')->loadObjectList();
+            foreach ($rows as $r) {
+                $url = amuj_product_url((int) $r->product_id);
+                if ($url !== '') {
+                    $urls[] = [$abs($url), (int) $r->product_modified ? gmdate('Y-m-d', (int) $r->product_modified) : null, '0.9'];
+                }
+            }
+        }
+
+        $app->setHeader('Content-Type', 'application/xml; charset=utf-8', true);
+        $app->sendHeaders();
+        echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        foreach ($urls as [$loc, $lastmod, $priority]) {
+            echo '  <url><loc>' . htmlspecialchars($loc, ENT_XML1) . '</loc>' . ($lastmod ? '<lastmod>' . $lastmod . '</lastmod>' : '')
+                . '<priority>' . $priority . '</priority></url>' . "\n";
+        }
+        echo '</urlset>';
         $app->close();
     }
 

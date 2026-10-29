@@ -127,4 +127,40 @@ if (!function_exists('amuj_seo')) {
             . json_encode(['@context' => 'https://schema.org', '@graph' => $graph], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
             . '</script>');
     }
+
+    /**
+     * The one address of a product (canonical link, sitemap): under the "amuj-main" shop menu item of one of its
+     * categories, a category section ("shop/categories/...") before collections and trends. Empty when none.
+     */
+    function amuj_product_url($productId)
+    {
+        static $shopItems = null;
+        $app = \Joomla\CMS\Factory::getApplication();
+        $db  = \Joomla\CMS\Factory::getDbo();
+        if ($shopItems === null) {
+            $shopItems = [];
+            foreach ($app->getMenu('site')->getItems('menutype', 'amuj-main') as $item) {
+                $hk  = (array) $item->getParams()->get('hk_product', []);
+                $cat = (int) ($hk['selectparentlisting'] ?? 0);
+                $rank = strpos($item->route, '/categories/') !== false ? 2 : 1;
+                if ($item->type === 'component' && $cat && $rank > ($shopItems[$cat][1] ?? 0)) {
+                    $shopItems[$cat] = [(int) $item->id, $rank];
+                }
+            }
+        }
+        $best = null;
+        foreach ($db->setQuery('SELECT category_id FROM #__hikashop_product_category WHERE product_id = ' . (int) $productId . ' ORDER BY ordering')->loadColumn() as $cat) {
+            $found = $shopItems[(int) $cat] ?? null;
+            if ($found && (!$best || $found[1] > $best[1])) {
+                $best = $found;
+            }
+        }
+        if (!$best) {
+            return '';
+        }
+        $alias = (string) $db->setQuery('SELECT product_alias FROM #__hikashop_product WHERE product_id = ' . (int) $productId)->loadResult();
+
+        return \Joomla\CMS\Router\Route::_('index.php?option=com_hikashop&ctrl=product&task=show&cid=' . (int) $productId
+            . ($alias !== '' ? '&name=' . $alias : '') . '&Itemid=' . $best[0]);
+    }
 }

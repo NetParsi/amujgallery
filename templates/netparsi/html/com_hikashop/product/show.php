@@ -81,35 +81,7 @@ $recent = $recent ? amuj_hika_products($recent) : [];
 $app      = Factory::getApplication();
 $menuItem = $app->getMenu()->getActive();
 // One address per product for search engines: under the shop menu item of the product's own category
-$canonItem = 0;
-$prodCats  = $db->setQuery('SELECT category_id FROM ' . hikashop_table('product_category') . ' WHERE product_id = ' . $mainId . ' ORDER BY ordering')->loadColumn();
-$shopItems = [];
-foreach ($app->getMenu()->getItems('menutype', 'amuj-main') as $item) {
-    $hkp = (array) $item->getParams()->get('hk_product', []);
-    $cat = (int) ($hkp['selectparentlisting'] ?? 0);
-    // the shop's category sections ("shop/categories/...") win over collections and trends
-    if ($item->type === 'component' && $cat && (!isset($shopItems[$cat]) || strpos($item->route, '/categories/') !== false)) {
-        $shopItems[$cat] = (int) $item->id;
-    }
-}
-$ranked = $prodCats;
-usort($ranked, function ($a, $b) use ($shopItems, $app) {
-    $score = function ($c) use ($shopItems, $app) {
-        $item = isset($shopItems[(int) $c]) ? $app->getMenu()->getItem($shopItems[(int) $c]) : null;
-        return $item ? (strpos($item->route, '/categories/') !== false ? 2 : 1) : 0;
-    };
-    return $score($b) <=> $score($a);
-});
-foreach ($ranked as $c) {
-    if (isset($shopItems[(int) $c])) {
-        $canonItem = $shopItems[(int) $c];
-        break;
-    }
-}
-$alias   = (string) $db->setQuery('SELECT product_alias FROM ' . hikashop_table('product') . ' WHERE product_id = ' . $mainId)->loadResult();
-$pageUrl = amuj_seo_abs($canonItem
-    ? Route::_('index.php?option=com_hikashop&ctrl=product&task=show&cid=' . $mainId . '&name=' . $alias . '&Itemid=' . $canonItem)
-    : Route::_($p['url']));
+$pageUrl = amuj_seo_abs(amuj_product_url($mainId) ?: Route::_($p['url']));
 $inStock  = (bool) array_filter($p['variants'], function ($v) { return !empty($v[1]); }) || !$p['variants'];
 $images   = array_values(array_unique(array_map(function ($img) { return amuj_seo_abs(amuj_img($img)); }, $gallery ?: [$p['img']])));
 $seoDesc  = amuj_seo_text($p['desc']) ?: amuj_seo_text($p['name'] . (count($colorNames) ? ' در رنگ‌های ' . implode('، ', $colorNames) : '')
