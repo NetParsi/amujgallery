@@ -11,7 +11,8 @@
 }
 @font-face {
   font-family: 'Estedad';
-  src: url('../fonts/Estedad-VariableFont_wght.ttf') format('truetype');
+  src: url('../fonts/Estedad-VF.woff2') format('woff2'),
+       url('../fonts/Estedad-VF.ttf') format('truetype');
   font-weight: 100 900;
   font-display: swap;
 }
@@ -38,7 +39,7 @@
   --az-header-h: 120px;
   --az-header-compact: 64px;
   --az-logo-h: 96px;
-  /* Body font: Estedad (trial; Noora is still declared above to switch back) */
+  /* Body font: Estedad (chosen 2026-10-29 instead of Noora, which is still declared above) */
   --az-font: 'Estedad', Tahoma, sans-serif;
   --az-title-font: 'Doran', 'Estedad', Tahoma, sans-serif;
 }
