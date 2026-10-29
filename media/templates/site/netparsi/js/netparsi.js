@@ -24,10 +24,12 @@ document.addEventListener('DOMContentLoaded', function () {
       logo.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
       setTimeout(finish, 1000);
     };
-    // at least ~1.8 s after the navigation started (the drawing), at most 6 s even if an image hangs
-    var introReady = function () { setTimeout(introGo, Math.max(0, 1800 - performance.now())); };
+    // The logo always finishes drawing (CSS: .15 s delay + 1.5 s) and then stays 2 s; if the page needs longer
+    // to load it waits for it (at most 8 s from the start, even if an image hangs)
+    var introStart = window.azIntroStart || 0;
+    var introReady = function () { setTimeout(introGo, Math.max(0, introStart + 1650 + 2000 - performance.now())); };
     if (document.readyState === 'complete') introReady(); else window.addEventListener('load', introReady);
-    setTimeout(introGo, 6000);
+    setTimeout(introGo, Math.max(0, introStart + 8000 - performance.now()));
   }
 
   // Smart header: compact after a short scroll, hides while scrolling down, returns on scroll up
