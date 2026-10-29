@@ -1759,3 +1759,76 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 /* Footer newsletter result line */
 .az-newsletter-msg { margin: 10px 0 0 !important; min-height: 1.6em; font-size: 13px; color: var(--az-accent-ink) !important; }
 .az-newsletter-msg.is-error { color: #b3261e !important; }
+
+/* ---------- Checkout (HikaShop blocks in the Amuj layout) ---------- */
+.az-co-live { position: relative; padding-bottom: 60px; }
+.az-co-live legend, .az-co-live .hikashop_address_required_info_line { display: none; }
+.az-co-live fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.az-co-section + .az-co-section { margin-top: 50px; }
+.az-co-section > .az-title { margin-bottom: 18px; }
+.az-steps a { color: inherit; }
+.az-steps a:hover { color: #000; }
+/* address form */
+.az-co-live .hkform-horizontal { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
+.az-co-live .hkform-group { margin: 0 0 26px; }
+.az-co-live .hkform-group::after { content: none; }
+.az-co-live .hikashop_address_address_street, .az-co-live .hikashop_checkout_address_default, .az-co-live .hikashop_checkout_address_same { grid-column: 1 / -1; }
+.az-co-live .hikashop_address_address_country { display: none; }
+.az-co-live .hkcontrol-label { display: block; float: none; width: auto; padding: 0; margin: 0 0 2px; text-align: right; font-size: 13px; font-weight: 300; color: var(--az-gray); }
+.az-co-live .hikashop_address_field_input, .az-co-live .hkform-group > .hkc-sm-8 { float: none; width: auto; max-width: none; padding: 0; flex: none; }
+.az-co-live .hkform-group > .hkc-sm-4:empty { display: none; }
+.az-co-live .hkform-group input[type=text], .az-co-live .hkform-group input[type=email], .az-co-live .hkform-group input[type=tel],
+.az-co-live .hkform-group select, .az-co-live .hkform-group textarea {
+  width: 100% !important; max-width: none; height: 40px; border: 0; border-bottom: 1px solid var(--az-black); border-radius: 0; box-shadow: none;
+  background: transparent; font: 300 15px var(--az-font); padding: 0; outline: none; color: var(--az-black);
+}
+.az-co-live .hkform-group textarea { height: 90px; padding-top: 8px; }
+.az-co-live .hkform-group input:focus, .az-co-live .hkform-group select:focus { border-bottom-color: var(--az-accent-ink); }
+.az-co-live .hikashop_field_required_label { color: var(--az-accent-ink); margin-right: 2px; }
+.az-co-live .hikashop_red_border, .az-co-live .invalid { border-bottom-color: #b4232c !important; }
+.az-co-live .hikashop_field_error_msg { display: block; font-size: 12px; color: #b4232c; margin-top: 4px; }
+.az-co-live .hikashop_checkout_address_default label, .az-co-live .hikashop_checkout_address_same label { display: flex; gap: 10px; align-items: center; font-size: 14px; cursor: pointer; }
+.az-co-live .hikashop_checkout_address_default input, .az-co-live .hikashop_checkout_address_same input { accent-color: #000; margin: 0; }
+.az-co-live .hikashop_checkout_address_ok_button, .az-co-live .hikashop_checkout_address .hikabtn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 26px; border: 1px solid #000; border-radius: 0;
+  background: #000; color: #fff; font: 400 14px var(--az-font); cursor: pointer; box-shadow: none; text-shadow: none;
+}
+.az-co-live .hikashop_checkout_address .hikabtn:hover { opacity: .85; }
+.az-co-live .hikashop_checkout_address .fa, .az-co-live .hikashop_checkout_address .fas { display: none; }
+.az-co-live .hikashop_checkout_address div[style*="float:right"], .az-co-live .hikashop_checkout_address div[style*="float: right"] { float: none !important; }
+/* saved addresses */
+.az-co-live .hikashop_address_listing_item, .az-co-live .hikashop_checkout_address_listing div[class*="address_item"] { border: 1px solid var(--az-line); padding: 14px 18px; margin-bottom: 8px; font-size: 14px; }
+/* shipping / payment methods: one bordered row per method */
+.az-co-live .hikashop_shipping_methods_table, .az-co-live .hikashop_payment_methods_table { display: block; width: 100%; border: 0; margin: 0; background: none; }
+.az-co-live .hikashop_shipping_methods_table tbody, .az-co-live .hikashop_payment_methods_table tbody,
+.az-co-live .hikashop_shipping_methods_table tr, .az-co-live .hikashop_payment_methods_table tr { display: block; background: none !important; border: 0; }
+.az-co-live .hikashop_shipping_methods_table td, .az-co-live .hikashop_payment_methods_table td {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 12px;
+  border: 1px solid var(--az-line); padding: 16px 18px; margin-bottom: 8px; font-size: 14px; background: #fff;
+}
+.az-co-live td:has(> input:checked) { border-color: #000; background: var(--az-accent-soft); }
+.az-co-live .hikashop_checkout_shipping_radio, .az-co-live .hikashop_checkout_payment_radio { accent-color: #000; margin: 0; }
+.az-co-live td > label { margin: 0; font-weight: 400; }
+.az-co-live .hikashop_checkout_shipping_cost, .az-co-live .hikashop_checkout_payment_cost { white-space: nowrap; }
+.az-co-live .hikashop_checkout_shipping_description, .az-co-live .hikashop_checkout_payment_description { grid-column: 2 / -1; font-size: 13px; color: var(--az-gray); margin-top: 2px; }
+.az-co-live .hikashop_checkout_payment_description p { margin: 0; }
+.az-co-live td > :not(input):not(label):not(span):not(.hikashop_checkout_shipping_description):not(.hikashop_checkout_payment_description) { grid-column: 1 / -1; }
+.az-co-live .hikashop_shipping_group_name { font-size: 14px; color: var(--az-gray); margin: 0 0 10px; }
+/* summary */
+.az-co-summary .az-co-block { padding: 0; background: none; margin: 0; }
+.az-co-summary .az-co-block + .az-co-block, .az-co-summary .az-co-club, .az-co-summary .az-co-coupon { background: #fff; padding: 16px 18px; margin-top: 12px; }
+.az-co-summary .az-co-coupon .az-co-coupon { background: none; padding: 0; margin: 0; }
+.az-co-items .az-link { display: inline-block; margin-bottom: 6px; }
+.az-co-totals { margin-top: 16px; }
+.az-co-credit.is-disabled { cursor: default; opacity: .7; }
+.az-co-coupon-set { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.az-co-msg .alert, .az-co-msg .hikashop_messages, .az-co-msg ul { margin: 0; padding: 0; list-style: none; background: none; border: 0; font-size: 13px; }
+.az-co-live .hikabtn_checkout_next { min-height: 50px; font-size: 15px; }
+/* HikaShop loading veil over a refreshing block */
+.az-co-live .hikashop_checkout_loading { position: relative; }
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_elem { background: rgba(255, 255, 255, .6); }
+@media (max-width: 959px) {
+  .az-co-live .hkform-horizontal { grid-template-columns: 1fr; }
+  .az-co-live .hkform-group { margin-bottom: 20px; }
+  .az-co-summary { position: static; }
+}

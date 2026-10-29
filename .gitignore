@@ -508,6 +508,7 @@
 /language/en-GB/en-GB.xml
 /language/en-GB/install.xml
 /language/overrides/*
+!/language/overrides/fa-IR.override.ini
 /language/index.html
 /layouts/joomla/*
 /layouts/libraries/*
