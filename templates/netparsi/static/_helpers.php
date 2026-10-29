@@ -860,12 +860,88 @@ if (!function_exists('amuj_url')) {
     }
 
     /**
-     * Demo live search over amuj_products(). Returns the same shape as
-     * mod_netparsisearch: {q, total, groups: [{key, items: [...]}]}
+     * HikaShop search: published products whose name, code, keywords, description, category or
+     * variant colour/size contains every word of $q, plus matching shop categories.
+     * Returns ['ids' => [productId...], 'categories' => [[id, name]...]] or null without HikaShop.
+     */
+    function amuj_hika_search($q, $limit = 48)
+    {
+        if (!defined('JPATH_ADMINISTRATOR')) {
+            return null;
+        }
+        if (!function_exists('hikashop_get') && is_file(JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php')) {
+            include_once JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php';
+        }
+        if (!function_exists('hikashop_table')) {
+            return null;
+        }
+
+        // Words as typed in Persian (Arabic ي/ك folded, digits back to Persian like the shop's data)
+        $text  = strtr(amuj_fold($q), array_combine(range('0', '9'), ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']));
+        $words = array_slice(array_filter(explode(' ', $text), function ($w) { return mb_strlen($w) > 0; }), 0, 6);
+        if (!$words) {
+            return ['ids' => [], 'categories' => []];
+        }
+
+        $db   = \Joomla\CMS\Factory::getDbo();
+        $p    = hikashop_table('product');
+        $pc   = hikashop_table('product_category');
+        $cat  = hikashop_table('category');
+        $var  = hikashop_table('variant');
+        $char = hikashop_table('characteristic');
+        $like = function ($w) use ($db) { return $db->quote('%' . $db->escape($w, true) . '%', false); };
+
+        $where = [];
+        foreach ($words as $w) {
+            $l = $like($w);
+            $where[] = '(p.product_name LIKE ' . $l . ' OR p.product_code LIKE ' . $l . ' OR p.product_keywords LIKE ' . $l
+                . ' OR p.product_description LIKE ' . $l
+                . ' OR EXISTS (SELECT 1 FROM ' . $pc . ' x JOIN ' . $cat . ' c ON c.category_id = x.category_id'
+                . ' WHERE x.product_id = p.product_id AND c.category_name LIKE ' . $l . ')'
+                . ' OR EXISTS (SELECT 1 FROM ' . $p . ' v JOIN ' . $var . ' vr ON vr.variant_product_id = v.product_id'
+                . ' JOIN ' . $char . ' ch ON ch.characteristic_id = vr.variant_characteristic_id'
+                . ' WHERE v.product_parent_id = p.product_id AND v.product_published = 1 AND ch.characteristic_value LIKE ' . $l . '))';
+        }
+        $ids = $db->setQuery('SELECT p.product_id FROM ' . $p . ' p WHERE p.product_type = "main" AND p.product_published = 1 AND '
+            . implode(' AND ', $where) . ' ORDER BY p.product_created DESC', 0, (int) $limit)->loadColumn();
+
+        $catWhere = implode(' AND ', array_map(function ($w) use ($like) { return 'category_name LIKE ' . $like($w); }, $words));
+        $cats = $db->setQuery('SELECT category_id AS id, category_name AS name FROM ' . $cat . ' WHERE category_type = "product"'
+            . ' AND category_published = 1 AND category_parent_id > 1 AND ' . $catWhere . ' ORDER BY category_left', 0, 6)->loadAssocList();
+
+        return ['ids' => array_map('intval', $ids), 'categories' => $cats];
+    }
+
+    /**
+     * Live search: HikaShop products and categories (amuj_hika_search), or the demo products
+     * outside Joomla. Returns the same shape as mod_netparsisearch: {q, total, groups: [{key, items: [...]}]}
      */
     function amuj_search($q)
     {
         $q     = mb_substr(trim((string) $q), 0, 80);
+
+        if (mb_strlen(amuj_fold($q)) >= 2 && ($found = amuj_hika_search($q)) !== null) {
+            $products = [];
+            $data = amuj_hika_products(array_slice($found['ids'], 0, 12));
+            foreach (array_slice($found['ids'], 0, 12) as $id) {
+                if (!isset($data[$id])) {
+                    continue;
+                }
+                $p = $data[$id];
+                $products[] = ['id' => $id, 'title' => $p['name'], 'url' => $p['url'], 'image' => amuj_img($p['img'], 400),
+                    'price' => amuj_price($p['price']), 'meta' => implode('، ', $p['color_names'] ?? [])];
+            }
+            $categories = array_map(function ($c) {
+                return ['title' => $c['name'], 'url' => amuj_category_url($c['id'], amuj_url('search', ['q' => $c['name']])),
+                    'image' => '', 'price' => '', 'meta' => ''];
+            }, $found['categories']);
+
+            return ['q' => $q, 'total' => count($found['ids']) + count($categories), 'groups' => array_values(array_filter([
+                ['key' => 'hcategories', 'items' => $categories],
+                ['key' => 'products', 'items' => $products],
+            ], function ($g) { return !empty($g['items']); }))];
+        }
+
         $terms = array_filter(explode(' ', amuj_fold($q)), function ($t) { return mb_strlen($t) > 0; });
 
         if (mb_strlen(amuj_fold($q)) < 2) {
