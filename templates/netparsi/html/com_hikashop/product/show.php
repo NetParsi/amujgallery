@@ -49,17 +49,33 @@ if (count($p['color_images']) > 1) {
 $variantJson = htmlspecialchars(json_encode($p['variants']), ENT_QUOTES);
 $cartUrl     = Uri::root() . 'index.php?option=com_hikashop&ctrl=product&task=updatecart&tmpl=raw';
 
-// "Pair it with": other products of the same categories
+// "Pair it with": the related products chosen in HikaShop (product > Related products), then other products of
+// the same categories, then the newest ones
 $db = Factory::getDbo();
-$related = $db->setQuery('SELECT DISTINCT pc2.product_id FROM ' . hikashop_table('product_category') . ' pc'
-    . ' JOIN ' . hikashop_table('product_category') . ' pc2 ON pc2.category_id = pc.category_id AND pc2.product_id != pc.product_id'
-    . ' JOIN ' . hikashop_table('product') . ' p ON p.product_id = pc2.product_id AND p.product_published = 1'
-    . ' WHERE pc.product_id = ' . $mainId . ' LIMIT 12')->loadColumn();
-if (count($related) < 4) {
+$chosen = $db->setQuery('SELECT r.product_related_id FROM ' . hikashop_table('product_related') . ' r'
+    . ' JOIN ' . hikashop_table('product') . ' p ON p.product_id = r.product_related_id AND p.product_published = 1 AND p.product_type = "main"'
+    . ' WHERE r.product_id = ' . $mainId . ' AND r.product_related_type = "related" ORDER BY r.product_related_ordering')->loadColumn();
+$related = $chosen;
+if (count($related) < 8) {
+    $related = array_merge($related, $db->setQuery('SELECT DISTINCT pc2.product_id FROM ' . hikashop_table('product_category') . ' pc'
+        . ' JOIN ' . hikashop_table('product_category') . ' pc2 ON pc2.category_id = pc.category_id AND pc2.product_id != pc.product_id'
+        . ' JOIN ' . hikashop_table('product') . ' p ON p.product_id = pc2.product_id AND p.product_published = 1 AND p.product_type = "main"'
+        . ' WHERE pc.product_id = ' . $mainId . ' LIMIT 12')->loadColumn());
+}
+if (count(array_unique($related)) < 4) {
     $related = array_merge($related, $db->setQuery('SELECT product_id FROM ' . hikashop_table('product')
         . ' WHERE product_type = "main" AND product_published = 1 AND product_id != ' . $mainId . ' ORDER BY product_created DESC LIMIT 8')->loadColumn());
 }
-$related = amuj_hika_products(array_slice(array_unique($related), 0, 8));
+$related = amuj_hika_products(array_slice(array_values(array_diff(array_unique(array_map('intval', $related)), [$mainId])), 0, 8));
+$relatedTitle = $chosen ? 'ست کنید با' : 'شاید بپسندید';
+
+// Recently viewed: product ids in a cookie (newest first), this product added for the next pages
+$cookie = Factory::getApplication()->getInput()->cookie;
+$seen   = array_values(array_filter(array_map('intval', explode(',', (string) $cookie->getString('amuj_seen', '')))));
+$cookie->set('amuj_seen', implode(',', array_slice(array_unique(array_merge([$mainId], $seen)), 0, 12)),
+    ['expires' => time() + 60 * 86400, 'path' => Uri::root(true) ?: '/', 'samesite' => 'Lax']);
+$recent = array_slice(array_values(array_diff($seen, [$mainId])), 0, 8);
+$recent = $recent ? amuj_hika_products($recent) : [];
 ?>
 <div class="az-product">
     <aside class="az-product-desc">
@@ -160,10 +176,23 @@ $guide = [
 
 <?php if ($related) : ?>
     <section class="az-section">
-        <div class="az-section-head"><h2>ست کنید با</h2></div>
+        <div class="az-section-head"><h2><?php echo $relatedTitle; ?></h2></div>
         <div class="az-row-slider" uk-slider="finite: true">
             <ul class="uk-slider-items">
                 <?php foreach ($related as $rid => $rp) : ?>
+                    <li><?php amuj_card($rid, $rp); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </section>
+<?php endif; ?>
+
+<?php if ($recent) : ?>
+    <section class="az-section az-recent">
+        <div class="az-section-head"><h2>اخیراً دیده‌اید</h2></div>
+        <div class="az-row-slider" uk-slider="finite: true">
+            <ul class="uk-slider-items">
+                <?php foreach ($recent as $rid => $rp) : ?>
                     <li><?php amuj_card($rid, $rp); ?></li>
                 <?php endforeach; ?>
             </ul>
