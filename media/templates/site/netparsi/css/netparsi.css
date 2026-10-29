@@ -10,6 +10,12 @@
   font-display: swap;
 }
 @font-face {
+  font-family: 'Estedad';
+  src: url('../fonts/Estedad-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
   font-family: 'Doran';
   src: url('../fonts/Doran-VF.woff2') format('woff2'),
        url('../fonts/Doran-VF.woff') format('woff');
@@ -32,8 +38,9 @@
   --az-header-h: 120px;
   --az-header-compact: 64px;
   --az-logo-h: 96px;
-  --az-font: 'Noora', Tahoma, sans-serif;
-  --az-title-font: 'Doran', 'Noora', Tahoma, sans-serif;
+  /* Body font: Estedad (trial; Noora is still declared above to switch back) */
+  --az-font: 'Estedad', Tahoma, sans-serif;
+  --az-title-font: 'Doran', 'Estedad', Tahoma, sans-serif;
 }
 
 ::selection { background: var(--az-accent); color: #000; }
