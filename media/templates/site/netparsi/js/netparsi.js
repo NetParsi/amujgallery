@@ -760,6 +760,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Joomla system messages: success / info cards close themselves after a few seconds (errors and warnings stay)
+  var sysMessages = document.getElementById('system-message-container');
+  if (sysMessages) {
+    var autoClose = function () {
+      sysMessages.querySelectorAll('joomla-alert:not([data-az-timed])').forEach(function (alert) {
+        alert.setAttribute('data-az-timed', '1');
+        if (['success', 'info', 'message', 'notice'].indexOf(alert.getAttribute('type')) < 0) return;
+        setTimeout(function () {
+          if (typeof alert.close === 'function') alert.close(); else alert.remove();
+        }, 6000);
+      });
+    };
+    autoClose();
+    new MutationObserver(autoClose).observe(sysMessages, { childList: true });
+  }
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');

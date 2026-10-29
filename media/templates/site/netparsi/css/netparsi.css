@@ -1881,3 +1881,34 @@ a.az-address-add { color: inherit; }
 .az-empty .az-btn { margin-top: 6px; }
 .az-birthday-later { grid-column: 1 / -1; margin-top: 10px; background: none; border: 0; padding: 4px; cursor: pointer; font: 400 13px var(--az-font); color: var(--az-gray); }
 .az-birthday-later:hover { color: #000; }
+
+/* ---------- Joomla system messages (also HikaShop / extensions): floating cards under the header ---------- */
+#system-message-container { position: fixed; z-index: 1010; top: calc(var(--az-header-h, 80px) + 14px); left: 50%; transform: translateX(-50%);
+  width: min(520px, calc(100% - 32px)); display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+#system-message-container:empty { display: none; }
+#system-message-container joomla-alert {
+  position: relative; display: flex; align-items: flex-start; gap: 12px; margin: 0; padding: 14px 16px 14px 44px; pointer-events: auto;
+  background: #fff; color: var(--az-black); border: 1px solid var(--az-line); border-right: 3px solid var(--az-accent-ink); border-radius: 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .08); font: 400 14px/1.8 var(--az-font); text-align: right; opacity: 1;
+}
+#system-message-container joomla-alert[type="danger"], #system-message-container joomla-alert[type="error"] { border-right-color: #b4232c; }
+#system-message-container joomla-alert[type="warning"] { border-right-color: #c98a1a; }
+#system-message-container joomla-alert[type="info"], #system-message-container joomla-alert[type="notice"] { border-right-color: #8a8a8a; }
+#system-message-container .alert-heading { display: flex; align-items: center; flex: none; margin: 0; padding-top: 2px; font-size: 0; }
+#system-message-container .alert-heading > span:first-child { display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--az-accent-soft); position: relative; }
+#system-message-container .alert-heading > span:first-child::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: var(--az-accent-ink); }
+#system-message-container joomla-alert[type="danger"] .alert-heading > span:first-child { background: #f7e3e4; }
+#system-message-container joomla-alert[type="danger"] .alert-heading > span:first-child::after { background: #b4232c; }
+#system-message-container joomla-alert[type="warning"] .alert-heading > span:first-child { background: #f8eedb; }
+#system-message-container joomla-alert[type="warning"] .alert-heading > span:first-child::after { background: #c98a1a; }
+#system-message-container joomla-alert[type="info"] .alert-heading > span:first-child { background: #eeeeee; }
+#system-message-container joomla-alert[type="info"] .alert-heading > span:first-child::after { background: #8a8a8a; }
+#system-message-container .alert-wrapper { flex: 1; min-width: 0; }
+#system-message-container .alert-message { margin: 0; padding: 0; color: var(--az-black); }
+#system-message-container .alert-message + .alert-message { margin-top: 4px; }
+#system-message-container .joomla-alert--close {
+  position: absolute; top: 10px; left: 10px; width: 26px; height: 26px; padding: 0; border: 0; background: none; cursor: pointer;
+  color: var(--az-gray); font-size: 20px; line-height: 26px; opacity: 1;
+}
+#system-message-container .joomla-alert--close:hover { color: #000; background: var(--az-accent-soft); }
+@media (max-width: 639px) { #system-message-container { top: calc(var(--az-header-h, 64px) + 8px); } }

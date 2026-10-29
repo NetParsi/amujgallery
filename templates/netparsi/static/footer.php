@@ -104,7 +104,6 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                     <jdoc:include type="modules" name="footer-trust" style="none" />
                 <?php else : ?>
                     <span class="az-trust-badge">نماد اعتماد<br>الکترونیکی</span>
-                    <span class="az-trust-badge">ساماندهی</span>
                     <span class="az-trust-badge">درگاه امن<br>شاپرک</span>
                 <?php endif; ?>
             </div>
@@ -112,7 +111,7 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
 
         <div class="az-footer-bottom">
             <p class="az-copy">© <?php echo amuj_fa(1405); ?> گالری آموژ — تمامی حقوق محفوظ است.</p>
-            <p class="az-copy">ارسال به سراسر ایران · ضمانت اصالت کالا · ۱۴ روز مهلت مرجوعی</p>
+            <p class="az-copy">طراحی و توسعه توسط <a class="az-credit" href="https://netparsi.com" target="_blank" rel="noopener">نت پارسی</a></p>
         </div>
     </div>
 </footer>
