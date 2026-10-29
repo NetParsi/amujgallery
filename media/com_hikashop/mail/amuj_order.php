@@ -12,6 +12,12 @@ defined('_JEXEC') or die('Restricted access');
 
 use Joomla\CMS\Factory;
 
+// The same files are included for the plain-text part of the email ($amujText set by *.text.modified.php)
+if (!empty($amujText)) {
+    require __DIR__ . '/amuj_order_text.php';
+    return;
+}
+
 $amujSite = rtrim(HIKASHOP_LIVE, '/') . '/';
 defined('AMUJ_BASE') || define('AMUJ_BASE', $amujSite);
 defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
