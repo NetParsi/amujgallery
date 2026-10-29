@@ -39,7 +39,10 @@ $last = 0;
 foreach ($contents as $k => $content) {
     $task = $content['task'];
     $handleEnter[] = 'window.checkout.handleEnter(\'' . $task . '\',' . $this->step . ',' . $k . ');';
+    // Plugin blocks (club wallet) echo their markup instead of returning it
+    ob_start();
     $html = $this->displayBlock($task, $k, @$content['params']);
+    $html = ob_get_clean() . $html;
     $last = $k;
     if (trim(strip_tags($html, '<input><select><textarea><img><button>')) === '') {
         // Empty block (e.g. login for a signed-in customer): keep its markup for HikaShop's AJAX, no heading
