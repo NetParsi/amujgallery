@@ -103,8 +103,26 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                 <?php if ($hasModules('footer-trust')) : ?>
                     <jdoc:include type="modules" name="footer-trust" style="none" />
                 <?php else : ?>
-                    <span class="az-trust-badge">نماد اعتماد<br>الکترونیکی</span>
-                    <span class="az-trust-badge">درگاه امن<br>شاپرک</span>
+                    <?php
+                    // Badge images in images/trust/ (enamad.png / shaparak.png, or .svg / .webp); without an image the text placeholder stays.
+                    // Enamad's own link (with its id and code) comes from the global variable "enamad_link".
+                    $trust = [
+                        'enamad'   => ['نماد اعتماد الکترونیکی', trim((string) amuj_var('enamad_link', '')) ?: 'https://enamad.ir', 'نماد اعتماد<br>الکترونیکی'],
+                        'shaparak' => ['درگاه امن شاپرک', 'https://www.shaparak.ir', 'درگاه امن<br>شاپرک'],
+                    ];
+                    foreach ($trust as $key => [$alt, $href, $text]) :
+                        $file = '';
+                        foreach (['png', 'svg', 'webp', 'jpg'] as $ext) {
+                            if (is_file(AMUJ_ROOT . '/images/trust/' . $key . '.' . $ext)) {
+                                $file = 'images/trust/' . $key . '.' . $ext;
+                                break;
+                            }
+                        }
+                        ?>
+                        <a class="az-trust-badge<?php echo $file ? ' has-img' : ''; ?>" href="<?php echo htmlspecialchars($href); ?>" target="_blank" rel="noopener" referrerpolicy="origin" title="<?php echo $alt; ?>">
+                            <?php if ($file) : ?><img src="<?php echo AMUJ_BASE . $file; ?>" alt="<?php echo $alt; ?>" loading="lazy"><?php else : echo $text; endif; ?>
+                        </a>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </div>
         </div>

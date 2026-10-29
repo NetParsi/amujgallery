@@ -2052,3 +2052,8 @@ a.az-address-add { color: inherit; }
 /* order steps: the number / tick exactly in the middle of its circle (whatever the font's line metrics) */
 .az-track li::before { display: flex; align-items: center; justify-content: center; line-height: 1; box-sizing: border-box; }
 .az-track--mini li::before { line-height: 1; }
+/* trust badges: images fill their white box; the text placeholder links too */
+a.az-trust-badge { color: var(--az-gray); transition: border-color .2s; }
+a.az-trust-badge:hover { border-color: #000; color: #000; }
+.az-trust-badge.has-img { padding: 6px; }
+.az-trust-badge.has-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
