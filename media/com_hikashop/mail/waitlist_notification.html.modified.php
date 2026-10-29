@@ -14,6 +14,14 @@ $cell  = 'font-family:' . $font . ';font-size:14px;line-height:26px;color:#1a1a1
 $label = (string) ($data->amuj_label ?? ($data->product_name ?? ''));
 $url   = (string) ($data->amuj_url ?? $amujSite);
 $p     = !empty($data->amuj_main) ? (amuj_hika_products([(int) $data->amuj_main])[(int) $data->amuj_main] ?? null) : null;
+// Photo of the colour that is back in stock
+$img = $p['img'] ?? '';
+foreach ($p['variants'] ?? [] as $key => $v) {
+    if ((int) $v[0] === (int) ($data->product_id ?? 0)) {
+        $img = $p['color_images'][(int) explode('|', $key)[0]] ?? $img;
+        break;
+    }
+}
 ?>
 <h1 style="margin:0 0 6px;font-family:<?php echo $font; ?>;font-size:20px;line-height:30px;font-weight:normal;color:#000000;">موجود شد</h1>
 <p style="margin:0 0 4px;<?php echo $cell; ?>"><?php echo htmlspecialchars(trim((string) ($data->amuj_name ?? $data->name ?? '')) ?: 'مشتری گرامی'); ?> عزیز،</p>
@@ -23,7 +31,7 @@ $p     = !empty($data->amuj_main) ? (amuj_hika_products([(int) $data->amuj_main]
 	<tr>
 		<?php if ($p) : ?>
 			<td width="96" style="padding:14px 16px 14px 0;vertical-align:top;">
-				<img src="<?php echo amuj_img($p['img'], 300); ?>" width="80" alt="" style="display:block;width:80px;height:107px;object-fit:cover;border:0;">
+				<img src="<?php echo amuj_img($img, 300); ?>" width="80" alt="" style="display:block;width:80px;height:107px;object-fit:cover;border:0;">
 			</td>
 		<?php endif; ?>
 		<td style="padding:14px 16px;vertical-align:middle;<?php echo $cell; ?>">
