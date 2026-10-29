@@ -876,9 +876,9 @@ if (!function_exists('amuj_url')) {
             return null;
         }
 
-        // Words as typed in Persian (Arabic ي/ك folded, digits back to Persian like the shop's data)
-        $text  = strtr(amuj_fold($q), array_combine(range('0', '9'), ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']));
-        $words = array_slice(array_filter(explode(' ', $text), function ($w) { return mb_strlen($w) > 0; }), 0, 6);
+        // Words with Arabic ي/ك folded; each word is matched with Latin digits (codes) and Persian digits (names)
+        $words = array_slice(array_filter(explode(' ', amuj_fold($q)), function ($w) { return mb_strlen($w) > 0; }), 0, 6);
+        $faDigits = array_combine(range('0', '9'), ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']);
         if (!$words) {
             return ['ids' => [], 'categories' => []];
         }
@@ -889,23 +889,28 @@ if (!function_exists('amuj_url')) {
         $cat  = hikashop_table('category');
         $var  = hikashop_table('variant');
         $char = hikashop_table('characteristic');
-        $like = function ($w) use ($db) { return $db->quote('%' . $db->escape($w, true) . '%', false); };
+        $like = function ($w) use ($db, $faDigits) {
+            $forms = array_unique([$w, strtr($w, $faDigits)]);
+            return array_map(function ($f) use ($db) { return $db->quote('%' . $db->escape($f, true) . '%', false); }, $forms);
+        };
+        // "col LIKE a OR col LIKE b" for every spelling of the word
+        $any = function ($col, array $likes) { return '(' . implode(' OR ', array_map(function ($l) use ($col) { return $col . ' LIKE ' . $l; }, $likes)) . ')'; };
 
         $where = [];
         foreach ($words as $w) {
             $l = $like($w);
-            $where[] = '(p.product_name LIKE ' . $l . ' OR p.product_code LIKE ' . $l . ' OR p.product_keywords LIKE ' . $l
-                . ' OR p.product_description LIKE ' . $l
+            $where[] = '(' . $any('p.product_name', $l) . ' OR ' . $any('p.product_code', $l) . ' OR ' . $any('p.product_keywords', $l)
+                . ' OR ' . $any('p.product_description', $l)
                 . ' OR EXISTS (SELECT 1 FROM ' . $pc . ' x JOIN ' . $cat . ' c ON c.category_id = x.category_id'
-                . ' WHERE x.product_id = p.product_id AND c.category_name LIKE ' . $l . ')'
+                . ' WHERE x.product_id = p.product_id AND ' . $any('c.category_name', $l) . ')'
                 . ' OR EXISTS (SELECT 1 FROM ' . $p . ' v JOIN ' . $var . ' vr ON vr.variant_product_id = v.product_id'
                 . ' JOIN ' . $char . ' ch ON ch.characteristic_id = vr.variant_characteristic_id'
-                . ' WHERE v.product_parent_id = p.product_id AND v.product_published = 1 AND ch.characteristic_value LIKE ' . $l . '))';
+                . ' WHERE v.product_parent_id = p.product_id AND v.product_published = 1 AND ' . $any('ch.characteristic_value', $l) . '))';
         }
         $ids = $db->setQuery('SELECT p.product_id FROM ' . $p . ' p WHERE p.product_type = "main" AND p.product_published = 1 AND '
             . implode(' AND ', $where) . ' ORDER BY p.product_created DESC', 0, (int) $limit)->loadColumn();
 
-        $catWhere = implode(' AND ', array_map(function ($w) use ($like) { return 'category_name LIKE ' . $like($w); }, $words));
+        $catWhere = implode(' AND ', array_map(function ($w) use ($like, $any) { return $any('category_name', $like($w)); }, $words));
         $cats = $db->setQuery('SELECT category_id AS id, category_name AS name FROM ' . $cat . ' WHERE category_type = "product"'
             . ' AND category_published = 1 AND category_parent_id > 1 AND ' . $catWhere . ' ORDER BY category_left', 0, 6)->loadAssocList();
 
