@@ -900,6 +900,17 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') ctaSet(false); });
   }
 
+  // Checkout: a click anywhere in a shipping / payment row chooses it (HikaShop's radio + its change handler)
+  var coPage = document.querySelector('.az-co-live');
+  if (coPage) {
+    coPage.addEventListener('click', function (e) {
+      var cell = e.target.closest('.hikashop_shipping_methods_table td, .hikashop_payment_methods_table td');
+      if (!cell || e.target.closest('input, label, a, button, select, textarea')) return;
+      var radio = cell.querySelector('input[type=radio]');
+      if (radio && !radio.checked && !radio.disabled) radio.click();
+    });
+  }
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');
