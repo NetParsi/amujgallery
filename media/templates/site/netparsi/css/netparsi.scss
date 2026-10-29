@@ -1770,10 +1770,10 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-steps a:hover { color: #000; }
 /* address form */
 .az-co-live .hkform-horizontal { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
-.az-co-live .hkform-group { margin: 0 0 26px; }
+.az-co-live .hkform-group { display: block !important; margin: 0 0 26px; }
 .az-co-live .hkform-group::after { content: none; }
 .az-co-live .hikashop_address_address_street, .az-co-live .hikashop_checkout_address_default, .az-co-live .hikashop_checkout_address_same { grid-column: 1 / -1; }
-.az-co-live .hikashop_address_address_country { display: none; }
+.az-co-live .hikashop_address_address_country { display: none !important; }
 .az-co-live .hkcontrol-label { display: block; float: none; width: auto; padding: 0; margin: 0 0 2px; text-align: right; font-size: 13px; font-weight: 300; color: var(--az-gray); }
 .az-co-live .hikashop_address_field_input, .az-co-live .hkform-group > .hkc-sm-8 { float: none; width: auto; max-width: none; padding: 0; flex: none; }
 .az-co-live .hkform-group > .hkc-sm-4:empty { display: none; }
