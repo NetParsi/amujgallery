@@ -99,8 +99,21 @@ $optSorts = ['new' => 'جدیدترین', 'cheap' => 'ارزان‌ترین', 'e
 
 // Chosen values (only values that exist as options)
 $input    = $app->getInput();
-$fSize    = array_values(array_intersect((array) $input->get('size', [], 'array'), $optSizes));
-$fColor   = array_values(array_intersect((array) $input->get('color', [], 'array'), array_keys($optColors)));
+// HikaShop's SEF router writes arrays into the path as "color-a,b": accept both forms
+$readList = function ($name) use ($input) {
+    $out = [];
+    foreach ((array) $input->get($name, [], 'raw') as $v) {
+        foreach (explode(',', (string) $v) as $part) {
+            $part = trim(strip_tags($part));
+            if ($part !== '') {
+                $out[] = $part;
+            }
+        }
+    }
+    return $out;
+};
+$fSize    = array_values(array_intersect(array_unique($readList('size')), $optSizes));
+$fColor   = array_values(array_intersect(array_unique($readList('color')), array_keys($optColors)));
 $fPrice   = $input->getString('price', '');
 $fPrice   = isset($optPrices[$fPrice]) ? $fPrice : '';
 $fSort    = $input->getCmd('sort', '');
