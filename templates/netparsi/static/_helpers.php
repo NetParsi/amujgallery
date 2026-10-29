@@ -824,14 +824,15 @@ if (!function_exists('amuj_url')) {
         $sizes  = $p['sizes'] ?? ['XS', 'S', 'M', 'L', 'XL'];
         $out    = $p['sizes_out'] ?? (isset($p['url']) ? [] : array_filter($sizes, function ($i) use ($id) { return ($id + $i) % 7 === 0; }, ARRAY_FILTER_USE_KEY));
         ?>
-        <article class="az-card" data-name="<?php echo $p['name']; ?>" data-color="<?php echo $p['color_names'][0] ?? ''; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
+        <article class="az-card"<?php echo isset($p['url']) ? ' data-id="' . (int) $id . '"' : ''; ?> data-name="<?php echo $p['name']; ?>" data-color="<?php echo $p['color_names'][0] ?? ''; ?>" data-price="<?php echo amuj_price($p['price']); ?>" data-img="<?php echo amuj_img($p['img'], 300); ?>">
             <div class="az-card-media">
                 <a class="az-card-link" href="<?php echo $url; ?>">
                     <img src="<?php echo amuj_img($p['img'], 700); ?>" alt="<?php echo $p['name']; ?>" loading="lazy">
                     <img class="az-card-alt" src="<?php echo amuj_img($p['img2'], 700); ?>" alt="" loading="lazy">
                 </a>
                 <?php if (!empty($p['tag'])) : ?><span class="az-card-tag"><?php echo $p['tag']; ?></span><?php endif; ?>
-                <button class="az-card-fav" type="button" aria-label="افزودن به علاقه‌مندی‌ها">
+                <?php $wished = isset($p['url']) && function_exists('amuj_wishlist_ids') && in_array((int) $id, amuj_wishlist_ids(), true); ?>
+                <button class="az-card-fav<?php echo $wished ? ' is-active' : ''; ?>" type="button" aria-label="<?php echo $wished ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'; ?>">
                     <svg width="14" height="18" viewBox="0 0 14 18"><path d="M1 1h12v16l-6-4.5L1 17z" stroke="#000" stroke-width="1.1"/></svg>
                 </button>
                 <button class="az-card-quick" type="button" aria-label="افزودن سریع">+</button>

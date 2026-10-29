@@ -705,6 +705,61 @@ document.addEventListener('DOMContentLoaded', function () {
     if (window.UIkit) UIkit.notification({ message: message, pos: 'bottom-center', timeout: 2000 });
   }
 
+  // Wishlist heart: HikaShop products are saved in the customer's wishlist (amujcontact plugin, form=wish);
+  // guests go to the mobile login; demo cards only toggle
+  function toggleWish(btn, card) {
+    var id = card && card.dataset.id;
+    var body = document.body.dataset;
+    if (id && body.azLogin) {
+      window.location.href = body.azLogin;
+      return;
+    }
+    if (!id || !body.azWish) {
+      btn.classList.toggle('is-active');
+      notify(btn.classList.contains('is-active') ? 'به علاقه‌مندی‌ها اضافه شد' : 'از علاقه‌مندی‌ها حذف شد');
+      return;
+    }
+    var data = new FormData();
+    data.append('form', 'wish');
+    data.append('product_id', id);
+    if (btn.dataset.op) data.append('op', btn.dataset.op);
+    data.append(body.azToken, '1');
+    btn.disabled = true;
+    fetch(body.azWish, { method: 'POST', body: data, credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        btn.disabled = false;
+        if (!res || !res.ok) { notify((res && res.message) || 'انجام نشد'); return; }
+        document.querySelectorAll('.az-card[data-id="' + id + '"] .az-card-fav').forEach(function (b) { b.classList.toggle('is-active', res.active); });
+        notify(res.message);
+        document.dispatchEvent(new CustomEvent('az:wish', { detail: { id: id, active: res.active, count: res.count } }));
+      })
+      .catch(function () { btn.disabled = false; notify('انجام نشد'); });
+  }
+
+  // Wishlist page of a real customer: "حذف" removes through the same endpoint; removed cards leave the grid
+  var wishPage = document.querySelector('[data-az-wish-page]');
+  if (wishPage) {
+    wishPage.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-az-wish-remove]');
+      if (!btn) return;
+      var item = btn.closest('.az-wish-item');
+      var fav = item.querySelector('.az-card-fav');
+      fav.dataset.op = 'remove';
+      toggleWish(fav, item.querySelector('.az-card'));
+    });
+    document.addEventListener('az:wish', function (e) {
+      if (e.detail.active) return;
+      var item = wishPage.querySelector('.az-wish-item[data-id="' + e.detail.id + '"]');
+      if (item) item.remove();
+      var left = wishPage.querySelectorAll('.az-wish-item').length;
+      var count = document.querySelector('[data-az-wish-count]');
+      if (count) { count.textContent = '(' + persian(left) + ' کالا)'; count.hidden = !left; }
+      wishPage.hidden = !left;
+      document.querySelector('[data-az-wish-empty]').hidden = left > 0;
+    });
+  }
+
   // Product cards: quick size picker, wishlist
   document.addEventListener('click', function (e) {
     var quick = e.target.closest('.az-card-quick');
@@ -723,8 +778,7 @@ document.addEventListener('DOMContentLoaded', function () {
       addToCart(parseInt(size.dataset.variant || '0', 10), { name: card.dataset.name, price: card.dataset.price, img: card.dataset.img,
                   color: card.dataset.color || '', size: size.textContent });
     } else if (fav) {
-      fav.classList.toggle('is-active');
-      notify(fav.classList.contains('is-active') ? 'به علاقه‌مندی‌ها اضافه شد' : 'از علاقه‌مندی‌ها حذف شد');
+      toggleWish(fav, fav.closest('.az-card'));
     }
   });
 

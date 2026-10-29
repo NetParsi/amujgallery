@@ -295,4 +295,32 @@ if (!function_exists('amuj_real_user')) {
             . ($button !== '' ? '<a class="az-btn az-btn--ghost" href="' . htmlspecialchars($url) . '">' . $button . '</a>' : '')
             . '</div>';
     }
+
+    /**
+     * Products in the signed-in customer's wishlist (HikaShop wishlist cart): main product ids, newest first.
+     * Empty for guests and without HikaShop.
+     */
+    function amuj_wishlist_ids()
+    {
+        static $ids = null;
+        if ($ids !== null) {
+            return $ids;
+        }
+        $ids  = [];
+        $user = \Joomla\CMS\Factory::getApplication()->getIdentity();
+        if (!$user || $user->guest) {
+            return $ids;
+        }
+        $db = \Joomla\CMS\Factory::getDbo();
+        if (!in_array($db->getPrefix() . 'hikashop_cart', $db->getTableList(), true)) {
+            return $ids;
+        }
+        $ids = array_map('intval', $db->setQuery('SELECT DISTINCT IF(p.product_parent_id > 0, p.product_parent_id, p.product_id)'
+            . ' FROM #__hikashop_cart c JOIN #__hikashop_user hu ON hu.user_id = c.user_id'
+            . ' JOIN #__hikashop_cart_product cp ON cp.cart_id = c.cart_id JOIN #__hikashop_product p ON p.product_id = cp.product_id'
+            . ' WHERE hu.user_cms_id = ' . (int) $user->id . ' AND c.cart_type = "wishlist" AND cp.cart_product_quantity > 0'
+            . ' ORDER BY cp.cart_product_modified DESC')->loadColumn());
+
+        return $ids;
+    }
 }

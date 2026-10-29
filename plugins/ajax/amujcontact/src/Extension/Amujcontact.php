@@ -52,6 +52,10 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
             $this->readAll();
         }
 
+        if ($input->getCmd('form') === 'wish') {
+            $this->wish();
+        }
+
         // Bots fill the hidden "website" field: answer as if sent, send nothing
         if ($input->getString('website', '') !== '') {
             $this->respond(true, 'پیام شما ارسال شد');
@@ -171,6 +175,75 @@ final class Amujcontact extends CMSPlugin implements SubscriberInterface
         }
 
         $this->respond(true, 'همه پیام‌ها خوانده شد');
+    }
+
+    /**
+     * Product cards' heart: add / remove a product (main product id) in the customer's HikaShop wishlist
+     * (a cart of type "wishlist", created on first use). Answers {"ok", "message", "active", "count"}.
+     */
+    private function wish(): void
+    {
+        $app   = $this->getApplication();
+        $user  = $app->getIdentity();
+        $input = $app->getInput()->post;
+        if (!$user || $user->guest) {
+            $this->respond(false, 'برای ذخیره علاقه‌مندی‌ها ابتدا وارد حساب کاربری شوید.');
+        }
+        $productId = $input->getInt('product_id', 0);
+        $remove    = $input->getCmd('op') === 'remove';
+
+        $helper = JPATH_ADMINISTRATOR . '/components/com_hikashop/helpers/helper.php';
+        if (!$productId || !is_file($helper)) {
+            $this->respond(false, 'انجام نشد.');
+        }
+        include_once $helper;
+
+        try {
+            $db = Factory::getContainer()->get('DatabaseDriver');
+            $exists = (int) $db->setQuery('SELECT product_id FROM #__hikashop_product WHERE product_id = ' . $productId
+                . ' AND product_published = 1 AND product_type = "main"')->loadResult();
+            $hkUser = (int) hikashop_loadUser(false);
+            if (!$exists || !$hkUser) {
+                $this->respond(false, 'انجام نشد.');
+            }
+
+            $cartId = (int) $db->setQuery('SELECT cart_id FROM #__hikashop_cart WHERE user_id = ' . $hkUser
+                . ' AND cart_type = "wishlist" ORDER BY cart_current DESC, cart_id LIMIT 1')->loadResult();
+            if (!$cartId && !$remove) {
+                $cart = (object) ['user_id' => $hkUser, 'session_id' => '', 'cart_modified' => time(), 'cart_type' => 'wishlist',
+                    'cart_coupon' => '', 'cart_currency_id' => (int) hikashop_getCurrency(), 'cart_name' => 'علاقه‌مندی‌ها', 'cart_current' => 1,
+                    'cart_share' => 'nobody', 'cart_params' => '{}', 'cart_fields' => '{}', 'cart_ip' => '', 'cart_shipping_ids' => '',
+                    'cart_shipping_address_ids' => '', 'cart_payment_id' => 0, 'cart_billing_address_id' => 0];
+                $db->insertObject('#__hikashop_cart', $cart, 'cart_id');
+                $cartId = (int) $cart->cart_id;
+            }
+
+            $has = $cartId ? (int) $db->setQuery('SELECT COUNT(*) FROM #__hikashop_cart_product WHERE cart_id = ' . $cartId
+                . ' AND product_id = ' . $productId)->loadResult() : 0;
+            if ($remove || $has) {
+                if ($cartId) {
+                    $db->setQuery('DELETE FROM #__hikashop_cart_product WHERE cart_id = ' . $cartId . ' AND product_id = ' . $productId)->execute();
+                }
+                $active = false;
+            } else {
+                $row = (object) ['cart_id' => $cartId, 'product_id' => $productId, 'cart_product_quantity' => 1,
+                    'cart_product_modified' => time(), 'cart_product_parent_id' => 0, 'cart_product_option_parent_id' => 0];
+                $db->insertObject('#__hikashop_cart_product', $row);
+                $active = true;
+            }
+            if ($cartId) {
+                $db->setQuery('UPDATE #__hikashop_cart SET cart_modified = ' . time() . ' WHERE cart_id = ' . $cartId)->execute();
+            }
+            $count = $cartId ? (int) $db->setQuery('SELECT COUNT(*) FROM #__hikashop_cart_product WHERE cart_id = ' . $cartId)->loadResult() : 0;
+        } catch (\Throwable $e) {
+            $this->respond(false, 'انجام نشد.');
+        }
+
+        $app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
+        $app->sendHeaders();
+        echo json_encode(['ok' => true, 'message' => $active ? 'به علاقه‌مندی‌ها اضافه شد' : 'از علاقه‌مندی‌ها حذف شد',
+            'active' => $active, 'count' => $count], JSON_UNESCAPED_UNICODE);
+        $app->close();
     }
 
     private function respond(bool $ok, string $message): void

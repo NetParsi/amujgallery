@@ -110,7 +110,11 @@ if ($staticPage) {
     . ($pageclass ? ' ' . $pageclass : '')
     . ($this->direction == 'rtl' ? ' rtl' : '')
     . ($staticPage ? ' az-page-' . $staticPage : '');
-?>" data-az-cart="<?php echo Uri::root(); ?>index.php?option=com_hikashop&amp;ctrl=product&amp;task=updatecart&amp;tmpl=raw">
+?>" data-az-cart="<?php echo Uri::root(); ?>index.php?option=com_hikashop&amp;ctrl=product&amp;task=updatecart&amp;tmpl=raw"
+    data-az-wish="<?php echo Uri::root(); ?>index.php?option=com_ajax&amp;group=ajax&amp;plugin=amujcontact&amp;format=raw"
+    data-az-token="<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>"<?php
+    // Guests: the heart opens the mobile login (and comes back here)
+    echo Factory::getApplication()->getIdentity()->guest ? ' data-az-login="' . htmlspecialchars(amuj_login_url()) . '"' : ''; ?>>
 <?php if (!$amujBare) include __DIR__ . '/static/header.php'; ?>
 <main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?><?php echo $amujBare ? ' az-main--bare' : ''; ?>">
     <jdoc:include type="message" />

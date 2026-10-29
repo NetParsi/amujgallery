@@ -6,6 +6,14 @@
  */
 defined('_JEXEC') or die;
 
+// Menu item "wishlist" (amuj-pages, cart type wishlist): the customer panel's wishlist page
+$amujMenu = \Joomla\CMS\Factory::getApplication()->getMenu()->getActive();
+if ($amujMenu && $amujMenu->getParams()->get('cart_type') === 'wishlist'
+    && !in_array(\Joomla\CMS\Factory::getApplication()->getInput()->getCmd('tmpl'), ['component', 'raw', 'ajax'], true)) {
+    require __DIR__ . '/_wishlist.php';
+    return;
+}
+
 if ((!empty($this->cart->cart_type) && $this->cart->cart_type !== 'cart')
     || in_array(\Joomla\CMS\Factory::getApplication()->getInput()->getCmd('tmpl'), ['component', 'raw', 'ajax'], true)) {
     require JPATH_ROOT . '/components/com_hikashop/views/cart/tmpl/show.php';
