@@ -52,8 +52,10 @@ $list = array_merge(array_keys($products), array_keys($products));
 
 <div id="az-filter" uk-offcanvas="overlay: true; flip: true">
     <div class="uk-offcanvas-bar az-filter-bar">
-        <button class="uk-offcanvas-close" type="button" uk-close></button>
-        <div class="az-title">فیلتر</div>
+        <div class="az-user-top">
+            <div class="az-user-hello">فیلتر</div>
+            <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg></button>
+        </div>
 
         <h4>سایز</h4>
         <div class="az-chips" data-az-choice="multi">

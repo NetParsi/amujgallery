@@ -36,7 +36,7 @@ amuj_account_open('addresses');
 
 <div id="az-address-form" uk-modal>
     <div class="uk-modal-dialog uk-modal-body az-modal">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <button class="az-user-close az-modal-close uk-modal-close" type="button" aria-label="بستن"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg></button>
         <h2 class="az-title">آدرس جدید</h2>
         <form class="az-form-grid" onsubmit="UIkit.modal('#az-address-form').hide(); return false;">
             <div class="az-field"><label>عنوان آدرس</label><input class="az-input" placeholder="مثلاً خانه"></div>

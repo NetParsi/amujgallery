@@ -268,8 +268,10 @@ amuj_seo([
 <?php if ($all) : ?>
     <div id="az-filter" uk-offcanvas="overlay: true; flip: true">
         <form class="uk-offcanvas-bar az-filter-bar" method="get" action="<?php echo htmlspecialchars($baseUrl); ?>">
-            <button class="uk-offcanvas-close" type="button" uk-close></button>
-            <div class="az-title">فیلتر</div>
+            <div class="az-user-top">
+                <div class="az-user-hello">فیلتر</div>
+                <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg></button>
+            </div>
 
             <?php if ($optSizes) : ?>
                 <h4>سایز</h4>

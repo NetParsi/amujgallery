@@ -104,7 +104,7 @@ endif;
                 <?php foreach (array_diff_key($products, $items) as $id => $p) : ?>
                     <li><?php amuj_card($id, $p); ?></li>
                 <?php endforeach; ?>
-            </ul>
+            </ul><?php amuj_slider_nav(); ?>
         </div>
     </section>
 </div>

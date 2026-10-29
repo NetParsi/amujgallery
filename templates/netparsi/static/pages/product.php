@@ -127,6 +127,6 @@ $guide = [
             <?php foreach ($products as $rid => $rp) : ?>
                 <?php if ($rid !== $id) : ?><li><?php amuj_card($rid, $rp); ?></li><?php endif; ?>
             <?php endforeach; ?>
-        </ul>
+        </ul><?php amuj_slider_nav(); ?>
     </div>
 </section>

@@ -194,7 +194,7 @@ endif;
                     <?php foreach ($suggest as $id => $sp) : ?>
                         <li><?php amuj_card($id, $sp); ?></li>
                     <?php endforeach; ?>
-                </ul>
+                </ul><?php amuj_slider_nav(); ?>
             </div>
         </section>
     </div>

@@ -36,7 +36,7 @@ $id       = 'az-birthday-popup';
 ?>
 <div id="<?php echo $id; ?>" uk-modal="bg-close: false">
     <div class="uk-modal-dialog uk-modal-body az-modal az-modal--sm">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <button class="az-user-close az-modal-close uk-modal-close" type="button" aria-label="بستن"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg></button>
         <h2 class="az-title">ثبت تاریخ تولد</h2>
         <p class="az-muted az-small">تاریخ تولد خود را ثبت کنید تا در روز تولدتان هدیه کیف پول دریافت کنید. تاریخ تولد فقط یک بار ثبت می‌شود.</p>
         <form class="az-birthday-form" data-az-birthday-form action="<?php echo AMUJ_BASE; ?>index.php">

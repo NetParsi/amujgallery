@@ -232,7 +232,7 @@ $guide = [
                 <?php foreach ($related as $rid => $rp) : ?>
                     <li><?php amuj_card($rid, $rp); ?></li>
                 <?php endforeach; ?>
-            </ul>
+            </ul><?php amuj_slider_nav(); ?>
         </div>
     </section>
 <?php endif; ?>
@@ -245,7 +245,7 @@ $guide = [
                 <?php foreach ($recent as $rid => $rp) : ?>
                     <li><?php amuj_card($rid, $rp); ?></li>
                 <?php endforeach; ?>
-            </ul>
+            </ul><?php amuj_slider_nav(); ?>
         </div>
     </section>
 <?php endif; ?>

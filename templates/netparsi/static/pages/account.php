@@ -60,7 +60,7 @@ $months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرد
 ?>
 <div id="az-birthday" uk-modal>
     <div class="uk-modal-dialog uk-modal-body az-modal az-modal--sm">
-        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <button class="az-user-close az-modal-close uk-modal-close" type="button" aria-label="بستن"><svg viewBox="0 0 38 38" aria-hidden="true"><path d="M2 2l34 34M36 2L2 36"/></svg></button>
         <h2 class="az-title">ثبت تاریخ تولد</h2>
         <p class="az-muted az-small">تاریخ تولد فقط یک بار ثبت می‌شود و برای ارسال هدیه تولد استفاده خواهد شد.</p>
         <form class="az-birthday-form" data-az-birthday-form>

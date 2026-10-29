@@ -860,6 +860,15 @@ if (!function_exists('amuj_url')) {
         <?php
     }
 
+    /** Previous / next arrows of a product row slider (desktop only; UIkit hides the one that cannot move) */
+    function amuj_slider_nav()
+    {
+        $chev = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8"/></svg>';
+        // RTL: "previous" sits on the right, "next" on the left
+        echo '<button class="az-slidenav az-slidenav--prev" type="button" uk-slider-item="previous" aria-label="قبلی">' . $chev . '</button>'
+            . '<button class="az-slidenav az-slidenav--next" type="button" uk-slider-item="next" aria-label="بعدی">' . $chev . '</button>';
+    }
+
     /** Large editorial tile that spans two grid columns */
     function amuj_feature($img, $title, $text = '')
     {

@@ -67,7 +67,7 @@ $slideDuration = 5000;
             <?php foreach ($products as $id => $p) : ?>
                 <li><?php amuj_card($id, $p); ?></li>
             <?php endforeach; ?>
-        </ul>
+        </ul><?php amuj_slider_nav(); ?>
     </div>
 </section>
 

@@ -19,6 +19,6 @@ require __DIR__ . '/_amuj.php';
             <?php foreach ($cards as $id => $p) : ?>
                 <li><?php amuj_card($id, $p); ?></li>
             <?php endforeach; ?>
-        </ul>
+        </ul><?php amuj_slider_nav(); ?>
     </div>
 </section>
