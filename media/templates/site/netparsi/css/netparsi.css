@@ -2073,3 +2073,30 @@ a.az-trust-badge:hover { border-color: #000; color: #000; }
 .az-co-address-new:hover { background: var(--az-accent-soft); }
 .az-co-summary .az-co-plgshopclub { padding: 0; }
 .az-co-summary .az-co-plgshopclub .az-co-credit { padding: 16px 18px; }
+
+/* ---------- Home intro: frosted cover + logo that draws itself, then flies into the header ---------- */
+.az-intro {
+  position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .62); -webkit-backdrop-filter: blur(18px) saturate(1.05); backdrop-filter: blur(18px) saturate(1.05);
+  transition: background-color .8s ease, -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+}
+.az-intro-logo { position: relative; color: #000; line-height: 0; will-change: transform; }
+.az-intro-logo svg {
+  display: block; height: 150px; width: auto;
+  animation: azIntroDraw 1.5s cubic-bezier(.65, 0, .25, 1) .15s both, azIntroFocus 1.1s ease-out .15s both;
+}
+/* a soft sage glow that breathes under the logo while the page loads */
+.az-intro-logo::after {
+  content: ""; position: absolute; inset: 20% -18%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(178, 204, 157, .55), rgba(178, 204, 157, 0));
+  animation: azIntroGlow 2.4s ease-in-out .4s infinite alternate; opacity: 0;
+}
+@keyframes azIntroDraw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes azIntroFocus { from { opacity: 0; filter: blur(8px); transform: translateY(8px) scale(.96); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes azIntroGlow { from { opacity: .35; transform: scale(.92); } to { opacity: 1; transform: scale(1.06); } }
+.az-intro.is-leaving { background-color: rgba(255, 255, 255, 0); -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); }
+.az-intro.is-leaving .az-intro-logo::after { animation: none; opacity: 0; transition: opacity .3s; }
+.az-intro.is-leaving .az-intro-logo { transition: transform .95s cubic-bezier(.7, 0, .2, 1), color .95s ease; }
+html.az-intro-on { overflow: hidden; }
+html.az-intro-on .az-header .az-logo { visibility: hidden; }
+@media (max-width: 959px) { .az-intro-logo svg { height: 112px; } }

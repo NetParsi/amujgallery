@@ -1,4 +1,35 @@
 document.addEventListener('DOMContentLoaded', function () {
+  // Home intro: when the page has loaded (and the logo had time to draw itself) the logo flies into the
+  // header logo, the frosted cover clears, then the real header logo takes over
+  var intro = document.getElementById('az-intro');
+  if (intro) {
+    var introDone = false;
+    var introGo = function () {
+      if (introDone) return;
+      introDone = true;
+      var logo = intro.querySelector('.az-intro-logo');
+      var target = document.querySelector('.az-header .az-logo svg');
+      var finish = function () {
+        document.documentElement.classList.remove('az-intro-on');
+        if (intro.parentNode) intro.parentNode.removeChild(intro);
+      };
+      if (!logo || !target) { finish(); return; }
+      var from = logo.getBoundingClientRect();
+      var to = target.getBoundingClientRect();
+      var scale = to.height / from.height;
+      var dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+      var dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+      intro.classList.add('is-leaving');
+      logo.style.color = getComputedStyle(target).color;
+      logo.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
+      setTimeout(finish, 1000);
+    };
+    // at least ~1.8 s after the navigation started (the drawing), at most 6 s even if an image hangs
+    var introReady = function () { setTimeout(introGo, Math.max(0, 1800 - performance.now())); };
+    if (document.readyState === 'complete') introReady(); else window.addEventListener('load', introReady);
+    setTimeout(introGo, 6000);
+  }
+
   // Smart header: compact after a short scroll, hides while scrolling down, returns on scroll up
   var body = document.body;
   var lastY = window.scrollY;

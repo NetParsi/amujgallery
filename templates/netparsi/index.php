@@ -118,6 +118,12 @@ amuj_seo_render($this);
     data-az-token="<?php echo \Joomla\CMS\Session\Session::getFormToken(); ?>"<?php
     // Guests: the heart opens the mobile login (and comes back here)
     echo Factory::getApplication()->getIdentity()->guest ? ' data-az-login="' . htmlspecialchars(amuj_login_url()) . '"' : ''; ?>>
+<?php if ($staticPage === 'home') : ?>
+    <?php // Home intro: blurred cover, the logo draws itself, then flies into the header logo (netparsi.js). Once per browser session. ?>
+    <div id="az-intro" class="az-intro" aria-hidden="true"><div class="az-intro-logo"><?php echo amuj_logo(); ?></div></div>
+    <script>(function(){var el=document.getElementById('az-intro');try{if(sessionStorage.getItem('azIntro')||window.matchMedia('(prefers-reduced-motion: reduce)').matches){el.parentNode.removeChild(el);return;}sessionStorage.setItem('azIntro','1');}catch(e){}document.documentElement.classList.add('az-intro-on');})();</script>
+    <noscript><style>#az-intro{display:none}</style></noscript>
+<?php endif; ?>
 <?php if (!$amujBare) include __DIR__ . '/static/header.php'; ?>
 <main id="az-main" class="az-main<?php echo $amujOverlay ? ' az-main--overlay' : ''; ?><?php echo $amujBare ? ' az-main--bare' : ''; ?>">
     <jdoc:include type="message" />
