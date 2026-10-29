@@ -13,6 +13,8 @@ defined('AMUJ_BASE') || define('AMUJ_BASE', Uri::root());
 defined('AMUJ_ROOT') || define('AMUJ_ROOT', JPATH_ROOT);
 require_once JPATH_THEMES . '/netparsi/static/_helpers.php';
 
+Factory::getDocument()->setTitle('نتیجه سفارش');
+
 $db        = Factory::getDbo();
 $config    = hikashop_config();
 $confirmed = $config->get('order_confirmed_status', 'confirmed');
@@ -56,7 +58,7 @@ $user = Factory::getApplication()->getIdentity();
 if (!$user->guest && !$isFailed) {
     $level = $db->setQuery('SELECT l.level_name, l.cashback_rate FROM #__club_levels l JOIN #__users u ON u.club_level_id = l.id WHERE u.id = ' . (int) $user->id)->loadObject();
     if ($level && (float) $level->cashback_rate > 0) {
-        $cashback = [$level->level_name, round($total * $level->cashback_rate / 100, -3)];
+        $cashback = [$level->level_name, round($total * $level->cashback_rate / 100)];
     }
 }
 ?>

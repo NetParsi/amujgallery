@@ -21,6 +21,8 @@ if ($app->getIdentity()->guest) {
     return;
 }
 
+Factory::getDocument()->setTitle('تکمیل سفارش');
+
 $contents = $this->workflow['steps'][$this->workflow_step]['content'];
 if (in_array('end', array_column($contents, 'task'), true)) {
     // Payment hand-off page: HikaShop's own layout inside the Amuj frame
