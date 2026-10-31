@@ -3,9 +3,10 @@
 #
 # The repository holds only this site's own files, laid out like the site root (template, our plugins,
 # HikaShop email templates, language overrides, images). They are uploaded over the live site; Joomla,
-# HikaShop and the other extensions on the host are never touched. Only files changed since the last
-# deploy are sent (the action keeps .ftp-deploy-sync-state.json on the host); a file deleted from the
-# repository is deleted on the host only if this workflow uploaded it before.
+# HikaShop and the other extensions on the host are never touched. Every run sends all of these files
+# with lftp, one at a time. The host drops the connection during a long upload, so lftp reconnects and
+# a retry skips what already arrived. Nothing is deleted on the host: a file removed from the repository
+# stays there until it is removed by hand.
 #
 # Secrets (GitHub > Settings > Secrets and variables > Actions), entered by the site owner:
 #   FTP_SERVER      ftp.example.com
@@ -65,18 +66,39 @@ jobs:
           fi
           echo "Port 21 is reachable"
 
-      - name: Upload changed files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          protocol: ${{ inputs.protocol }}
-          dry-run: ${{ inputs.dry_run }}
-          log-level: standard
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            .gitignore
+      - name: Upload files
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          PROTOCOL: ${{ inputs.protocol }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          sudo apt-get install -y -qq lftp > /dev/null
+          if [ "$PROTOCOL" = "ftps" ]; then
+            TLS="set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate no"
+          else
+            TLS="set ftp:ssl-allow false"
+          fi
+          DRY=""
+          if [ "$DRY_RUN" = "true" ]; then DRY="--dry-run"; fi
+          # --only-newer: a retry skips files that already arrived; a new run has a fresh checkout, so it sends all
+          for attempt in 1 2 3 4 5 6; do
+            echo "Attempt $attempt"
+            if lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" -c "
+              $TLS
+              set cmd:fail-exit true
+              set net:timeout 30
+              set net:max-retries 3
+              set net:reconnect-interval-base 5
+              set net:reconnect-interval-max 30
+              mirror --reverse --verbose --only-newer --no-perms --parallel=1 $DRY --exclude '(^|/)\.git' . '$FTP_SERVER_DIR'
+            "; then
+              echo "Upload finished"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "::error::The upload did not finish after 6 attempts"
+          exit 1
