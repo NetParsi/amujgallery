@@ -104,10 +104,11 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                     <jdoc:include type="modules" name="footer-trust" style="none" />
                 <?php else : ?>
                     <?php
-                    // Badge images in images/trust/ (enamad.png / shaparak.png, or .svg / .webp); without an image the text placeholder stays.
-                    // Enamad's own link (with its id and code) comes from the global variable "enamad_link".
+                    // Badge images in images/trust/ (shaparak.png, or .svg / .webp); without an image the text placeholder stays.
+                    // Enamad's seal is its own image, served by Enamad for this site's id and code (official code from enamad.ir).
+                    $enamadQuery = 'id=762187&Code=F4nhb3UDN2eWBt9jUgxyYxmBvgLPg8Ay';
                     $trust = [
-                        'enamad'   => ['نماد اعتماد الکترونیکی', trim((string) amuj_var('enamad_link', '')) ?: 'https://enamad.ir', 'نماد اعتماد<br>الکترونیکی'],
+                        'enamad'   => ['نماد اعتماد الکترونیکی', 'https://trustseal.enamad.ir/?' . $enamadQuery, 'نماد اعتماد<br>الکترونیکی'],
                         'shaparak' => ['درگاه امن شاپرک', 'https://www.shaparak.ir', 'درگاه امن<br>شاپرک'],
                     ];
                     foreach ($trust as $key => [$alt, $href, $text]) :
@@ -119,8 +120,8 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                             }
                         }
                         ?>
-                        <a class="az-trust-badge<?php echo $file ? ' has-img' : ''; ?>" href="<?php echo htmlspecialchars($href); ?>" target="_blank" rel="noopener" referrerpolicy="origin" title="<?php echo $alt; ?>">
-                            <?php if ($file) : ?><img src="<?php echo AMUJ_BASE . $file; ?>" alt="<?php echo $alt; ?>" loading="lazy"><?php else : echo $text; endif; ?>
+                        <a class="az-trust-badge<?php echo $file || $key === 'enamad' ? ' has-img' : ''; ?>" href="<?php echo htmlspecialchars($href); ?>" target="_blank" rel="noopener" referrerpolicy="origin" title="<?php echo $alt; ?>">
+                            <?php if ($key === 'enamad') : ?><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?<?php echo htmlspecialchars($enamadQuery); ?>" alt="<?php echo $alt; ?>" style="cursor:pointer" code="F4nhb3UDN2eWBt9jUgxyYxmBvgLPg8Ay"><?php elseif ($file) : ?><img src="<?php echo AMUJ_BASE . $file; ?>" alt="<?php echo $alt; ?>" loading="lazy"><?php else : echo $text; endif; ?>
                         </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
