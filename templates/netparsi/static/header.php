@@ -370,7 +370,7 @@ $announcements = [
             <button class="az-user-close uk-offcanvas-close" type="button" aria-label="بستن"><?php echo $icoClose; ?></button>
         </div>
         <div class="az-added-item">
-            <img src="" alt="" data-az-added-img>
+            <img alt="" data-az-added-img>
             <div>
                 <strong data-az-added-name></strong>
                 <span class="az-muted" data-az-added-meta></span>

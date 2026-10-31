@@ -227,7 +227,7 @@ if (!function_exists('amuj_url')) {
                 'img2'         => $images[1] ?? $images[0],
                 'images'       => $images,
                 'tag'          => (int) $r->product_created > time() - 30 * 86400 ? 'جدید' : '',
-                'url'          => hikashop_contentLink('product&task=show&cid=' . $id . '&name=' . $r->product_alias . ($itemid ? '&Itemid=' . $itemid : ''), $r),
+                'url'          => amuj_product_url($id) ?: hikashop_contentLink('product&task=show&cid=' . $id . '&name=' . $r->product_alias . ($itemid ? '&Itemid=' . $itemid : ''), $r),
                 'color_ids'    => array_keys($colors),
                 'color_names'  => array_values($colors),
                 'colors'       => array_map('amuj_color_hex', array_values($colors)),
