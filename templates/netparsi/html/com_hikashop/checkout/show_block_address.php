@@ -50,7 +50,8 @@ if ($keys) {
 
     <div class="az-co-addresses">
         <?php foreach ($list as $id => $a) :
-            $place = implode('، ', array_unique(array_filter([$zones[$a->address_state] ?? '', $a->address_city, $a->address_street])));
+            // HikaShop's checkout may already have turned the namekey into the province name
+            $place = implode('، ', array_unique(array_filter([$zones[$a->address_state] ?? $a->address_state, $a->address_city, $a->address_street])));
             ?>
             <label class="az-option az-co-address-item">
                 <span class="az-co-address-text">
