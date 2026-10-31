@@ -2108,3 +2108,5 @@ a.az-trust-badge:hover { border-color: #000; color: #000; }
 html.az-intro-on { overflow: hidden; }
 html.az-intro-on .az-header .az-logo { visibility: hidden; }
 @media (max-width: 959px) { .az-intro-logo svg { height: 112px; } }
+/* hero text sits above the fixed WhatsApp / address buttons on desktop */
+@media (min-width: 960px) { .az-hero-caption { bottom: 150px; } }
