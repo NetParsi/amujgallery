@@ -1834,7 +1834,6 @@ button.az-remove { background: none; border: 0; padding: 0; font-family: inherit
 .az-co-live .hikabtn_checkout_next { min-height: 50px; font-size: 15px; }
 /* HikaShop loading veil over a refreshing block */
 .az-co-live .hikashop_checkout_loading { position: relative; }
-.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_elem { background: rgba(255, 255, 255, .6); }
 @media (max-width: 959px) {
   .az-co-live .hkform-horizontal { grid-template-columns: 1fr; }
   .az-co-live .hkform-group { margin-bottom: 20px; }
@@ -2114,3 +2113,23 @@ html.az-intro-on .az-header .az-logo { visibility: hidden; }
 /* address form: city list; the typed city ("سایر") sits under it */
 .az-co-live .az-city-select + input[type=text] { margin-top: 8px; }
 .az-co-live .az-city-select:has(+ input.invalid) { border-bottom-color: #b4232c; }
+
+/* checkout block loading: frosted veil and a thin sliding line instead of HikaShop's spinner GIF */
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_elem {
+  background: rgba(255, 255, 255, .55); opacity: 1; filter: none;
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); animation: az-co-veil .2s ease;
+}
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_spinner { background: none !important; overflow: hidden; }
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_spinner::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--az-accent-soft);
+}
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_spinner::after {
+  content: ""; position: absolute; top: 0; left: 0; width: 40%; height: 2px; background: var(--az-accent-ink);
+  animation: az-co-line 1.1s cubic-bezier(.45, 0, .55, 1) infinite;
+}
+.az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_message { top: 50%; margin-top: 0; font: 300 14px var(--az-font); color: var(--az-black); text-shadow: none; }
+@keyframes az-co-veil { from { opacity: 0; } }
+@keyframes az-co-line { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@media (prefers-reduced-motion: reduce) {
+  .az-co-live .hikashop_checkout_loading > .hikashop_checkout_loading_spinner::after { animation: none; width: 100%; }
+}
