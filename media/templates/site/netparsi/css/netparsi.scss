@@ -2113,3 +2113,4 @@ html.az-intro-on .az-header .az-logo { visibility: hidden; }
 
 /* address form: city list; the typed city ("سایر") sits under it */
 .az-co-live .az-city-select + input[type=text] { margin-top: 8px; }
+.az-co-live .az-city-select:has(+ input.invalid) { border-bottom-color: #b4232c; }
