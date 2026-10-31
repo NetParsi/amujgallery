@@ -24,12 +24,20 @@ document.addEventListener('DOMContentLoaded', function () {
       logo.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')';
       setTimeout(finish, 1000);
     };
-    // The logo always finishes drawing (CSS: .15 s delay + 1.5 s) and then stays 2 s; if the page needs longer
-    // to load it waits for it (at most 8 s from the start, even if an image hangs)
-    var introStart = window.azIntroStart || 0;
-    var introReady = function () { setTimeout(introGo, Math.max(0, introStart + 1650 + 2000 - performance.now())); };
-    if (document.readyState === 'complete') introReady(); else window.addEventListener('load', introReady);
-    setTimeout(introGo, Math.max(0, introStart + 8000 - performance.now()));
+    // Order: the logo finishes drawing (its CSS animation really ended), stays 2 s, and the page has loaded.
+    // Whichever comes last starts the flight. Safety: at most 10 s, e.g. if an image hangs or animations do not run.
+    var introDrawn = false;
+    var introLoaded = document.readyState === 'complete';
+    var introCheck = function () { if (introDrawn && introLoaded) introGo(); };
+    var introSvg = intro.querySelector('svg');
+    if (introSvg) {
+      introSvg.addEventListener('animationend', function (e) {
+        if (e.animationName !== 'azIntroDraw') return;
+        setTimeout(function () { introDrawn = true; introCheck(); }, 2000);
+      });
+    }
+    if (!introLoaded) window.addEventListener('load', function () { introLoaded = true; introCheck(); });
+    setTimeout(introGo, 10000);
   }
 
   // Smart header: compact after a short scroll, hides while scrolling down, returns on scroll up
