@@ -40,6 +40,31 @@ jobs:
         with:
           ref: main
 
+      # Says what is wrong with the address before the upload fails on it; the secret's value is never printed
+      - name: Check the FTP address
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          S="$FTP_SERVER"
+          case "$S" in
+            "") echo "::error::FTP_SERVER is empty"; exit 1 ;;
+            *://*) echo "::error::FTP_SERVER must not contain ftp:// or https://"; exit 1 ;;
+            */*) echo "::error::FTP_SERVER must not contain /"; exit 1 ;;
+            *:*) echo "::error::FTP_SERVER must not contain a port"; exit 1 ;;
+            *[[:space:]]*) echo "::error::FTP_SERVER contains a space or a line break"; exit 1 ;;
+          esac
+          echo "Format is fine"
+          if ! getent hosts "$S" > /dev/null; then
+            echo "::error::FTP_SERVER does not resolve from GitHub (no DNS answer). Use the server IP from cPanel"
+            exit 1
+          fi
+          echo "DNS is fine"
+          if ! timeout 15 bash -c "exec 3<>/dev/tcp/$S/21" 2> /dev/null; then
+            echo "::error::Port 21 is not reachable from GitHub. The host blocks FTP from abroad or uses another port"
+            exit 1
+          fi
+          echo "Port 21 is reachable"
+
       - name: Upload changed files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
