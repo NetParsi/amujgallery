@@ -86,13 +86,14 @@ jobs:
           # --only-newer: a retry skips files that already arrived; a new run has a fresh checkout, so it sends all
           for attempt in 1 2 3 4 5 6; do
             echo "Attempt $attempt"
-            if lftp -u "$FTP_USERNAME" --env-password "$FTP_SERVER" -c "
+            if lftp -c "
               $TLS
               set cmd:fail-exit true
               set net:timeout 30
               set net:max-retries 3
               set net:reconnect-interval-base 5
               set net:reconnect-interval-max 30
+              open --env-password --user '$FTP_USERNAME' '$FTP_SERVER'
               mirror --reverse --verbose --only-newer --no-perms --parallel=1 $DRY --exclude '(^|/)\.git' . '$FTP_SERVER_DIR'
             "; then
               echo "Upload finished"
