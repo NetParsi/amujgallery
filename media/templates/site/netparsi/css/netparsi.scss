@@ -2110,3 +2110,6 @@ html.az-intro-on .az-header .az-logo { visibility: hidden; }
 @media (max-width: 959px) { .az-intro-logo svg { height: 112px; } }
 /* hero text sits above the fixed WhatsApp / address buttons on desktop */
 @media (min-width: 960px) { .az-hero-caption { bottom: 150px; } }
+
+/* address form: city list; the typed city ("سایر") sits under it */
+.az-co-live .az-city-select + input[type=text] { margin-top: 8px; }

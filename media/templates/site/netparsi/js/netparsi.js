@@ -1085,6 +1085,73 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Address form (checkout and customer panel): the city is chosen from the province's list. HikaShop's own text
+  // input stays in the form (hidden) and carries the value, so saving and validation are unchanged; "سایر" shows it.
+  var cityForm = document.querySelector('.az-co-live');
+  if (cityForm) {
+    var cityOther = '__other';
+    var cityKey = function (t) { return (t || '').trim().replace(/ي/g, 'ی').replace(/ك/g, 'ک'); };
+    var cityFill = function (input, select) {
+      var state = input.form && input.form.querySelector('select[name$="[address_state]"]');
+      var option = state && state.options[state.selectedIndex];
+      var list = (option && option.value && window.AMUJ_CITIES[cityKey(option.text)]) || [];
+      var current = cityKey(input.value);
+      select.innerHTML = '';
+      var add = function (value, text) {
+        var o = document.createElement('option');
+        o.value = value;
+        o.textContent = text;
+        select.appendChild(o);
+      };
+      add('', option && option.value ? 'انتخاب شهر' : 'ابتدا استان را انتخاب کنید');
+      list.forEach(function (city) { add(city, city); });
+      if (option && option.value) add(cityOther, 'سایر (نوشتن نام شهر)');
+      var known = list.indexOf(current) !== -1;
+      select.value = known ? current : (current ? cityOther : '');
+      input.hidden = known || !current;
+    };
+    var citySetup = function () {
+      if (!window.AMUJ_CITIES) return;
+      cityForm.querySelectorAll('input[name$="[address_city]"]').forEach(function (input) {
+        if (input.dataset.azCity) return;
+        input.dataset.azCity = '1';
+        input.placeholder = 'نام شهر';
+        var select = document.createElement('select');
+        select.className = 'az-city-select';
+        select.setAttribute('aria-label', 'شهر');
+        input.parentNode.insertBefore(select, input);
+        cityFill(input, select);
+        select.addEventListener('change', function () {
+          var other = select.value === cityOther;
+          input.value = other ? '' : select.value;
+          input.hidden = !other;
+          if (other) input.focus();
+        });
+      });
+    };
+    // A new province means a new list and no city yet
+    cityForm.addEventListener('change', function (e) {
+      if (!e.target.matches('select[name$="[address_state]"]') || !e.target.form) return;
+      var input = e.target.form.querySelector('input[name$="[address_city]"]');
+      var select = input && input.parentNode.querySelector('.az-city-select');
+      if (select) { input.value = ''; cityFill(input, select); }
+    });
+    var cityLoad = function () {
+      if (!cityForm.querySelector('input[name$="[address_city]"]')) return;
+      if (window.AMUJ_CITIES) { citySetup(); return; }
+      if (cityLoad.started) return;
+      cityLoad.started = true;
+      var own = document.querySelector('script[src*="netparsi.js"]');
+      var script = document.createElement('script');
+      script.src = own.src.replace('netparsi.js', 'iran-cities.js');
+      script.onload = citySetup;
+      document.head.appendChild(script);
+    };
+    cityLoad();
+    // The checkout address form arrives by AJAX
+    new MutationObserver(cityLoad).observe(cityForm, { childList: true, subtree: true });
+  }
+
   // Checkout (HikaShop): prices that HikaShop renders itself come with Latin digits; blocks are re-rendered by AJAX
   var coLive = document.querySelector('.az-co-live');
   if (coLive) {
