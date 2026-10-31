@@ -1,0 +1,48 @@
+/*
+ * Amuj Gallery: HikaShop's back end in Persian. Atum loads this file by itself (asset "template.user"), so it needs no
+ * installation and survives Joomla and HikaShop updates. Every rule is limited to HikaShop pages in right-to-left.
+ */
+
+/* page title: icon next to the text */
+html[dir=rtl] .com_hikashop .page-title { display: flex; align-items: center; gap: 10px; }
+html[dir=rtl] .com_hikashop .page-title .hika-title-icons { margin: 0; }
+
+/* the dashboard chart's hidden table is thousands of rows tall and stretched the page */
+html[dir=rtl] .com_hikashop .hk-chart-sr { display: block; }
+
+/* dashboard tiles: long amounts stay inside the tile */
+html[dir=rtl] .com_hikashop .cpanel-tile-body h2.cpanel-right { font-size: clamp(18px, 1.7vw, 26px); line-height: 1.4; }
+
+/* form rows: label on the right, field beside it */
+html[dir=rtl] .com_hikashop dl.hika_options > dt { float: right; clear: right; width: 170px; margin: 5px 0 0 !important; text-align: right; padding: 8px 0 0 12px; }
+html[dir=rtl] .com_hikashop dl.hika_options > dt label { text-align: right; }
+html[dir=rtl] .com_hikashop dl.hika_options > dd { float: none; margin: 0 178px 14px 0 !important; width: auto; min-height: 38px; }
+html[dir=rtl] .com_hikashop dl.hika_options > dd input[type=text],
+html[dir=rtl] .com_hikashop dl.hika_options > dd textarea,
+html[dir=rtl] .com_hikashop dl.hika_options > dd select { max-width: 100%; }
+html[dir=rtl] .com_hikashop dl.hika_options > dd > input[type=text] { width: 100%; box-sizing: border-box; }
+
+/* order page: the title sits above the box's content instead of across its border */
+html[dir=rtl] .com_hikashop fieldset.hika_field { padding: 14px 17px 17px; margin-bottom: 16px; }
+html[dir=rtl] .com_hikashop fieldset.hika_field > legend { float: right; width: auto; margin: 0 0 12px; padding: 0; border: 0; font-size: 16px; font-weight: 700; line-height: 34px; }
+html[dir=rtl] .com_hikashop fieldset.hika_field > .hika_edit { float: left; clear: none; width: auto; position: static; margin: 0 0 12px; }
+html[dir=rtl] .com_hikashop fieldset.hika_field > .hika_edit ~ * { clear: both; }
+
+/* product list: browser title clear of its open / close button */
+html[dir=rtl] .com_hikashop .hikashop_category_explorer_title { padding-inline: 34px 12px; }
+html[dir=rtl] .com_hikashop .hikashop_explorer_button_width { color: #132f53; }
+html[dir=rtl] .com_hikashop #hikashop_category_explorer_container a, html[dir=rtl] .com_hikashop #hikashop_category_explorer_container span { font-size: 12px; }
+
+/* tab badges */
+html[dir=rtl] .com_hikashop .hk-nav-tabs .badge, html[dir=rtl] .com_hikashop .hikabadge { margin-inline-start: 6px; }
+
+/* list pages: a wide table scrolls by itself; the page and the toolbar stay in place */
+html[dir=rtl] body.com_hikashop .container-fluid, html[dir=rtl] body.com_hikashop #content, html[dir=rtl] body.com_hikashop #content .col-md-12 { min-width: 0; }
+html[dir=rtl] .com_hikashop table.adminlist { display: block; max-width: 100%; overflow-x: auto; }
+html[dir=rtl] .com_hikashop table.adminlist select { min-width: 235px; width: auto; }
+html[dir=rtl] .com_hikashop td.hikashop_order_date_value, html[dir=rtl] .com_hikashop td.hikashop_order_modified_value { white-space: nowrap; }
+/* the "save order" button of a sortable column stays next to its title instead of on the next column */
+html[dir=rtl] .com_hikashop table.adminlist th a.saveorder { float: none !important; display: inline-block; width: auto; height: auto; position: static; margin-inline-start: 8px; padding: 0; border: 0; background: none; vertical-align: middle; }
+html[dir=rtl] .com_hikashop table.adminlist th a.saveorder button { position: static !important; margin: 0; padding: 2px 7px; }
+html[dir=rtl] .com_hikashop table.adminlist th.titleorder { white-space: nowrap; }
+html[dir=rtl] .com_hikashop table.adminlist td { vertical-align: middle; }

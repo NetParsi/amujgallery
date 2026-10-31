@@ -352,6 +352,7 @@
 /administrator/language/en-GB/en-GB.xml
 /administrator/language/en-GB/install.xml
 /administrator/language/overrides/*
+!/administrator/language/overrides/fa-IR.override.ini
 /administrator/language/index.html
 /administrator/logs/*
 /administrator/manifests/files/joomla.xml
