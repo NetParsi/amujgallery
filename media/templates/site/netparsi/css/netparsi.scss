@@ -1977,7 +1977,9 @@ a.az-address-add { color: inherit; }
 .az-user-top { align-items: center; margin-bottom: 26px; gap: 16px; }
 .az-user-top .az-user-hello { font-size: 24px; }
 .az-user-close, .az-modal-close {
-  position: relative; flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px; margin: -8px -10px -8px 0;
+  position: relative; flex: none; display: inline-grid; place-items: center; width: 40px; height: 40px;
+  /* the icon (18px in a 40px circle) lines up with the panel's padding, level with the title */
+  margin: -8px 0 -8px -11px; top: auto; right: auto; left: auto;
   padding: 0; border: 0; border-radius: 50%; background: transparent; color: #000; cursor: pointer; line-height: 0;
   transition: background-color .2s;
 }
@@ -1987,6 +1989,7 @@ a.az-address-add { color: inherit; }
 .uk-modal-dialog .az-modal-close { position: absolute; top: 20px; left: 22px; margin: 0; }
 .uk-modal-dialog.az-modal { padding-top: 28px; }
 #az-filter .az-user-top { margin-bottom: 8px; }
+#az-filter .az-user-close { top: auto; right: auto; left: auto; }
 @media (max-width: 959px) {
   .uk-offcanvas-bar.az-user-panel, .uk-offcanvas-bar.az-filter-bar,
   #az-user .uk-offcanvas-bar.az-user-panel, #az-notify .uk-offcanvas-bar.az-user-panel, #az-filter .uk-offcanvas-bar.az-filter-bar { padding: 20px var(--az-gutter); }
