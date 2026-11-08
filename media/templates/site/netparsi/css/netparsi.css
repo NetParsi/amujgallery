@@ -1923,9 +1923,9 @@ a.az-address-add { color: inherit; }
 .az-credit-line { display: flex; align-items: center; gap: 8px; }
 .az-credit { display: inline-flex; align-items: center; color: var(--az-gray); line-height: 0; }
 .az-credit svg { height: 15px; width: auto; display: block; }
-.az-credit svg g, .az-credit svg circle { fill: currentColor; transition: fill .2s; }
-.az-credit:hover svg g { fill: #19488a; }
-.az-credit:hover svg circle { fill: #f5a31e; }
+/* NetParsi logo in its own colors (blue #19488a, orange #f5a31e, set in the SVG) */
+.az-credit svg { transition: opacity .2s; }
+.az-credit:hover svg { opacity: .75; }
 
 /* ---------- Category: title + tools (filter, grid density) above the list, filter panel ---------- */
 .az-cat-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 14px; }

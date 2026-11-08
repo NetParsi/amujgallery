@@ -104,12 +104,11 @@ $social = ['اینستاگرام' => $contact['instagram'], 'واتس‌اپ' =>
                     <jdoc:include type="modules" name="footer-trust" style="none" />
                 <?php else : ?>
                     <?php
-                    // Badge images in images/trust/ (shaparak.png, or .svg / .webp); without an image the text placeholder stays.
+                    // Another badge can be added here, with its image in images/trust/ (name.png, or .svg / .webp).
                     // Enamad's seal is its own image, served by Enamad for this site's id and code (official code from enamad.ir).
                     $enamadQuery = 'id=762187&Code=F4nhb3UDN2eWBt9jUgxyYxmBvgLPg8Ay';
                     $trust = [
                         'enamad'   => ['نماد اعتماد الکترونیکی', 'https://trustseal.enamad.ir/?' . $enamadQuery, 'نماد اعتماد<br>الکترونیکی'],
-                        'shaparak' => ['درگاه امن شاپرک', 'https://www.shaparak.ir', 'درگاه امن<br>شاپرک'],
                     ];
                     foreach ($trust as $key => [$alt, $href, $text]) :
                         $file = '';
