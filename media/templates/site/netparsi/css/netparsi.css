@@ -1923,7 +1923,7 @@ a.az-address-add { color: inherit; }
 .az-credit-line { display: flex; align-items: center; gap: 8px; }
 .az-credit { display: inline-flex; align-items: center; color: var(--az-gray); line-height: 0; }
 .az-credit svg { height: 15px; width: auto; display: block; }
-/* NetParsi logo in its own colors (blue #19488a, orange #f5a31e, set in the SVG) */
+/* NetParsi logo in the NetParsi brand colors (blue #2d68ff, orange #fb6514, set in the SVG) */
 .az-credit svg { transition: opacity .2s; }
 .az-credit:hover svg { opacity: .75; }
 
